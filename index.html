@@ -104,7 +104,7 @@ body.touch .kgrid{display:none} body:not(.touch) .tgrid{display:none} body:not(.
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">— 8BIT 3D FLIGHT COMBAT —  v3.8</div>
+<div class="tag">— 8BIT 3D FLIGHT COMBAT —  v4.0</div>
 <div id="ovMsg"></div>
 <div class="modes"><div class="mode"><button id="go">▶ ノーマルプレイ</button><small id="goSub">ウェーブ制・ボスあり</small></div><div class="mode" id="sdWrap"><button id="sdb">☠ サドンデス</button><small>敵が途切れず出続ける</small></div><div class="mode" id="advWrap"><button id="advb">🏔 アドベンチャー</button><small>最高難易度：谷を抜けて敵基地を叩け</small></div></div><div style="margin-top:10px"><button id="hgb">🛠 HANGAR（進化）</button></div><div style="margin-top:8px"><button id="rdo"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div style="height:10px"></div>
@@ -266,7 +266,7 @@ class MB{constructor(){this.a=[]}
  pyr(x,y,z,w,h,c,e=0){const a=[x-w,y,z-w],b=[x+w,y,z-w],cc=[x+w,y,z+w],d=[x-w,y,z+w],t=[x,y+h,z];
   this.t(a,b,t,c,e);this.t(b,cc,t,c,e);this.t(cc,d,t,c,e);this.t(d,a,t,c,e);return this}
  mir(f){f(1);f(-1);return this}
- build(){const d=new Float32Array(this.a),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,d,gl.STATIC_DRAW);return{b,n:d.length/10}}}
+ build(){const d=new Float32Array(this.a),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,d,gl.STATIC_DRAW);return{b,n:d.length/10,d}}}
 function draw(m,M,T){gl.bindBuffer(gl.ARRAY_BUFFER,m.b);gl.vertexAttribPointer(A.P,3,gl.FLOAT,false,40,0);gl.vertexAttribPointer(A.N,3,gl.FLOAT,false,40,12);
  gl.vertexAttribPointer(A.C,4,gl.FLOAT,false,40,24);gl.uniformMatrix4fv(U.uM,false,M);gl.uniform4fv(U.uT,T||T0);gl.drawArrays(gl.TRIANGLES,0,m.n);}
 
@@ -810,7 +810,7 @@ function hurtE(e,d,p){if(e.dead)return;
   if(p&&G.time-(e.popT||0)>.6){e.popT=G.time;G.pops.push({p:p.slice(),t:.8,s:m>1?'WEAK!':m<1?'ARMOR':''});}}e.hp-=d;e.flash=1;if(p)sparks(p);SFX.hit();
  if(e.hp<=0){e.dead=true;orphan(e);const s=(e.type==='carrier'||e.type==='battleship')?6:e.type==='boss'?4:e.type==='turret'?1.6:1.3;const c=e.type==='turret'?add(e.p,[0,7,0]):e.p,fr=FRT[UL.frame];explode(c,s*fr.boom,fr.pal,fr.ring);
   {const cvb=e.type==='carrier'||e.type==='battleship';if(e.type==='boss'||cvb)for(let i=1;i<=(cvb?14:6);i++)G.sq.push({t:G.time+i*.18,fn:()=>explode(cvb?add(madd(c,e.f,rnd(-80,80)),[rnd(-15,15),10,0]):madd(c,rdir(),rnd(10,30)),(cvb?2.6:2)*fr.boom,fr.pal)});}
-  G.score+=e.sc;radioKill(e);if(e.type==='carrier'||e.type==='battleship')carrierBonus(e);if(UL.od&&P&&P.od<=0){P.odG=Math.min(1,P.odG+(e.type==='boss'?.5:.14)*UV.odGain());if(P.odG>=1&&!P.odR){P.odR=1;msg('','OVERDRIVE READY'+(TOUCH?'':' [H]'),1.5);}}G.pops.push({p:c.slice(),t:1.4,s:'+'+e.sc});
+  G.score+=e.sc;radioKill(e);if(e.type==='carrier'||e.type==='battleship'){carrierBonus(e);addWreck(e);}if(UL.od&&P&&P.od<=0){P.odG=Math.min(1,P.odG+(e.type==='boss'?.5:.14)*UV.odGain());if(P.odG>=1&&!P.odR){P.odR=1;msg('','OVERDRIVE READY'+(TOUCH?'':' [H]'),1.5);}}G.pops.push({p:c.slice(),t:1.4,s:'+'+e.sc});
   if(G.mode==='sd'&&e.type==='fighter'&&G.state==='play'){G.kills++;G.wave=1+Math.floor(G.kills/10);
    if(G.kills%1000===0)radio('k1000',G.kills+" kills... Sky Control has never seen anything like this.",G.kills+'機撃墜…前代未聞だ。',{pri:1,cd:0});else if(G.kills%100===0)radio('k100',G.kills+" kills! You're a living legend, Pixel One!",G.kills+'機撃墜！生ける伝説だ、ピクセル1！',{pri:1,cd:0});
    if(G.kills%100===0)G.sq.push({t:G.time+2,fn:()=>{if(G.mode==='sd'&&G.state==='play'){spawnBoss();msg('WARNING','空中要塞 接近 — '+G.kills+'機撃墜ボーナス',3);SFX.wave();}}});
@@ -819,7 +819,10 @@ function hurtE(e,d,p){if(e.dead)return;
   if(G.mode!=='sd'&&G.mode!=='tut'&&G.state==='play'&&P.alive&&!(e.type==='fighter'&&E.some(o=>o.type==='carrier'&&!o.dead))&&!E.some(o=>o!==e&&!o.dead&&o.type===e.type))kcTrigger(e.type,c);}}
 function hurtP(d){if(!P.alive||P.inv>0)return;P.hp-=d;P.lastHit=G.time;G.hurt=Math.min(1,G.hurt+d/25);G.shake=Math.max(G.shake,d/10);SFX.hurt();
  if(TOUCH&&navigator.vibrate)try{navigator.vibrate(Math.min(80,10+d*3));}catch(e){}if(P.hp<=0)killP();}
-function killP(){if(!P.alive)return;if(G.mode==='tut'){P.p[1]=Math.max(P.p[1],ground(P.p[0],P.p[2])+260);P.f=norm([P.f[0],.1,P.f[2]]);P.u=norm(sub(UP,mul(P.f,dot(UP,P.f))));P.r=norm(cross(P.f,P.u));P.hp=100;P.inv=2;msg('','墜落！ 地面と高度に注意しよう',2);return;}radio('down',"Pixel One is down! Pixel One is down!",'ピクセル1、撃墜された！',{pri:1,cd:0});P.alive=false;P.hp=0;orphan(P);explode(P.p,2.5);G.state='dead';G.deadT=0;G.orb=Math.atan2(-P.f[2],-P.f[0]);
+function killP(){if(!P.alive)return;if(G.mode==='tut'){P.p[1]=Math.max(P.p[1],ground(P.p[0],P.p[2])+260);P.f=norm([P.f[0],.1,P.f[2]]);P.u=norm(sub(UP,mul(P.f,dot(UP,P.f))));P.r=norm(cross(P.f,P.u));P.hp=100;P.inv=2;msg('','墜落！ 地面と高度に注意しよう',2);return;}P.alive=false;P.hp=0;orphan(P);G.state='dead';G.deadT=0;G.orb=Math.atan2(-P.f[2],-P.f[0]);P.landed=false;PWK=null;
+ if(P.crashHit){P.crashHit=false;pImpact(true);}
+ else{explode(P.p,1.6);SFX.boom(1.4,.8,20000,0,0);P.fall={v:mul(P.f,Math.max(P.spd,60)),sp:(Math.random()<.5?-1:1)*rnd(3.2,4.2),yw:(Math.random()<.5?-1:1)*rnd(1.2,1.8)}; // 空中で撃墜：炎上しながら制御不能のきりもみ落下
+  radio('hit',"Pixel One, you're hit! You're on fire! Pull up! Pull up!",'ピクセル1、被弾！炎上しているぞ！機首を上げろ！',{pri:1,cd:0});}
  if(G.score>G.hi){G.hi=G.score;STORE.set(hiKey(),G.hi);}bank();}
 function fireMissile(){if(G.kc||!P.alive||G.state!=='play')return;if(G.mode==='adv'&&advBombReady()){dropBomb();return;}if(UL.msl===3){fireLaser();return;}const od=P.od>0;if(P.ms<=0&&!od)return;if(!od)P.ms--;
  if(UL.msl>=4){fireFunnel();return;}
@@ -1021,7 +1024,7 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  if(P.boosting&&!P.wasB&&UL.boost>=3&&P.sbCd<=0){P.sbCd=2;sonic();}P.wasB=P.boosting;P.sbCd-=dt;
  P.spd+=(tgt-P.spd)*dt*(P.boosting?1.2:P.braking?2.6:.7)-P.f[1]*24*dt;if(P.braking&&Math.random()<dt*30)part(madd(P.p,P.f,3),madd(mul(rdir(),6),P.f,P.spd*.6),.5,.25,[.8,.9,1],1);P.spd=clamp(P.spd,P.braking?14:30,240);
  P.p=madd(P.p,P.f,P.spd*dt);if(P.p[1]>1400)P.p[1]=1400;
- if(P.p[1]<ground(P.p[0],P.p[2])+1.8){P.inv=0;hurtP(999);return;}
+ if(P.p[1]<ground(P.p[0],P.p[2])+1.8){P.inv=0;P.crashHit=true;hurtP(999);return;}
  {const hr=Math.hypot(P.p[0],P.p[2]);P.oob=hr>HALF*1.15;if(P.oob){P.oobT+=dt;P.auto=true;}else P.oobT=0;if(P.auto&&hr<HALF*.95)P.auto=false;} // エリア外：ダメージなし・自動操縦で中心へ
  P.gunT-=dt;P.heat=Math.max(0,P.heat-dt*.42);if(P.over&&P.heat<.3)P.over=false;
  if(!G.kc&&(K.Space||K.KeyJ||K.M0||TC.fire)&&!P.over&&P.gunT<=0){P.gunT=1/UV.gunRate();if(P.od<=0){P.heat+=UV.gunHeat();if(P.heat>=1){P.heat=1;P.over=true;}}P.gs*=-1;
@@ -1119,11 +1122,11 @@ function update(dt){G.time+=dt;G.warpFx=Math.max(0,G.warpFx-dt);upBeams(dt);G.ms
  upEnemies(dt);upShots(dt);upFunnels(dt);trailsUpdate();
  if(G.state==='play'){
   if(G.mode==='normal'&&!E.length&&G.next<0&&G.wave===10&&G.mode==='normal'&&STORE.get('pixsky_clear')!=='1'&&P.alive){G.next=1e9;startEnding();}
-  if(G.mode==='tut')tutTick(dt);if(G.mode==='adv')advTick(dt);
+  upWrecks(dt);if(G.mode==='tut')tutTick(dt);if(G.mode==='adv')advTick(dt);
   if(G.mode==='normal'&&!E.length&&G.next<0){G.next=3.2;P.hp=Math.min(100,P.hp+CFG.clearHeal);P.ms=6;msg('WAVE CLEAR','+'+CFG.clearHeal+' HP / MISSILE FULL',3);tone(880,.3,'triangle',.1);radio('clear',"Sector clear. Good work, Pixel One. Stand by.",'空域クリア。よくやった、ピクセル1。次に備えよ。',{cd:0});}
   if(G.next>=0){G.next-=dt;if(G.next<0){G.next=-1;nextWave();}}
   G.alertT-=dt;if(P.alive&&MSL.some(m=>m.en&&m.tgt===P)&&G.alertT<=0){G.alertT=.22;SFX.alert();}}
- if(G.state==='dead'){G.deadT+=dt;if(G.deadT>2.6&&!$('ov').classList.contains('show')&&!DK.on)showOver();}}
+ if(G.state==='dead'){G.deadT+=dt;pFallTick(dt);if(P.landed&&G.deadT>5&&!$('ov').classList.contains('show')&&!DK.on)showOver();}}
 function audioTick(){if(!AC)return;const t=AC.currentTime,st=(n,v,k=.06)=>n.setTargetAtTime(v,t,k);
  const sa=clamp((1-G.ts)/(1-CFG.slowScale),0,1);PF=1-.45*sa;st(SLF.frequency,20000-18800*Math.sqrt(sa),.08);
  const fly=G.state==='play'&&P&&P.alive,thr=fly?clamp(P.spd/200,0,1):0,ab=fly&&P.boosting?1:0,s=G.vs*G.vs*(3-2*G.vs),ck=fly?1-s:0,ti=fly?P.ti:0;
@@ -1146,7 +1149,7 @@ function audioTick(){if(!AC)return;const t=AC.currentTime,st=(n,v,k=.06)=>n.setT
 // ================= camera / render =================
 function camera(dt){if(G.state==='brief'){advBriefCam(dt);return;}if(G.intro){introCam();return;}
  if(G.state==='title'){const a=G.time*.05,R=HALF*.75;eye=[Math.cos(a)*R,330,Math.sin(a)*R];ctr=[0,40,0];cup=[0,1,0];fov=1.05;}
- else if(!P.alive){G.orb+=dt*.3;eye=[P.p[0]+Math.cos(G.orb)*80,0,P.p[2]+Math.sin(G.orb)*80];eye[1]=Math.max(P.p[1]+35,ground(eye[0],eye[2])+10);ctr=P.p;cup=[0,1,0];}
+ else if(!P.alive){G.orb+=dt*(P.landed?.25:.5);const R=P.landed?46:60,H=P.landed?16:20;eye=[P.p[0]+Math.cos(G.orb)*R,0,P.p[2]+Math.sin(G.orb)*R];eye[1]=Math.max(P.p[1]+H,ground(eye[0],eye[2])+6);ctr=add(P.p,[0,P.landed?1:0,0]);cup=[0,1,0];}
  else{G.vs+=clamp(G.view-G.vs,-dt*2,dt*2);const s=G.vs*G.vs*(3-2*G.vs);
   camF=norm(lerp(camF,P.f,Math.min(1,dt*5)));camU=norm(lerp(camU,P.u,Math.min(1,dt*3.5)));
   const fe=madd(madd(P.p,P.u,1.25),P.f,1),te=madd(madd(P.p,camF,-G.cd),camU,G.cd*.27),tc=madd(madd(P.p,camF,30),camU,G.cd*.1);
@@ -1166,6 +1169,8 @@ function render(){if(DK.on){renderDock();return;}gl.viewport(0,0,cv.width,cv.hei
  gl.depthMask(false);gl.uniform1f(U.uFD,0);draw(sky,mdl([1,0,0],[0,1,0],[0,0,1],eye));gl.depthMask(true);gl.uniform1f(U.uFD,G.fogD);
  draw(world,I4);
  if(G.intro)introDraw();
+ if(P&&P.fall&&!P.landed&&G.state==='dead')draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),new Float32Array([.15,.1,.08,.35]));
+ if(G.state==='dead')drawPWreck();
  if(P&&P.alive&&!G.intro&&G.state!=='title'&&G.state!=='brief'&&(G.vs>.22||(G.kc&&G.kc.ph==='cam')))draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),P.od>0?new Float32Array([1,.85,.3,.2+.12*Math.sin(G.time*12)]):P.inv>0&&(G.time*20|0)%2?new Float32Array([.5,.9,1,.5]):null);
  for(const e of E){const T=e.flash>0?new Float32Array([1,1,1,e.flash]):null;
   if(e.type==='fighter')draw(MESH.ef,mdl(e.r,e.u,e.f,e.p),T);
@@ -1175,6 +1180,7 @@ function render(){if(DK.on){renderDock();return;}gl.viewport(0,0,cv.width,cv.hei
   else if(e.type==='dummy')draw(MESH.dummy,mdl([1,0,0],[0,1,0],[0,0,1],add(e.p,[0,Math.sin(G.time*2+e.p[0])*.6,0]),1.4),T);
   else if(e.type==='target')draw(MESH.tgt,mdl([1,0,0],[0,1,0],[0,0,1],e.p),T);
   else draw(MESH.boss,mdl(e.r,e.u,e.f,e.p),T);}
+ drawWrecks();
  if(G.mode==='adv'&&ADV.ph==='egress'&&ADV.egM)draw(ADV.egM,I4);
  if(G.mode==='adv')for(const b of ADV.bl){const bb=basisF(norm(b.v));draw(MESH.bomb,mdl(bb.r,bb.u,norm(b.v),b.p,2.4));}
  for(const u of G.fn){const bb=basisF(u.f);draw(MESH.fu,mdl(bb.r,bb.u,u.f,u.p,1.15),u.st==='aim'&&u.t<.12?new Float32Array([.6,.85,1,.7]):null);}
@@ -1380,9 +1386,47 @@ addEventListener('resize',resize);addEventListener('orientationchange',()=>setTi
 let last=performance.now();
 function goFull(){if(!TOUCH)return;try{const d=document.documentElement,f=d.requestFullscreen||d.webkitRequestFullscreen;if(f&&!document.fullscreenElement){const r=f.call(d);if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
 function tcReset(){TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
-function start(){G.intro=null;INTRO=null;if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
+function start(){G.intro=null;INTRO=null;WRK=[];PWK=null;if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
  if(G.mode==='normal'||G.mode==='sd')introStart();
  if(G.mode!=='tut'&&G.mode!=='adv')radio('start',G.mode==='sd'?"Sky Control to Pixel One. Hostiles are endless. Stay alive.":"Sky Control to Pixel One. Weapons free. Good hunting.",G.mode==='sd'?'管制よりピクセル1へ。敵は途切れない。生き残れ。':'管制よりピクセル1へ。兵装使用許可。健闘を祈る。',{pri:1,cd:0});if(G.mode==='normal')radioWave();G.tipT=G.mode==='tut'||G.mode==='adv'?0:G.time+(TOUCH?8:10);G.pause=false;G.ts=1;}
+// ===== 空母・戦艦の撃沈演出：中央で真っ二つに折れて炎上し、ゆっくり沈んで消える =====
+let WRK=[];
+function halfMesh(ms,sg){const d=ms.d,o=[];for(let i=0;i<d.length;i+=30){const cz=(d[i+2]+d[i+12]+d[i+22])/3;if(cz*sg>=0)for(let k=0;k<30;k++){let v=d[i+k];if(k%10>=6&&k%10<=8)v*=.6;o.push(v);}} // 前半分／後ろ半分だけの三角形を取り出し、焦げた色に
+ const f=new Float32Array(o),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,f,gl.STATIC_DRAW);return{b,n:f.length/10,d:f};}
+function addWreck(e){const k=e.type,ms=k==='carrier'?MESH.cv:MESH.bs;if(!ms||!ms.d)return;if(!MESH[k+'_hf']){MESH[k+'_hf']=halfMesh(ms,1);MESH[k+'_hb']=halfMesh(ms,-1);}
+ WRK.push({k,p:e.p.slice(),f:e.f.slice(),r:e.r.slice(),u:e.u.slice(),t:0,dur:17,y0:4,L:k==='carrier'?95:105,bt:0,roll:rnd(-1,1)>0?1:-1});}
+function wreckPose(w,sg){const a=.36*Math.min(1,w.t/3.5)*(sg>0?1:.85),b=.13*w.roll*sg*Math.min(1,w.t/5),ca=Math.cos(a),sa=Math.sin(a)*sg;
+ const f1=norm(add(mul(w.f,ca),mul(w.u,sa))),u1=norm(sub(mul(w.u,ca),mul(w.f,sa))),u2=norm(add(mul(u1,Math.cos(b)),mul(w.r,Math.sin(b)))),r2=norm(sub(mul(w.r,Math.cos(b)),mul(u1,Math.sin(b))));
+ const sink=w.t<3?w.t*.6:1.8+Math.pow(w.t-3,1.55)*.75,sep=4+Math.min(10,w.t*1.5),Pv=add(add(add(w.p,mul(w.u,w.y0)),mul(w.f,sg*sep)),[0,-sink,0]);return{r:r2,u:u2,f:f1,o:sub(Pv,mul(u2,w.y0))};}
+function upWrecks(dt){for(const w of WRK){w.t+=dt;const live=1-w.t/w.dur;
+ for(const sg of[1,-1]){const q=wreckPose(w,sg),pt=()=>add(add(add(q.o,mul(q.r,rnd(-12,12))),mul(q.u,rnd(10,16))),mul(q.f,sg*rnd(4,w.L)));
+  if(Math.random()<dt*28*live){const a=pt();if(a[1]>0)part(a,[rnd(-3,3),rnd(10,22),rnd(-3,3)],rnd(.5,1.1),rnd(2.5,5),null,1,0,-1,.4,1);} // 炎
+  if(Math.random()<dt*14*live){const a=pt();if(a[1]>0)part(a,[rnd(-4,4)+3,rnd(12,22),rnd(-4,4)],rnd(2.5,4),rnd(5,9),[.13,.12,.12],0,0,3,.25,0,1);} // 黒煙
+  if(w.t>2.5&&Math.random()<dt*10)part(add(q.o,mul(q.f,sg*rnd(0,8))),[rnd(-6,6),rnd(4,10),rnd(-6,6)],1.2,rnd(2,3),[.9,.95,1],.6,-4,1.5,.5); } // 折れ目の水しぶき
+ w.bt-=dt;if(w.t<7&&w.bt<=0){w.bt=rnd(.5,1.1);const q=wreckPose(w,Math.random()<.5?1:-1),a=add(q.o,add(mul(q.u,14),mul(q.f,rnd(-w.L,w.L)*.8)));if(a[1]>2){explode(a,rnd(1.4,2.4));if(P&&dist(a,P.p)<900)G.shake=Math.max(G.shake,.25);}}}
+ WRK=WRK.filter(w=>w.t<w.dur);}
+function drawWrecks(){for(const w of WRK){const T=new Float32Array([.12,.09,.07,Math.min(.55,.15+w.t*.12)]);for(const sg of[1,-1]){const q=wreckPose(w,sg);draw(MESH[w.k+(sg>0?'_hf':'_hb')],mdl(q.r,q.u,q.f,q.o),T);}}}
+// ===== 自機の撃墜演出：きりもみ落下 → 地上／海上に激突 → 真っ二つの残骸が炎上。管制が応答を呼びかける =====
+let PWK=null;
+function pFallTick(dt){if(P.fall&&!P.landed){const F=P.fall;F.v[1]-=48*dt;F.v[0]*=1-.25*dt;F.v[2]*=1-.25*dt;P.p=madd(P.p,F.v,dt);
+  const rot=(v,ax,a)=>{const c=Math.cos(a),s2=Math.sin(a);return add(add(mul(v,c),mul(cross(ax,v),s2)),mul(ax,dot(ax,v)*(1-c)));};
+  P.f=norm(rotTo(rot(P.f,UP,F.yw*dt),norm(F.v),.9*dt));P.u=norm(rot(P.u,P.f,F.sp*dt));P.u=norm(sub(P.u,mul(P.f,dot(P.u,P.f))));P.r=norm(cross(P.f,P.u));
+  for(let i=0;i<3;i++)part(madd(P.p,P.f,-rnd(1,5)),add(mul(F.v,.2),mul(rdir(),6)),rnd(.4,.8),rnd(2,3.5),null,1,0,-1,.6,1);
+  part(madd(P.p,P.f,-4),add(mul(F.v,.05),[0,6,0]),rnd(2,3),rnd(3,5),[.12,.12,.13],0,0,2.2,.3,0,1);
+  if(Math.random()<dt*2.5)explode(madd(P.p,rdir(),3),.5);G.shake=Math.max(G.shake,.15);
+  if(P.p[1]<ground(P.p[0],P.p[2])+1.5||G.deadT>14)pImpact(false);}
+ if(PWK){PWK.t+=dt;const w=PWK,live=w.sea?Math.max(0,1-w.t/7):1;for(const sg of[1,-1]){const q=pwPose(sg),a=add(q.o,add(mul(q.u,1.2),mul(q.f,sg*rnd(0,3))));
+   if(a[1]>-.5){if(Math.random()<dt*22*live)part(a,[rnd(-2,2),rnd(6,14),rnd(-2,2)],rnd(.4,.9),rnd(1.5,3),null,1,0,-.8,.4,1);if(Math.random()<dt*4*live)part(add(a,[0,4,0]),[rnd(-2,2)+3,rnd(10,16),rnd(-2,2)],rnd(2.5,4),rnd(2,4),[.14,.14,.15],0,0,2.2,.25,0,1);}}}}
+function pImpact(crash){P.landed=true;P.fall=null;G.deadT=0;const gy=ground(P.p[0],P.p[2]),sea=groundRaw(P.p[0],P.p[2])<0;P.p[1]=gy;explode(add(P.p,[0,2,0]),2);G.shake=1.4;try{SFX.boom(1.4,.8,20000,0,0);}catch(e){}
+ if(sea)for(let i=0;i<40;i++)part(add(P.p,[rnd(-6,6),0,rnd(-6,6)]),[rnd(-14,14),rnd(20,55),rnd(-14,14)],rnd(1,2),rnd(1.5,3),[.88,.94,1],.6,-38,1,.2); // 着水の水柱
+ const f=norm([P.f[0],0,P.f[2]]);PWK={t:0,p:P.p.slice(),f:len(f)?f:[0,0,1],sea,tl:rnd(-.3,.3),k:(UL.frame||0)+'_'+(UL.boost||0)};
+ if(!MESH['pw_'+PWK.k]){const ms=pjFine();MESH['pw_'+PWK.k]=[halfMesh(ms,1),halfMesh(ms,-1)];}
+ if(crash)radio('down',"Pixel One! Pixel One, respond!",'ピクセル1！ピクセル1、応答しろ！',{pri:1,cd:0});
+ G.sq.push({t:G.time+(crash?2.6:1),fn:()=>radio('resp',"Pixel One, respond! Pixel One, do you copy? Come in, Pixel One!",'ピクセル1、応答しろ！ピクセル1、聞こえるか！応答しろ！',{pri:1,cd:0})});
+ G.sq.push({t:G.time+(crash?6.5:5),fn:()=>radio('sar',"Pixel One... respond. ...Get me a search and rescue team. Now.",'ピクセル1…応答しろ。…救難チームを出せ。今すぐだ。',{pri:1,cd:0})});}
+function pwPose(sg){const w=PWK,b=basisF(w.f),a=(sg>0?.28:-.22)+w.tl*sg,ca=Math.cos(a),sa=Math.sin(a);const f1=norm(add(mul(w.f,ca),mul(b.u,sa))),u1=norm(sub(mul(b.u,ca),mul(w.f,sa))),r1=norm(cross(f1,u1));
+ const sink=w.sea?Math.min(9,w.t*1.1):0,o=add(add(w.p,mul(w.f,sg*2.6)),[0,.6-sink,0]);return{r:mul(r1,1),u:u1,f:f1,o};}
+function drawPWreck(){if(!PWK)return;const M=MESH['pw_'+PWK.k],T=new Float32Array([.1,.08,.07,.5]);for(const sg of[1,-1]){const q=pwPose(sg),b=basisF(q.f);draw(M[sg>0?0:1],mdl(b.r,q.u,q.f,q.o,PJS),T);}}
 // ===== 発進ムービー：空母のエレベーターで甲板へ → エンジン点火 → カタパルト射出 → 少し沈んでから上昇して作戦へ =====
 let INTRO=null;
 const swp=(f0,f1,d,v,ty)=>{try{if(on())osc(ty||'sawtooth',f0,f1,d,v,MS);}catch(e){}};
@@ -1546,7 +1590,7 @@ function dropBomb(){if(ADV.nb<=0)return;ADV.nb--;ADV.bl.push({p:add(P.p,mul(P.u,
  if(ADV.nb===3)radio('bomb',"Bombs away!",'爆弾投下！',{cd:8,who:'PIXEL ONE'});}
 function advTick(dt){if(!P.alive||ADV.done)return;ADV.t+=dt;const left=ADV.limit-ADV.t;
  // 大橋との衝突
- const br=ADV.br;if(br){const v=sub(P.p,br.c);if(Math.abs(dot(v,br.X))<br.hs&&Math.abs(v[1])<4&&Math.abs(dot(v,br.Z))<br.hw){P.inv=0;hurtP(999);return;}}
+ const br=ADV.br;if(br){const v=sub(P.p,br.c);if(Math.abs(dot(v,br.X))<br.hs&&Math.abs(v[1])<4&&Math.abs(dot(v,br.Z))<br.hw){P.inv=0;P.crashHit=true;hurtP(999);return;}}
  // レーダー高度：超えるとSAMが一斉発射
  if(P.p[1]>ADV.ceil){ADV.hiT+=dt;if(ADV.hiT>.3&&ADV.lockMsg<=0&&ADV.ph!=='egress'){radio('radar',"Radar lock! Get back down in the canyon, now!",'レーダーに捕捉された！今すぐ谷へ戻れ！',{pri:1,cd:6});ADV.lockMsg=6;}
   if(ADV.hiT>.5&&ADV.ph!=='egress'){ADV.samT-=dt;if(ADV.samT<=0){ADV.samT=.28;for(let k=0;k<2;k++){const a=rnd(0,6.28),r=rnd(260,520),q=[P.p[0]+Math.cos(a)*r,0,P.p[2]+Math.sin(a)*r];q[1]=Math.max(Math.max(groundRaw(q[0],q[2]),0)+12,P.p[1]+rnd(60,180),300); // 谷の上空から撃ち下ろす（壁に阻まれない）
