@@ -104,7 +104,7 @@ body.touch .kgrid{display:none} body:not(.touch) .tgrid{display:none} body:not(.
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">— 8BIT 3D FLIGHT COMBAT —  v4.0.1</div>
+<div class="tag">— 8BIT 3D FLIGHT COMBAT —  v4.1.3</div>
 <div id="ovMsg"></div>
 <div class="modes"><div class="mode"><button id="go">▶ ノーマルプレイ</button><small id="goSub">ウェーブ制・ボスあり</small></div><div class="mode" id="sdWrap"><button id="sdb">☠ サドンデス</button><small>敵が途切れず出続ける</small></div><div class="mode" id="advWrap"><button id="advb">🏔 アドベンチャー</button><small>最高難易度：谷を抜けて敵基地を叩け</small></div></div><div style="margin-top:10px"><button id="hgb">🛠 HANGAR（進化）</button></div><div style="margin-top:8px"><button id="rdo"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div style="height:10px"></div>
@@ -148,11 +148,11 @@ body.touch .kgrid{display:none} body:not(.touch) .tgrid{display:none} body:not(.
 <div id="brief"><div class="bf-top"><div class="bf-t">MISSION 01<span>CANYON RUN</span></div><div id="bfPh" class="bf-ph">ROUTE PREVIEW</div></div>
 <div class="bf-panel"><h3>ブリーフィング</h3>
 <p class="bf-obj">🎯 目的：盆地の奥にある敵施設（リアクター）を<b>爆撃して破壊</b>せよ</p>
-<ul><li>⚠ <b>高度（ALT）480 以上</b>に上がると敵レーダーに捕捉され、<b>SAM（地対空ミサイル）が一斉に発射</b>される。谷の中から機体を出すな</li>
+<ul><li>🟢 奥の<b>盆地に入れば高度制限はない</b></li><li>⚠ 谷の上（尾根）には<b>6連装ミサイル発射装置（SAM）</b>が等間隔で並んでいる。<b>高度（ALT）480 以上</b>に上がるとレーダーに捕捉され、一斉に撃ってくる。谷の中から機体を出すな</li>
 <li>🟢 <b>緑の点線矢印</b>がルート。<b>深い谷</b> → <b>大橋の架かる川の峡谷</b>（橋の下をくぐれ）→ <b>山あいの谷</b> → <b>盆地</b>の順に抜けろ</li>
 <li>⏱ 制限時間 <b id="bfLim">--</b>。巡航速度だけでは間に合わない。<b>ブーストを使え</b>（機体強化でも有利に）</li>
 <li>💣 目標の近くではミサイルボタンが<b>爆弾</b>に変わる（誘導爆弾4発）。2発命中で破壊</li>
-<li>🚀 目標を破壊したら<b>離脱まで</b>が任務。新しく出る緑の矢印に沿って盆地を抜け、離脱ポイント（緑の光の柱）へ。盆地から出るため高度を上げると、<b>敵ミサイルと高速の迎撃機</b>が襲ってくる。かわしながら低く逃げるか、応戦してから離脱せよ</li><li>盆地には対空砲台がある。これは最高難易度のミッションだ</li></ul>
+<li>🚀 目標を破壊したら<b>離脱まで</b>が任務。新しく出る緑の矢印に沿って盆地を抜け、海岸の離脱ポイント（緑の光の柱）へ。高度を上げると敵ミサイルも飛んでくる。迎撃機をかわしながら低く逃げるか、応戦して全滅させよ</li><li>⚠ 基地を破壊すると警報が鳴り、<b>迎撃機が次々と発進</b>する。離脱ポイントは<b>東の海岸線</b>。画面の緑の印を目指すか、迎撃機を全滅させれば任務完了。空母へ帰還せよ</li><li>このミッションでは EXファンネルは使えない。ブーストは常にソニックムーブ。最高難易度だ</li></ul>
 <p class="bf-rw">報酬：初回クリア <b>4000 CR</b>／2回目以降 1000 CR＋残り時間ボーナス</p>
 <div class="bf-b"><button id="bfGo">▶ 出撃</button><button id="bfRe">↻ ルートを再生</button><button id="bfBk">◀ 戻る</button></div></div></div>
 <div id="dkConf"><div class="dkc"><div class="dkc-h" id="dkcH">UPGRADE CONFIRM</div><div id="dkcB"></div><div class="dkc-b"><button id="dkcNo">キャンセル</button><button id="dkcOk">強化する</button></div></div></div>
@@ -416,6 +416,8 @@ const SOS=113,VOL=.55,BOOM_DELAY=1/3; // 爆発音の遅延倍率（1=実際の�
 let EBG=null,AC=null,MS,SLF,CKF,REVIN,NB,EN=null,FB=null,muted=false,PF=1,MV=0,camR=[1,0,0];
 function mkPan(){if(AC.createStereoPanner){const p=AC.createStereoPanner();return{in:p,out:p,set:v=>p.pan.setTargetAtTime(clamp(v,-1,1),AC.currentTime,.03)};}
  const g=AC.createGain();return{in:g,out:g,set:()=>{}};}
+const LIVE=new Set();
+function stopAllAudio(){for(const n of LIVE){try{n.stop();}catch(e){}}LIVE.clear();VO.n=0;radioStop();for(const q of G.sq)q.fn=()=>{};MSL=MSL.filter(m=>!m.en);G.alertT=9;} // メニューに戻ったら鳴っている音をすべて止める
 function initAudio(){if(AC)return;try{AC=new(window.AudioContext||window.webkitAudioContext)();const sr=AC.sampleRate;
  const comp=AC.createDynamicsCompressor();comp.threshold.value=-10;comp.knee.value=10;comp.ratio.value=4;comp.attack.value=.003;comp.release.value=.25;comp.connect(AC.destination);
  SLF=AC.createBiquadFilter();SLF.type='lowpass';SLF.frequency.value=20000;SLF.connect(comp);
@@ -433,6 +435,7 @@ function initAudio(){if(AC)return;try{AC=new(window.AudioContext||window.webkitA
  o1.connect(wg);o2.connect(wg);wg.connect(eb);o1.start();o2.start();EN.wh={o1,o2,g:wg};
  const fs=AC.createBufferSource();fs.buffer=NB;fs.loop=true;fs.start(0,.7);const ff=AC.createBiquadFilter();ff.type='bandpass';ff.Q.value=1.1;ff.frequency.value=900;
  const fg=AC.createGain();fg.gain.value=0;const fp=mkPan();fs.connect(ff);ff.connect(fg);fg.connect(fp.in);fp.out.connect(MS);FB={f:ff,g:fg,p:fp};
+ {const R=AC,cb=R.createBufferSource.bind(R),co=R.createOscillator.bind(R),tr=n=>{LIVE.add(n);n.addEventListener('ended',()=>LIVE.delete(n));return n;};R.createBufferSource=()=>tr(cb());R.createOscillator=()=>tr(co());} // 以降に鳴らす効果音を記録（全停止用）
 }catch(e){console.warn('audio off',e);AC=null;}}
 function bus(vol,pan=0,wet=.15,lp=20000){const g=AC.createGain();g.gain.value=vol;let n=g;
  if(lp<19000){const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=lp;f.Q.value=.5;n.connect(f);n=f;}
@@ -771,11 +774,14 @@ function radioKill(e){RADIO.act=performance.now()/1000;if(e.type==='battleship')
  if(Math.random()<.3){const k=KILLV[Math.random()*KILLV.length|0];radio('kill',k[0],k[1],{cd:7});}}
 function radioTick(){if(G.state!=='play'||G.pause||!P||!P.alive)return;const nowR=performance.now()/1000;
  if(!RADIO.act)RADIO.act=nowR;if(K.Space||K.KeyJ||K.M0||TC.fire||MSL.some(m=>!m.en))RADIO.act=nowR;
- if(!RADIO.cur&&!RADIO.q.length&&!P.oob&&!MSL.some(m=>m.en&&m.tgt===P)&&!E.some(e=>dist(e.p,P.p)<500)&&nowR-RADIO.act>CFG.idleChat&&nowR-Math.max(RADIO.lastEnd||0,(RADIO.lastSay||0)+3)>CFG.idleChat&&(!RADIO.chatAt||nowR-Math.max(RADIO.chatAt,RADIO.lastEnd||0)>CFG.chatGap)){ // 前の雑談が話し終わってから10秒
+ if(G.mode!=='adv'&&!RADIO.cur&&!RADIO.q.length&&!P.oob&&!MSL.some(m=>m.en&&m.tgt===P)&&!E.some(e=>dist(e.p,P.p)<500)&&nowR-RADIO.act>CFG.idleChat&&nowR-Math.max(RADIO.lastEnd||0,(RADIO.lastSay||0)+3)>CFG.idleChat&&(!RADIO.chatAt||nowR-Math.max(RADIO.chatAt,RADIO.lastEnd||0)>CFG.chatGap)){ // 前の雑談が話し終わってから10秒
   if(!RADIO.deck||!RADIO.deck.length){RADIO.deck=CHAT.map((_,i)=>i).sort(()=>Math.random()-.5);}const c=CHAT[RADIO.deck.pop()]; // 全部話し終えるまで同じ雑談は繰り返さない
   radio('chat',c[0],c[1],{cd:CFG.chatGap});RADIO.act=nowR;RADIO.chatAt=nowR;}
  const ma=MSL.some(m=>m.en&&m.tgt===P);if(ma&&!RADIO.ma)radio('msl',"Missile, missile! Break, Pixel One!",'ミサイル接近！回避しろ！',{pri:1,cd:8});RADIO.ma=ma;
- const gh=P.p[1]-ground(P.p[0],P.p[2]);if(gh<90&&P.f[1]<-.15)radio('pull',"Pull up! Pull up!",'高度が低い！機首を上げろ！',{pri:1,cd:9});
+ const gh=P.p[1]-ground(P.p[0],P.p[2]);if(G.mode==='adv'&&ADV.on){ // アドベンチャー：低空は正解。上げすぎと激突に注意させる
+  if(ADV.ph!=='egress'&&!advInBasin()&&P.p[1]>ADV.ceil*.82&&P.f[1]>.05)radio('advhi',"Too high, Pixel One! Get down! Stay under the radar!",'高度が高すぎる！高度を下げろ！レーダーの下を飛べ！',{cd:8});
+  else{let near=gh<22;for(const d of[45,80]){const q=madd(P.p,P.f,d);if(groundRaw(q[0],q[2])>q[1]-6)near=true;}if(near)radio('advwall',"Easy, Pixel One! Watch the walls! Don't crash!",'気をつけろ、ピクセル1！壁に激突するなよ！',{cd:10});}}
+ else if(gh<90&&P.f[1]<-.15)radio('pull',"Pull up! Pull up!",'高度が低い！機首を上げろ！',{pri:1,cd:9});
  // 高度上限・作戦空域の端に近づいたら管制から指示
  const alt=P.p[1];if(alt>=1395){if(!RADIO.ceil)radio('ceilhit',"Pixel One, you've hit the ceiling. Nothing up there but stars. Bring it down.",'ピクセル1、高度上限だ。その上には星しかないぞ。高度を下げろ。',{pri:1,cd:12});RADIO.ceil=1;}
  else{if(alt<1300)RADIO.ceil=0;if(alt>1220&&P.f[1]>.12)radio('ceil',"Pixel One, approaching altitude ceiling. Level off.",'ピクセル1、高度上限に接近。水平飛行に戻せ。',{cd:14});}
@@ -844,7 +850,7 @@ function fireFunnel(){for(let i=0;i<3;i++){const sd=i-1,f=norm(add(add(mul(P.f,-
   const m={p:madd(madd(P.p,P.f,-4),P.r,sd*2.5),f,spd:55,tgt:null,life:6.5*UV.mslRange(),en:false,fun:1,kinks:5+(Math.random()<.5?1:0),kt:rnd(.2,.28),re:0};MSL.push(m);m.snd=mslVoice();}
  SFX.funnel();msg('','F MISSILE',.8);}
 // ===== EX武装：ファンネル（漏斗型ユニット。直線移動で接近→停止してビーム→次の敵へ） =====
-const exUnlocked=()=>UPG.every(u=>u.id==='tonbo'||UO[u.id]>=u.cost.length),exAvail=()=>EXON&&exUnlocked();
+const exUnlocked=()=>UPG.every(u=>u.id==='tonbo'||UO[u.id]>=u.cost.length),exAvail=()=>EXON&&exUnlocked()&&G.mode!=='adv'; // アドベンチャーではEXファンネル使用禁止
 function fireEX(){if(!exAvail()||G.kc||!P||!P.alive||G.state!=='play')return;const od=P.od>0;if(!od&&P.exc<=0)return;
  const n=Math.min(3,CFG.exMax-G.fn.length);if(n<=0){msg('','FUNNEL MAX '+CFG.exMax,.8);return;}if(!od)P.exc--;
  for(let i=0;i<n;i++){const a=i/3*Math.PI*2+rnd(-.3,.3),d=norm(add(add(mul(P.r,Math.cos(a)),mul(P.u,Math.sin(a)*.8+.3)),mul(P.f,.3)));
@@ -1021,7 +1027,7 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  P.boosting=!G.kc&&!!(K.ShiftLeft||K.ShiftRight||MO.ab||TC.boost)&&P.boost>.02;if(P.boost<=.02)MO.ab=false;
  P.braking=!P.boosting&&!!(K.KeyX||TC.brake);const tgt=P.boosting?UV.bspd():(P.braking?14:UV.cruise()); // 逆噴射で減速
  P.boost=P.boosting?P.boost-dt*UV.bdrain():Math.min(1,P.boost+dt*.11);
- if(P.boosting&&!P.wasB&&UL.boost>=3&&P.sbCd<=0){P.sbCd=2;sonic();}P.wasB=P.boosting;P.sbCd-=dt;
+ if(P.boosting&&!P.wasB&&(UL.boost>=3||G.mode==='adv')&&P.sbCd<=0){P.sbCd=2;sonic();} // アドベンチャーでは常にソニックムーブP.wasB=P.boosting;P.sbCd-=dt;
  P.spd+=(tgt-P.spd)*dt*(P.boosting?1.2:P.braking?2.6:.7)-P.f[1]*24*dt;if(P.braking&&Math.random()<dt*30)part(madd(P.p,P.f,3),madd(mul(rdir(),6),P.f,P.spd*.6),.5,.25,[.8,.9,1],1);P.spd=clamp(P.spd,P.braking?14:30,240);
  P.p=madd(P.p,P.f,P.spd*dt);if(P.p[1]>1400)P.p[1]=1400;
  if(P.p[1]<ground(P.p[0],P.p[2])+1.8){P.inv=0;P.crashHit=true;hurtP(999);return;}
@@ -1053,6 +1059,7 @@ function upEnemies(dt){for(const e of E){e.flash=Math.max(0,e.flash-dt*6);e.cd-=
  if(e.type==='fighter'){const d=dist(P.p,e.p);let want=P.alive?norm(sub(madd(P.p,P.f,P.spd*.6),e.p)):norm([e.f[0],.05,e.f[2]]);
   if(P.alive&&P.braking&&!(e.ovT>0)&&d<300&&dot(sub(P.p,e.p),e.f)>d*.5){e.ovT=3.5;if(!G.ovMsgT||G.time>G.ovMsgT){G.ovMsgT=G.time+2;msg('','OVERSHOOT！ 敵が前に出た',1.4);}} // 逆噴射：背後の敵は止まれず追い越す
   if(e.ovT>0){e.ovT-=dt;want=norm([e.f[0],e.f[1]*.3,e.f[2]]);e.ev=0;}
+  else if(e.hunter&&P.alive&&G.time<(e.hgo||0)){want=norm([e.f[0],.22,e.f[2]]);e.cd=Math.max(e.cd,1);} // 発進直後はまず上昇（すぐには襲ってこない）
   else if(e.hunter&&P.alive){const bh=madd(P.p,P.f,-45);want=norm(sub(d>140?madd(bh,P.f,-d*.25):P.p,e.p));e.spd=Math.max(e.base,P.spd*1.12);e.ev=0;} // 離脱時の追撃機：速く、すぐ背後へ回り込む
   else if(e.ev>0){e.ev-=dt;want=e.evd;}else if(d<75&&P.alive){e.ev=rnd(1.4,2.4);e.evd=norm([rnd(-1,1),rnd(.15,.5),rnd(-1,1)]);}
   const ah=madd(e.p,e.f,160);if(e.p[1]<ground(e.p[0],e.p[2])+60||ah[1]<ground(ah[0],ah[2])+70)want=norm([e.f[0],1.6,e.f[2]]);
@@ -1160,8 +1167,10 @@ function camera(dt){if(G.state==='brief'){advBriefCam(dt);return;}if(G.intro){in
  if(G.kc&&P&&P.alive){const k=G.kc;if(k.ph==='cam'){const u=k.t/G.kc.dur,e=1-(1-u)*(1-u);eye=lerp(k.eye0,k.ctr,(k.push||.1)*e);ctr=k.ctr;cup=[0,1,0];fov=k.fov*(1-.06*e);
    if(k.t<.35)eye=madd(eye,rdir(),(.35-k.t)*(k.type==='boss'?6:3));}
   else fov*=.9;}
+ if(G.kc&&G.kc.type==='samIntro'&&ADV.samQ&&P){const q=ADV.samQ,bk=norm([q.p[0]-P.p[0],0,q.p[2]-P.p[2]]),sd=[bk[2],0,-bk[0]];eye=add(add(add(q.p,mul(bk,46)),mul(sd,22)),[0,22,0]);ctr=add(lerp(q.p,P.p,.12),[0,8,0]);cup=[0,1,0];fov=.95;} // 発射装置がこちらを捉える場面
  if((K.KeyQ||TC.back)&&P&&P.alive&&!G.kc&&G.state==='play'){eye=add(madd(P.p,P.f,16),mul(P.u,10));ctr=add(madd(P.p,P.f,-160),mul(P.u,-4));cup=P.u.slice();fov=1.15;} // 後方確認
- G.fogD=G.kc&&G.kc.ph==='cam'?FOGD*.35:FOGD;
+ if(G.kc&&G.kc.type==='scramble'){const bc=ABC,y0=groundRaw(bc[0],bc[1]-140);eye=[bc[0]+40,y0+18,bc[1]-205];ctr=[bc[0]+60,y0+16,bc[1]-140];cup=[0,1,0];fov=1.05;} // 迎撃機の発進を滑走路脇から
+ G.fogD=G.kc&&G.kc.ph==='cam'&&G.kc.type!=='scramble'&&G.kc.type!=='samIntro'?FOGD*.35:FOGD;
  const cr=cross(sub(ctr,eye),cup);if(len(cr)>1e-6)camR=norm(cr);}
 function render(){if(DK.on){renderDock();return;}gl.viewport(0,0,cv.width,cv.height);gl.clearColor(FOG[0],FOG[1],FOG[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  const as=cv.width/cv.height;FYE=as<1?2*Math.atan(Math.tan(fov/2)/Math.max(as,.62)):fov; // portrait: widen vertical FOV so the horizontal view stays usable
@@ -1180,7 +1189,7 @@ function render(){if(DK.on){renderDock();return;}gl.viewport(0,0,cv.width,cv.hei
   else if(e.type==='dummy')draw(MESH.dummy,mdl([1,0,0],[0,1,0],[0,0,1],add(e.p,[0,Math.sin(G.time*2+e.p[0])*.6,0]),1.4),T);
   else if(e.type==='target')draw(MESH.tgt,mdl([1,0,0],[0,1,0],[0,0,1],e.p),T);
   else draw(MESH.boss,mdl(e.r,e.u,e.f,e.p),T);}
- drawWrecks();
+ drawWrecks();if(ADV.on)drawSams();
  if(G.mode==='adv'&&ADV.ph==='egress'&&ADV.egM)draw(ADV.egM,I4);
  if(G.mode==='adv')for(const b of ADV.bl){const bb=basisF(norm(b.v));draw(MESH.bomb,mdl(bb.r,bb.u,norm(b.v),b.p,2.4));}
  for(const u of G.fn){const bb=basisF(u.f);draw(MESH.fu,mdl(bb.r,bb.u,u.f,u.p,1.15),u.st==='aim'&&u.t<.12?new Float32Array([.6,.85,1,.7]):null);}
@@ -1387,7 +1396,7 @@ let last=performance.now();
 function goFull(){if(!TOUCH)return;try{const d=document.documentElement,f=d.requestFullscreen||d.webkitRequestFullscreen;if(f&&!document.fullscreenElement){const r=f.call(d);if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
 function tcReset(){TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
 function start(){G.intro=null;INTRO=null;WRK=[];PWK=null;if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
- if(G.mode==='normal'||G.mode==='sd')introStart();
+ if(G.mode==='normal'||G.mode==='sd'||G.mode==='adv')introStart();
  if(G.mode!=='tut'&&G.mode!=='adv')radio('start',G.mode==='sd'?"Sky Control to Pixel One. Hostiles are endless. Stay alive.":"Sky Control to Pixel One. Weapons free. Good hunting.",G.mode==='sd'?'管制よりピクセル1へ。敵は途切れない。生き残れ。':'管制よりピクセル1へ。兵装使用許可。健闘を祈る。',{pri:1,cd:0});if(G.mode==='normal')radioWave();G.tipT=G.mode==='tut'||G.mode==='adv'?0:G.time+(TOUCH?8:10);G.pause=false;G.ts=1;}
 // ===== 空母・戦艦の撃沈演出：中央で真っ二つに折れて炎上し、ゆっくり沈んで消える =====
 let WRK=[];
@@ -1430,11 +1439,12 @@ function drawPWreck(){if(!PWK)return;const M=MESH['pw_'+PWK.k],T=new Float32Arra
 // ===== 発進ムービー：空母のエレベーターで甲板へ → エンジン点火 → カタパルト射出 → 少し沈んでから上昇して作戦へ =====
 let INTRO=null;
 const swp=(f0,f1,d,v,ty)=>{try{if(on())osc(ty||'sawtooth',f0,f1,d,v,MS);}catch(e){}};
-function introStart(){const f0=norm([P.f[0],0,P.f[2]]),seaOK=(cp,cf)=>{const cr=[cf[2],0,-cf[0]];for(const z of[-110,-40,40,110,220,340,460])for(const x of[-34,0,34]){const q=add(add(cp,mul(cr,x)),mul(cf,z));if(groundRaw(q[0],q[2])>-6||Math.hypot(q[0],q[2])>HALF*.9)return false;}return true;};
- let cp=null,cf=null;for(let k=0;k<24&&!cp;k++){const a=(k%2?1:-1)*Math.ceil(k/2)*.26,f=[f0[0]*Math.cos(a)-f0[2]*Math.sin(a),0,f0[0]*Math.sin(a)+f0[2]*Math.cos(a)],c=[P.p[0]-f[0]*420,0,P.p[2]-f[2]*420];if(seaOK(c,f)){cp=c;cf=f;}}
+function introStart(o){o=o||{};const f0=norm([P.f[0],0,P.f[2]]),seaOK=(cp,cf)=>{const cr=[cf[2],0,-cf[0]];for(const z of[-110,-40,40,110,220,340,460])for(const x of[-34,0,34]){const q=add(add(cp,mul(cr,x)),mul(cf,z));if(groundRaw(q[0],q[2])>-6||Math.hypot(q[0],q[2])>HALF*.9)return false;}return true;};
+ let cp=null,cf=null;if(o.land){cp=[1985,0,240];cf=[0,0,1];}else if(G.mode==='adv'){let sE=0;while(sE<ADV.L&&advAt(sE).z<-1760)sE+=5;const A=advAt(sE);cf=A.T.slice();const cr0=basisF(cf).r;cp=sub(sub([A.x,0,A.z],mul(cf,457)),mul(cr0,-10));cp[1]=0;} // 発進後にルートの中心へ出るよう空母を配置 // アドベンチャー：南の海から発進／東の海の空母へ帰還
+ for(let k=0;k<24&&!cp;k++){const a=(k%2?1:-1)*Math.ceil(k/2)*.26,f=[f0[0]*Math.cos(a)-f0[2]*Math.sin(a),0,f0[0]*Math.sin(a)+f0[2]*Math.cos(a)],c=[P.p[0]-f[0]*420,0,P.p[2]-f[2]*420];if(seaOK(c,f)){cp=c;cf=f;}}
  for(let k=0;k<500&&!cp;k++){const a=rnd(0,6.28),R=rnd(200,1700),c=[P.p[0]+Math.cos(a)*R,0,P.p[2]+Math.sin(a)*R],f=norm([-c[0]+rnd(-400,400),0,-c[2]+rnd(-400,400)]);if(seaOK(c,f)){cp=c;cf=f;}}
  if(!cp){let bd=1e9;for(let gx=-HALF*.8;gx<=HALF*.8;gx+=120)for(let gz=-HALF*.8;gz<=HALF*.8;gz+=120)for(let k=0;k<8;k++){const a=k*Math.PI/4,f=[Math.sin(a),0,Math.cos(a)],c=[gx,0,gz],d=Math.hypot(gx-P.p[0],gz-P.p[2]);if(d<bd&&seaOK(c,f)){bd=d;cp=c;cf=f;}}} // 近くに無ければマップ全体から一番近い海を探す
- if(!cp)return;const b=basisF(cf);INTRO={t:0,cp,cf,cr:b.r,cu:b.u,said:{}};G.intro=INTRO;P.inv=99;MSL=[];
+ if(!cp)return;const b=basisF(cf);INTRO={t:0,cp,cf,cr:b.r,cu:b.u,said:{},land:!!o.land,lt:o.lt||0};G.intro=INTRO;P.inv=99;MSL=[];
  if(!MESH.elev){const m=new MB();m.box(0,0,0,18,1,22,[.3,.31,.35]);m.box(0,.55,0,18.4,.1,.6,[1,.8,.15],.5);m.box(0,.55,-10.8,18.4,.1,.6,[1,.8,.15],.5);m.box(0,.55,10.8,18.4,.1,.6,[1,.8,.15],.5);MESH.elev=m.build();
   const h=new MB();h.box(0,0,0,19,.1,23,[.02,.02,.03]);MESH.hole=h.build();}
  introPose(0);}
@@ -1471,12 +1481,16 @@ function fcarrierM(){const m=new MB(),hl=[.45,.47,.51],hd=[.36,.38,.42],dk=[.2,.
 const FC_PARK=[[-21,0,45,0],[-21,0,60,0],[-21,0,75,0],[20,0,-90,.5],[30,0,-70,.4],[14,0,-104,.6],[-18,0,-95,0]];
 const IW=(I,x,y,z)=>add(add(add(I.cp,mul(I.cr,x)),[0,y,0]),mul(I.cf,z));
 function introPose(t){const I=INTRO,GY=13+2.45*PJS;let z=-55,y=GY,vy=0,v=0,gear=true;I.ey=null;
+ if(I.land){if(t<4.2){const u=t/4.2;z=-560+475*u;y=GY+(75-GY)*Math.pow(1-u,1.3);I.ph='app';}else if(t<5.4){const u=(t-4.2)/1.2;z=-85+75*(1-(1-u)*(1-u));I.ph='trap';}else{z=-10;I.ph='stop';}
+  const f=norm(add(I.cf,[0,I.ph==='app'?.05:0,0])),pp=IW(I,-10,y,z);I.p=pp;I.f=f;I.v=0;I.gear=true;return pp;} // 着艦：進入 → タッチダウン（ワイヤーで減速）→ 停止
  if(t<2.6){y=GY-14+14*Math.min(1,t/2.4)**.7;I.ph='elev';}
  else if(t<5.6){I.ph='ign';}
  else if(t<8.2){const u=t-5.6;z=-55+.5*45.9*u*u;v=45.9*u;I.ph='cat';}
  else{const u=t-8.2;v=119;z=100+v*u;y=u<1?GY-8*Math.sin(u*Math.PI/2):GY-8+24*Math.pow(u-1,1.5);vy=u<1?-8*Math.PI/2*Math.cos(u*Math.PI/2):36*Math.pow(u-1,.5);gear=u<.7;I.ph='fly';}
  const f=norm(add(mul(I.cf,v||1),[0,vy*(v?1:0),0])),pp=IW(I,-10,y,z);I.p=pp;I.f=f;I.v=v;I.gear=gear;I.ey=y;return pp;}
 function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.said[k]){I.said[k]=1;fn();}};introPose(t);
+ if(I.land){once('a',()=>msg('','RETURN TO BASE — 着艦進入',2.5));if(t>4.2)once('td',()=>{tone(90,.3,'square',.1);SFX.hit();G.shake=.6;msg('','TOUCHDOWN',1.6);for(let i=0;i<16;i++)part(add(I.p,[rnd(-3,3),-2,rnd(-3,3)]),[rnd(-5,5),rnd(3,9),rnd(-12,-2)],1.4,rnd(2,3.5),[.75,.75,.75],0,0,2,.4,0,1);});
+  if(t>5.6)once('ok',()=>{msg('MISSION COMPLETE','おかえり、ピクセル1',3);SFX.wave();});if(t>=8)introEnd();return;}
  const b=basisF(I.f),noz=madd(I.p,I.f,-6.6);
  once('elev',()=>{swp(48,70,2.3,.05);msg('','SORTIE — 甲板へ移動',2);});
  if(t>2.4)once('clank',()=>{tone(140,.14,'square',.1);tone(90,.2,'square',.08);});
@@ -1489,10 +1503,12 @@ function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.sai
  if(I.ph==='cat'&&Math.random()<.8)part(IW(I,-10+rnd(-2,2),13.5,-55+rnd(0,20)),[rnd(-4,4),rnd(6,14),rnd(-4,4)],1.6,.9,[.92,.94,.98],1); // カタパルトの蒸気
  if(I.ph==='fly')part(noz,mul(I.f,-40),.3,.2,[.5,.85,1],1);
  if(t>=11.2)introEnd();}
-function introEnd(){const I=INTRO;if(!I)return;if(I.t<11.2){I.t=11.2;introPose(11.2);}G.intro=null;INTRO=null;
+function introEnd(){const I=INTRO;if(!I)return;if(I.land){G.intro=null;INTRO=null;advFinish(true,I.lt);return;}if(I.t<11.2){I.t=11.2;introPose(11.2);}G.intro=null;INTRO=null;
  P.p=I.p.slice();P.f=I.f.slice();P.u=norm(sub(UP,mul(P.f,dot(UP,P.f))));P.r=norm(cross(P.f,P.u));P.spd=Math.max(UV.cruise(),100);P.inv=2;camF=P.f.slice();camU=P.u.slice();G.shake=0;
- msg(G.mode==='sd'?'SUDDEN DEATH':'WAVE '+G.wave,G.mode==='sd'?'敵が途切れず出続ける':'ENEMY '+E.filter(e=>!e.dead).length+' UNITS',2.2);}
+ if(G.mode==='adv'){ADV.t=0;{let bs=0,bd=1e9;for(let s2=0;s2<ADV.L*.3;s2+=4){const A=advAt(s2),d=Math.hypot(A.x-P.p[0],A.z-P.p[2]);if(d<bd){bd=d;bs=s2;}}const A=advAt(bs);P.p=[A.x,Math.max(P.p[1],Math.max(groundRaw(A.x,A.z),0)+55),A.z];P.f=A.T.slice();P.u=[0,1,0];P.r=norm(cross(P.f,P.u));camF=P.f.slice();camU=P.u.slice();} // ルートの中心・進行方向に合わせる
+ msg('MISSION 01','CANYON RUN — ALT '+ADV.ceil*3+' 以下を維持して谷へ',3);}else msg(G.mode==='sd'?'SUDDEN DEATH':'WAVE '+G.wave,G.mode==='sd'?'敵が途切れず出続ける':'ENEMY '+E.filter(e=>!e.dead).length+' UNITS',2.2);}
 function introCam(){const I=INTRO,t=I.t;cup=[0,1,0];G.fogD=FOGD;
+ if(I.land){if(I.ph==='app'&&t<2.4){eye=add(madd(I.p,I.f,-30),[0,7,0]);ctr=madd(I.p,I.f,60);fov=1;}else if(I.ph==='app'){eye=IW(I,38,26,-40);ctr=I.p;fov=.9;}else{const a=(t-4.2)*.15;eye=IW(I,30*Math.cos(a)+4,22,-10+30*Math.sin(a));ctr=I.p;fov=.9;}return;}
  if(I.ph==='elev'){eye=IW(I,24,19,-34);ctr=IW(I,-10,I.ey+1,-55);fov=.95;}
  else if(I.ph==='ign'){if(t<4.1){eye=IW(I,-1,16.2,-40);ctr=IW(I,-10,16,-55);fov=.85;}else{eye=IW(I,4,25,-92);ctr=IW(I,-10,15.5,-55);fov=.75;}} // ブラスト・ディフレクター越しに後方から
  else if(I.ph==='cat'){eye=IW(I,20,19,52);ctr=I.p;fov=.95;}
@@ -1503,7 +1519,7 @@ function introDraw(){const I=INTRO;if(!I)return;if(!MESH.fcv)MESH.fcv=fcarrierM(
  if(I.ph==='elev'){draw(MESH.hole,mdl(I.cr,I.cu,I.cf,IW(I,-10,13.03,-55)));draw(MESH.elev,mdl(I.cr,I.cu,I.cf,IW(I,-10,I.ey-2.95,-55)));}
  const b=basisF(I.f);if(I.gear){const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl;if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,I.f,I.p,PJS));}else draw(pjFine(),mdl(b.r,b.u,I.f,I.p,PJS));}
 function introHud(){const bar=VH*.11;hx.fillStyle='#000';hx.fillRect(0,0,VW,bar);hx.fillRect(0,VH-bar,VW,bar);
- const I=INTRO,cap={elev:'FLIGHT DECK',ign:'ENGINE START',cat:'CATAPULT LAUNCH',fly:'SORTIE'}[I.ph]||'';T(cap,16,VH-bar/2+4,'#ffd23f',12,'left');T((TOUCH?'タップ':'キー')+'でスキップ ▶▶',VW-16,VH-bar/2+4,'#aab',10,'right');
+ const I=INTRO,cap={elev:'FLIGHT DECK',ign:'ENGINE START',cat:'CATAPULT LAUNCH',fly:'SORTIE',app:'RETURN TO BASE',trap:'TRAP',stop:'MISSION COMPLETE'}[I.ph]||'';T(cap,16,VH-bar/2+4,'#ffd23f',12,'left');T((TOUCH?'タップ':'キー')+'でスキップ ▶▶',VW-16,VH-bar/2+4,'#aab',10,'right');
  if(G.msgT>0&&G.sub)T(G.sub,VW/2,bar+26,'#fff',14,'center');}
 // ===== 初回 WAVE 10 クリア：特別演出 → クレジット風エンディング（記念に 5000 CR） =====
 function startEnding(){G.ending=1;P.inv=1e9;P.hp=100;MSL=MSL.filter(m=>!m.en);msg('MISSION COMPLETE','ALL 10 WAVES CLEARED',5);SFX.wave();
@@ -1521,7 +1537,7 @@ function endClose(cont){$('end').classList.remove('show');G.ending=0;
   $('ovMsg').textContent='ノーマルプレイ — MISSION COMPLETE\nSCORE '+G.score+'   WAVE '+G.wave+'   HI '+G.hi+'\n+'+(G.earned||0)+' CR ＋ クリアボーナス 5000 CR';}}
 // ===== ADVENTURE MODE：低空侵攻ミッション「CANYON RUN」（レーダー高度以下で谷を抜け、盆地の敵施設を爆撃） =====
 const ADV={on:false,built:false,R:[],S:[],L:0,ceil:160,t:0,limit:60,hiT:0,samT:0,nb:4,bl:[],tgt:null,br:null,briefT:0,done:0,lockMsg:0};
-const AROUTE=[[-200,-1900],[-160,-1520],[150,-1220],[360,-900],[120,-600],[-280,-360],[-500,0],[-360,360],[0,560],[400,700],[700,1000],[620,1340],[300,1560]],ABC=[300,1560];
+const AROUTE=[[-200,-1900],[-185,-1600],[-150,-1380],[150,-1180],[360,-900],[120,-600],[-280,-360],[-500,0],[-360,360],[0,560],[400,700],[700,1000],[620,1340],[300,1560]],ABC=[300,1560];
 let HM0=null,world0=null,AHM=null,advWorld=null;
 function advRoute(){const Q=AROUTE,o=[];for(let i=0;i<Q.length-1;i++){const p0=Q[Math.max(0,i-1)],p1=Q[i],p2=Q[i+1],p3=Q[Math.min(Q.length-1,i+2)];
   for(let k=0;k<12;k++){const t=k/12,t2=t*t,t3=t2*t;o.push([0,1].map(c=>.5*(2*p1[c]+(-p0[c]+p2[c])*t+(2*p0[c]-5*p1[c]+4*p2[c]-p3[c])*t2+(-p0[c]+3*p1[c]-3*p2[c]+p3[c])*t3)));}}
@@ -1535,16 +1551,34 @@ function advBuild(){if(ADV.built)return;advRoute();HM0=HM.slice();world0=world;A
   for(let k=1;k<R.length;k++){const a=R[k-1],b=R[k],dx=b[0]-a[0],dz=b[1]-a[1],l2=dx*dx+dz*dz,t=clamp(((x-a[0])*dx+(z-a[1])*dz)/l2,0,1),px=a[0]+dx*t,pz=a[1]+dz*t,d=Math.hypot(x-px,z-pz);if(d<bd){bd=d;bu=(S[k-1]+(S[k]-S[k-1])*t)/ADV.L;}}
   const hi=270+fbm(i/N*5+OX,j/N*5+OZ)*190+vn(i/N*14+OX,j/N*14)*30,[fl,w]=advSec(bu),bump=vn(i*.3,j*.3)*8;
   let h=fl+bump*(fl>0?1:0)+(hi-fl)*sm(w,w*1.7,bd);const db=Math.hypot(x-ABC[0],z-ABC[1]);h=Math.min(h,30+bump+(hi-30)*sm(400,560,db));if(bu<.03&&z<-1800)h=Math.min(h,fl);
+  {const ks=sm(1640,1790,-z),ke=sm(1560,1730,x);h=h*(1-ks)+(-6)*ks;h=h*(1-ke)+(-6)*ke;} // 南（出撃地点）と東（離脱地点）は海
   AHM[j*(N+1)+i]=h;}
- HM.set(AHM);advWorld=advMesh();ADV.egM=advEgMesh();HM.set(HM0);MESH.tgt=reactorM();MESH.bomb=missileM([.25,.25,.28],[1,.6,.2]);ADV.built=true;}
+ HM.set(AHM);advSams();advWorld=advMesh();ADV.egM=advEgMesh();HM.set(HM0);MESH.tgt=reactorM();MESH.bomb=missileM([.25,.25,.28],[1,.6,.2]);ADV.built=true;}
 function obox(m,c,X,Y,sx,sy,sz,col,em){const Z=cross(X,Y),hx_=mul(X,sx/2),hy=mul(Y,sy/2),hz=mul(Z,sz/2),F=(n,a,b)=>{const o=add(c,n);m.q(sub(sub(o,a),b),sub(add(o,a),b),add(add(o,a),b),add(sub(o,a),b),col,em);};
  F(hx_,hy,hz);F(mul(hx_,-1),hz,hy);F(hy,hz,hx_);F(mul(hy,-1),hx_,hz);F(hz,hx_,hy);F(mul(hz,-1),hy,hx_);}
+// 谷の上（尾根）に等間隔で並ぶ6連装ミサイル発射装置
+function advSams(){ADV.sams=[];let sd=1;for(let s2=360;s2<ADV.L*.86;s2+=320){const A=advAt(s2),Nn=[-A.T[2]*sd,0,A.T[0]*sd];let q=null;
+  for(let d=40;d<380&&!q;d+=10){const x=A.x+Nn[0]*d,z=A.z+Nn[2]*d;if(groundRaw(x,z)>ADV.ceil+30)q=[x,groundRaw(x,z),z];}
+  if(q){q[1]=Math.max(q[1],groundRaw(q[0]+3,q[2]),groundRaw(q[0]-3,q[2]),groundRaw(q[0],q[2]+3),groundRaw(q[0],q[2]-3));ADV.sams.push({p:q,yaw:Math.atan2(-Nn[0],-Nn[2]),spin:rnd(0,6)});}sd=-sd;}}
+function samBaseM(){const m=new MB();m.box(0,-1,0,16,3,16,[.38,.38,.36]);m.box(0,1,0,8,2,8,[.3,.32,.28]);for(const a of[-1,1])m.box(a*6.5,.8,0,1,1.6,12,[.9,.75,.2],.2);return m.build();}
+function samLauncherM(){const m=new MB(),g=[.36,.4,.3],d=[.18,.2,.16];m.box(0,1.5,0,6,3,6,g);m.box(0,3.4,-.5,7.4,1,8,d);
+ for(const x of[-2.3,0,2.3])for(const y of[0,1]){m.box(x,4.6+y*2,1.2,1.9,1.9,8,g);m.box(x,4.6+y*2,5.25,1.3,1.3,.1,[.05,.05,.05]);m.box(x,4.6+y*2,5.3,.6,.6,.1,[1,.3,.2],.5);} // 6連装の発射筒
+ return m.build();}
+function samRadarM(){const m=new MB(),g=[.5,.52,.5];m.box(0,0,0,.6,3,.6,g);m.box(0,2,0,6,2.4,.3,[.7,.72,.7]);m.box(0,2,.3,5,1.6,.2,[.25,.3,.28]);m.box(0,3.4,0,.5,.5,.5,[1,.2,.2],1);return m.build();}
+function drawSams(){if(!ADV.sams)return;if(!MESH.samB){MESH.samB=samBaseM();MESH.samL=samLauncherM();MESH.samR=samRadarM();}const now=G.time;
+ for(const sm2 of ADV.sams){if(dist(sm2.p,eye)>2600)continue;const alert=ADV.samAlert&&P,tgt=alert?P.p:null;
+  let yaw=sm2.yaw+Math.sin(now*.4+sm2.spin)*.5,el=.55;if(tgt){const v=sub(tgt,sm2.p);yaw=Math.atan2(v[0],v[2]);el=clamp(Math.atan2(v[1],Math.hypot(v[0],v[2])),-.2,1.2);}
+  sm2.cy=sm2.cy==null?yaw:sm2.cy+Math.atan2(Math.sin(yaw-sm2.cy),Math.cos(yaw-sm2.cy))*.08;const f0=[Math.sin(sm2.cy),0,Math.cos(sm2.cy)],b0=basisF(f0);
+  const SS=2.2;draw(MESH.samB,mdl([1,0,0],[0,1,0],[0,0,1],sm2.p,SS));const fe=norm(add(mul(f0,Math.cos(el)),[0,Math.sin(el),0])),be=basisF(fe);draw(MESH.samL,mdl(be.r,be.u,fe,add(sm2.p,[0,1.5*SS,0]),SS));
+  const ra=(alert?sm2.cy:now*2.4+sm2.spin),fr=[Math.sin(ra),0,Math.cos(ra)],br=basisF(fr);draw(MESH.samR,mdl(br.r,br.u,fr,add(sm2.p,madd([0,2.2*SS,0],f0,-5*SS)),SS));}}
+const samNear=(p,n)=>(ADV.sams||[]).map(q=>[dist(q.p,p),q]).filter(a=>a[0]<1500).sort((a,b)=>a[0]-b[0]).slice(0,n).map(a=>a[1]);
+function samFire(q,n,o){for(let i=0;i<n;i++)G.sq.push({t:G.time+i*.09,fn:()=>{if(!P.alive||!ADV.on)return;const v=norm(sub(P.p,q.p)),mz=add(add(q.p,[0,13+(i%2)*4,0]),mul(v,14));eMissile(mz,norm(add(v,[0,.4,0])),o);part(mz,[0,8,0],1.2,3,[.8,.8,.8],0,0,2,.4,0,1);}});}
 function advMesh(){const m=new MB(),vt=(i,j)=>[i*CS-HALF,HM[j*(N+1)+i],j*CS-HALF];
  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const Av=vt(i,j),Bv=vt(i+1,j),Cv=vt(i+1,j+1),Dv=vt(i,j+1),tr=((i+j)&1)?[[Av,Bv,Cv],[Av,Cv,Dv]]:[[Av,Bv,Dv],[Bv,Cv,Dv]];
   tr.forEach((T,k)=>{const n=norm(cross(sub(T[1],T[0]),sub(T[2],T[0]))),ny=Math.abs(n[1]),h=(T[0][1]+T[1][1]+T[2][1])/3,r=hash2(i*7+k,j*13)*.06,band=.88+.12*Math.sin(h*.09);let c;
    if(h<-2)c=[.16,.4,.6];else if(h<6)c=[.55,.5,.36];else if(ny<.75)c=[(.6+r)*band,(.37+r)*band,(.25+r)*band];else if(h>620)c=[.92,.93,.96];else if(h>300)c=[.6+r,.5+r,.37+r];else c=[.42+r,.46+r,.27];
    m.t(T[0],T[1],T[2],c);});}
- const E2=HALF*3,top=[.55,.46,.34];[[-E2,-E2,E2,-HALF],[-E2,HALF,E2,E2],[-E2,-HALF,-HALF,HALF],[HALF,-HALF,E2,HALF]].forEach(([x0,z0,x1,z1])=>m.q([x0,430,z0],[x0,430,z1],[x1,430,z1],[x1,430,z0],top));
+ const E2=HALF*3,top=[.55,.46,.34],wat=[.16,.4,.6];[[-E2,HALF,E2,E2,430],[-E2,-HALF,-HALF,HALF,430],[-E2,-E2,E2,-HALF,-6],[HALF,-HALF,E2,HALF,-6]].forEach(([x0,z0,x1,z1,y])=>m.q([x0,y,z0],[x0,y,z1],[x1,y,z1],[x1,y,z0],y<0?wat:top));
  // 大橋（川の峡谷に架かる吊り橋）
  const bs=ADV.L*.44,B=advAt(bs),X=[-B.T[2],0,B.T[0]],c=[B.x,110,B.z],span=300,red=[.78,.2,.14];obox(m,c,X,UP,span,4,22,[.35,.32,.3]);obox(m,add(c,[0,2.4,0]),X,UP,span,.8,18,[.2,.2,.22]);
  for(const sd of[-1,1]){const tc=madd(c,X,sd*(span/2-50));for(const w of[-10,10]){const pc=madd(tc,B.T,w);obox(m,add(pc,[0,0,0]),X,UP,6,190,6,red);}obox(m,add(tc,[0,80,0]),X,UP,6,6,26,red);
@@ -1561,7 +1595,7 @@ function advMesh(){const m=new MB(),vt=(i,j)=>[i*CS-HALF,HM[j*(N+1)+i],j*CS-HALF
  const gr=[.3,1,.45];for(let s2=50;s2<ADV.L-120;s2+=42){const A=advAt(s2),Nn=[-A.T[2],0,A.T[0]],y=Math.max(groundRaw(A.x,A.z),0)+26,tip=[A.x,y,A.z];
   for(const sd of[-1,1]){const st=add(madd(tip,A.T,-6),mul(Nn,sd*5)),mid=lerp(st,tip,.5),dir=norm(sub(tip,st));obox(m,mid,dir,UP,len(sub(tip,st))+1.2,1.4,1.4,gr,1);}}
  return m.build();}
-const AEG=[[300,1560],[560,1690],[880,1790],[1220,1870]];
+const AEG=[[300,1560],[720,1480],[1150,1230],[1500,950],[1760,760],[1930,640]];
 function advEgMesh(){const m=new MB(),gr=[.3,1,.45];let tot=0;const seg=[];for(let i=1;i<AEG.length;i++){const l=Math.hypot(AEG[i][0]-AEG[i-1][0],AEG[i][1]-AEG[i-1][1]);seg.push([AEG[i-1],AEG[i],tot,l]);tot+=l;}
  for(let s2=40;s2<tot-30;s2+=40){const g=seg.find(q=>s2<=q[2]+q[3])||seg[seg.length-1],t=(s2-g[2])/g[3],x=g[0][0]+(g[1][0]-g[0][0])*t,z=g[0][1]+(g[1][1]-g[0][1])*t,T=norm([g[1][0]-g[0][0],0,g[1][1]-g[0][1]]),Nn=[-T[2],0,T[0]];
   let y=0;for(const o of[-40,0,40])y=Math.max(y,groundRaw(x+T[0]*o,z+T[2]*o));y=Math.max(y,0)+30;const tip=[x,y,z];
@@ -1576,16 +1610,22 @@ function advLimit(){return Math.round(ADV.L/84+6);}
 function advBrief(){advEnter();G.mode='adv';G.state='brief';E=[];MSL=[];ADV.bl=[];advSpawnBase();ADV.briefT=0;$('bfLim').textContent=fmtT(advLimit());$('ov').classList.remove('show');$('brief').classList.add('show');
  radio('brief',"Here's the plan. Stay under the radar, thread the canyon, and hit the target in the basin. Four-eighty is the ceiling. Go above it and you're dead.",'作戦を説明する。レーダーの下を飛び、谷を抜けて盆地の目標を叩け。高度480が上限だ。上に出たら命はないぞ。それより上には出るな。',{pri:1,cd:0});}
 const fmtT=t=>{t=Math.max(0,t);return Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');};
-function advBriefCam(dt){ADV.briefT+=dt;const t=ADV.briefT,fly=16,ov=4;G.fogD=FOGD*.12;cup=[0,1,0];
- if(t<ov||t>ov+fly){const a=t*.06,cx=0,cz=0;eye=[cx+Math.sin(a)*900,2100,cz-1700+Math.cos(a)*300];ctr=[150,0,120];fov=1.0;$('bfPh').textContent='MAP OVERVIEW';}
- else{const k=(t-ov)/fly,s2=k*k*(3-2*k)*ADV.L,A=advAt(s2),B=advAt(s2+260),y=Math.max(groundRaw(A.x,A.z),0);eye=[A.x-A.T[0]*70,y+140,A.z-A.T[2]*70];ctr=[B.x,Math.max(groundRaw(B.x,B.z),0)+40,B.z];fov=1.15;
+function advBriefCam(dt){ADV.briefT+=dt;const t=ADV.briefT,fly=16,ov=4,sm=4.5;G.fogD=FOGD*.12;cup=[0,1,0];
+ if(t>=ov&&t<ov+sm&&ADV.sams&&ADV.sams.length){const q=ADV.sams[Math.min(2,ADV.sams.length-1)],a=(t-ov)*.5+1;eye=add(q.p,[Math.cos(a)*62,28,Math.sin(a)*62]);ctr=add(q.p,[0,9,0]);fov=.9;$('bfPh').textContent='SAM SITE — 6連装ミサイル発射装置';return;}
+ if(t<ov||t>ov+sm+fly){const a=t*.06,cx=0,cz=0;eye=[cx+Math.sin(a)*900,2100,cz-1700+Math.cos(a)*300];ctr=[150,0,120];fov=1.0;$('bfPh').textContent='MAP OVERVIEW';}
+ else{const k=(t-ov-sm)/fly,s2=k*k*(3-2*k)*ADV.L,A=advAt(s2),B=advAt(s2+260),y=Math.max(groundRaw(A.x,A.z),0);eye=[A.x-A.T[0]*70,y+140,A.z-A.T[2]*70];ctr=[B.x,Math.max(groundRaw(B.x,B.z),0)+40,B.z];fov=1.15;
   $('bfPh').textContent='ROUTE PREVIEW '+Math.round(k*100)+'%'+(k>.38&&k<.5?' — 大橋':k<.3?' — 深い谷':k<.55?' — 川の峡谷':k<.85?' — 山あいの谷':' — 盆地の敵基地');}}
-function advSpawnBase(){const y=groundRaw(ABC[0],ABC[1]);ADV.tgt={type:'target',p:[ABC[0],y,ABC[1]],hp:80,max:80,rad:30,flash:0,sc:3000,cd:99};E.push(ADV.tgt);
- [[-150,-60],[150,-80],[-120,160],[170,140]].forEach(([dx,dz])=>{const x=ABC[0]+dx,z=ABC[1]+dz;E.push({type:'turret',p:[x,groundRaw(x,z)-1,z],aim:[0,.3,1],hp:CFG.tHp,max:CFG.tHp,cd:rnd(5,9),gcd:2,rad:8,flash:0,sc:150});});}
-function advStart(){ADV.ph='ingress';ADV.hunt=0;ADV.egT=0;ADV.nmT=0;ADV.t=0;ADV.limit=advLimit();ADV.hiT=0;ADV.samT=0;ADV.nb=4;ADV.bl=[];ADV.done=0;G.fogD=FOGD;advSpawnBase();
+function advSpawnBase(){const y=groundRaw(ABC[0],ABC[1]);ADV.tgt={type:'target',p:[ABC[0],y,ABC[1]],hp:80,max:80,rad:30,flash:0,sc:3000,cd:99};E.push(ADV.tgt);}
+function advScramble(){if(!ADV.on||!P.alive)return;const bc=ABC,y0=groundRaw(bc[0],bc[1]-140);
+ kcTrigger('scramble',[bc[0]-120,y0+12,bc[1]-140],{intro:1,txt:['ALERT','ENEMY SCRAMBLE — 迎撃機発進','#ff4040'],stopT:.01,dur:3.4,slow:1,push:.25});SFX.warn();
+ radio('bandits',"Alert! Bandits scrambling from the base! Fast movers, they'll be on your six in seconds!",'警報！基地から迎撃機が発進！高速機だ、すぐ背後につかれるぞ！',{pri:1,cd:0});
+ for(let k=0;k<6;k++){const e=spawnFighter(),x=bc[0]-60+k*38,z=bc[1]-140+(k%2?7:-7);e.p=[x,groundRaw(x,z)+3+k*5,z];e.f=norm([1,.1+k*.05,0]);ebasis(e); // 滑走路から次々に離陸していく隊列
+  e.hunter=1;e.hgo=1e9;e.base=e.spd*1.75;e.spd=e.base;e.turn*=1.7;e.cd=99;ADV.scr++;part(madd(e.p,e.f,-5),[0,4,0],1,3,[.8,.8,.8],0,0,2,.3,0,1);}}
+function advStart(){ADV.ph='ingress';ADV.hunt=0;ADV.samCut=0;ADV.samAlert=0;ADV.samGo=0;ADV.scr=0;ADV.huntGo=0;ADV.egT=0;ADV.nmT=0;ADV.t=0;ADV.limit=advLimit();ADV.hiT=0;ADV.samT=0;ADV.nb=4;ADV.bl=[];ADV.done=0;G.fogD=FOGD;advSpawnBase();
  const A=advAt(60),y=Math.max(groundRaw(A.x,A.z),0)+60;P.p=[A.x,y,A.z];P.f=A.T.slice();P.u=[0,1,0];P.r=norm(cross(P.f,P.u));camF=P.f.slice();camU=P.u.slice();
  msg('MISSION 01','CANYON RUN — ALT '+ADV.ceil*3+' 以下を維持せよ',3);SFX.wave();
  radio('advgo',"Stay low, stay fast. Radar ceiling is four-eighty. Clock is running, Pixel One. Go!",'低く、速く飛べ。レーダー高度は480。時計は動き出したぞ、ピクセル1。行け！',{pri:1,cd:0});}
+const advInBasin=()=>!!P&&Math.hypot(P.p[0]-ABC[0],P.p[2]-ABC[1])<470; // 盆地の中は高度制限なし
 const advBombReady=()=>ADV.tgt&&!ADV.tgt.dead&&ADV.nb>0&&Math.hypot(P.p[0]-ADV.tgt.p[0],P.p[2]-ADV.tgt.p[2])<1100;
 function dropBomb(){if(ADV.nb<=0)return;ADV.nb--;ADV.bl.push({p:add(P.p,mul(P.u,-3)),v:add(mul(P.f,Math.max(P.spd,90)*1.7),[0,-45,0]),life:6});tone(220,.25,'square',.08);msg('','BOMB AWAY  残り '+ADV.nb,1);
  if(ADV.nb===3)radio('bomb',"Bombs away!",'爆弾投下！',{cd:8,who:'PIXEL ONE'});}
@@ -1593,34 +1633,44 @@ function advTick(dt){if(!P.alive||ADV.done)return;ADV.t+=dt;const left=ADV.limit
  // 大橋との衝突
  const br=ADV.br;if(br){const v=sub(P.p,br.c);if(Math.abs(dot(v,br.X))<br.hs&&Math.abs(v[1])<4&&Math.abs(dot(v,br.Z))<br.hw){P.inv=0;P.crashHit=true;hurtP(999);return;}}
  // レーダー高度：超えるとSAMが一斉発射
- if(P.p[1]>ADV.ceil){ADV.hiT+=dt;if(ADV.hiT>.3&&ADV.lockMsg<=0&&ADV.ph!=='egress'){radio('radar',"Radar lock! Get back down in the canyon, now!",'レーダーに捕捉された！今すぐ谷へ戻れ！',{pri:1,cd:6});ADV.lockMsg=6;}
-  if(ADV.hiT>.5&&ADV.ph!=='egress'){ADV.samT-=dt;if(ADV.samT<=0){ADV.samT=.28;for(let k=0;k<2;k++){const a=rnd(0,6.28),r=rnd(260,520),q=[P.p[0]+Math.cos(a)*r,0,P.p[2]+Math.sin(a)*r];q[1]=Math.max(Math.max(groundRaw(q[0],q[2]),0)+12,P.p[1]+rnd(60,180),300); // 谷の上空から撃ち下ろす（壁に阻まれない）
-    eMissile(q,norm(sub(P.p,q)),{nocap:1,spd:150,sm:260,acc:160,trn:3.6,lk:-.6,dmg:42,life:6});}}}}
- else{ADV.hiT=Math.max(0,ADV.hiT-dt*2);ADV.samT=0;}ADV.lockMsg-=dt;
+ const inB=advInBasin();if(P.p[1]>ADV.ceil&&!inB){ADV.hiT+=dt;if(ADV.hiT>.3&&ADV.lockMsg<=0&&ADV.ph!=='egress'){radio('radar',"Radar lock! Get back down in the canyon, now!",'レーダーに捕捉された！今すぐ谷へ戻れ！',{pri:1,cd:6});ADV.lockMsg=6;}
+  const SO={nocap:1,spd:150,sm:260,acc:160,trn:3.6,lk:-.6,dmg:42,life:6};
+  if(ADV.hiT>.35&&ADV.ph!=='egress'&&!ADV.samCut){ADV.samCut=1;ADV.samAlert=1;const q=samNear(P.p,1)[0];ADV.samGo=G.time+2.8; // 初めて作戦高度を超えた：発射装置がこちらを捉えるムービー
+   if(q){ADV.samQ=q;kcTrigger('samIntro',add(q.p,[0,5,0]),{intro:1,txt:['WARNING','SAM SITE — RADAR LOCK','#ff4040'],stopT:.01,dur:2.7,slow:1,push:.45});G.sq.push({t:G.time+2.5,fn:()=>samFire(q,6,SO)});}}
+  if(ADV.hiT>.5&&ADV.ph!=='egress'&&G.time>(ADV.samGo||0)){ADV.samAlert=1;ADV.samT-=dt;if(ADV.samT<=0){ADV.samT=.55;const qs=samNear(P.p,3);
+    if(qs.length)qs.forEach((q,i)=>{if(i<2)samFire(q,2,SO);});else for(let k=0;k<2;k++){const a=rnd(0,6.28),r=rnd(260,520),q=[P.p[0]+Math.cos(a)*r,0,P.p[2]+Math.sin(a)*r];q[1]=Math.max(P.p[1]+rnd(60,180),300);eMissile(q,norm(sub(P.p,q)),SO);}}}}
+ else{ADV.hiT=Math.max(0,ADV.hiT-dt*2);ADV.samT=0;if(ADV.hiT<=0)ADV.samAlert=0;}ADV.lockMsg-=dt;
  // 誘導爆弾
  for(const b of ADV.bl){b.life-=dt;b.v[1]-=150*dt;const T=ADV.tgt;if(T&&!T.dead){const c=add(T.p,[0,20,0]),d=sub(c,b.p);if(dot(norm(d),norm(b.v))>.2){const sp=Math.max(len(b.v),200);b.v=mul(rotTo(norm(b.v),norm(d),2.6*dt),sp);}
    if(len(d)<30){hurtE(T,45,b.p);explode(b.p,2.2);G.shake=Math.max(G.shake,1.2);b.life=0;continue;}}
   b.p=madd(b.p,b.v,dt);if(b.p[1]<groundRaw(b.p[0],b.p[2])+1){explode(b.p,1.2);b.life=0;}}
  ADV.bl=ADV.bl.filter(b=>b.life>0);
- if(ADV.ph!=='egress'&&ADV.tgt&&ADV.tgt.dead){ADV.ph='egress';ADV.limit=ADV.t+48;ADV.egT=0;msg('TARGET DESTROYED','離脱せよ — 緑の矢印に沿って離脱ポイントへ',4);SFX.wave();
+ if(ADV.ph!=='egress'&&ADV.tgt&&ADV.tgt.dead){ADV.ph='egress';ADV.limit=ADV.t+80;G.sq.push({t:G.time+3.6,fn:advScramble});ADV.egT=0;msg('TARGET DESTROYED','離脱せよ — 緑の矢印に沿って離脱ポイントへ',4);SFX.wave();
   radio('advok',"Target destroyed! Now get out of there. Follow the new route and egress. Expect company.",'目標破壊！離脱しろ。新しいルートに沿って脱出だ。追手が来るぞ。',{pri:1,cd:0});}
  if(ADV.ph==='egress'){ADV.egT+=dt;const ex=AEG[AEG.length-1];
-  if((P.p[1]>ADV.ceil||ADV.egT>9)&&!ADV.hunt){ADV.hunt=1;radio('bandits',"Bandits inbound, fast movers! They'll be on your six in seconds!",'敵迎撃機接近、高速だ！すぐに背後につかれるぞ！',{pri:1,cd:0});
-   for(let k=0;k<4;k++){const e=spawnFighter(),a=Math.atan2(P.f[0],P.f[2])+(k<2?0:Math.PI)+rnd(-.5,.5),r=k<2?900:700;e.p=[P.p[0]+Math.sin(a)*r,Math.max(P.p[1]+rnd(60,160),ground(P.p[0],P.p[2])+120),P.p[2]+Math.cos(a)*r];e.f=norm(sub(P.p,e.p));ebasis(e);e.hunter=1;e.base=e.spd*1.75;e.spd=e.base;e.turn*=1.7;e.cd=rnd(1.5,3);}}
-  if(P.p[1]>ADV.ceil){ADV.nmT-=dt;if(ADV.nmT<=0){ADV.nmT=1.6;const a=rnd(0,6.28),q=[P.p[0]+Math.cos(a)*600,0,P.p[2]+Math.sin(a)*600];q[1]=Math.max(groundRaw(q[0],q[2]),0)+10;eMissile(q,norm(sub(P.p,q)));}}
-  if(Math.hypot(P.p[0]-ex[0],P.p[2]-ex[1])<170){ADV.done=1;const lt=Math.max(0,Math.ceil(left));msg('MISSION COMPLETE','離脱成功 — 残り '+lt+' 秒',4.5);SFX.wave();P.inv=99;
-   radio('advend',"You made it out! Mission accomplished, Pixel One. Welcome home.",'脱出成功！任務完了だ、ピクセル1。おかえり。',{pri:1,cd:0});G.sq.push({t:G.time+5,fn:()=>advFinish(true,lt)});return;}}
+  if(ADV.scr>0&&!ADV.huntGo&&!G.kc){ADV.huntGo=G.time+4;P.inv=Math.max(P.inv,3);for(const e of E)if(e.hunter){e.hgo=ADV.huntGo;e.cd=ADV.huntGo-G.time+rnd(1,2.5);}msg('','迎撃機が上昇中 — 4秒後に追ってくる。今のうちに離脱！',3.5);} // ムービー後の猶予
+
+  if(P.p[1]>ADV.ceil&&!inB){ADV.nmT-=dt;if(ADV.nmT<=0){ADV.nmT=1.6;const a=rnd(0,6.28),q=[P.p[0]+Math.cos(a)*600,0,P.p[2]+Math.sin(a)*600];q[1]=Math.max(groundRaw(q[0],q[2]),0)+10;eMissile(q,norm(sub(P.p,q)));}}
+  const wiped=ADV.scr>=6&&!E.some(e=>e.hunter&&!e.dead);
+  if(Math.hypot(P.p[0]-ex[0],P.p[2]-ex[1])<220||wiped){ADV.done=1;const lt=Math.max(0,Math.ceil(left));msg('MISSION COMPLETE',(wiped?'迎撃機を全滅':'離脱成功')+' — 残り '+lt+' 秒',4.5);SFX.wave();P.inv=99;MSL=MSL.filter(m=>!m.en);
+   radio('advend',"Mission accomplished, Pixel One! Outstanding. Come on home.",'任務完了だ、ピクセル1！見事だった。帰ってこい。',{pri:1,cd:0});G.sq.push({t:G.time+3,fn:()=>{if(P.alive)introStart({land:1,lt});}});return;}}
  if(left<=0){ADV.done=1;msg('TIME OVER','作戦失敗',3.5);radio('advto',"We're out of time. Abort, Pixel One. Abort.",'時間切れだ。作戦中止、ピクセル1。中止だ。',{pri:1,cd:0});G.sq.push({t:G.time+4,fn:()=>advFinish(false,0)});}
  else if(left<15&&left+dt>=15)radio('adv15',"Fifteen seconds! Push it!",'残り15秒！急げ！',{pri:1,cd:0});}
 function advFinish(ok,lt){const first=ok&&STORE.get('pixsky_adv1')!=='1';let rw=0;if(ok){rw=first?4000:1000+lt*20;CR+=rw;STORE.set('pixsky_adv1','1');saveUp();}
  if(G.score>+(STORE.get('pixsky_hi')||0))STORE.set('pixsky_hi',G.score);bank();E=[];MSL=[];G.state='title';showOver();
  $('ovMsg').textContent='アドベンチャー MISSION 01 — '+(ok?'MISSION COMPLETE':'MISSION FAILED（TIME OVER）')+'\n'+(ok?'残り時間 '+lt+' 秒\n報酬 +'+rw+' CR'+(first?'（初回クリア）':''):'もう一度挑戦しよう。ブーストと機体強化がカギ')+'\n＋スコア分 '+(G.earned||0)+' CR';crText();}
-function advHud(portrait){if(!ADV.on||G.kc||G.state!=='play')return;const left=ADV.limit-ADV.t,cx=VW/2,y0=portrait?150:82;
+function exitMark(){const ex=AEG[AEG.length-1],q=proj([ex[0],60,ex[1]]),d=Math.hypot(P.p[0]-ex[0],P.p[2]-ex[1]),cx=VW/2,cy=VH/2;
+ const on=q.w>0&&q.x>14&&q.x<VW-14&&q.y>40&&q.y<VH-40,lbl='EXIT '+(d/1000).toFixed(1)+'km',t=performance.now()/1000;hx.fillStyle='#5f9';hx.strokeStyle='#5f9';hx.lineWidth=2;
+ if(on){const r=7+Math.sin(t*5)*1.5;hx.beginPath();hx.moveTo(q.x,q.y-r);hx.lineTo(q.x+r,q.y);hx.lineTo(q.x,q.y+r);hx.lineTo(q.x-r,q.y);hx.closePath();hx.stroke();T(lbl,q.x,q.y-r-6,'#5f9',10,'center');}
+ else{let dx=q.x-cx,dy=q.y-cy;if(q.w<=0){dx=-dx;dy=-dy;}const a=Math.atan2(dy,dx),mx=VW/2-22,my=VH/2-46,k=Math.min(mx/Math.abs(Math.cos(a)||1e-6),my/Math.abs(Math.sin(a)||1e-6)),x=cx+Math.cos(a)*k,y=cy+Math.sin(a)*k;
+  hx.save();hx.translate(x,y);hx.rotate(a);hx.beginPath();hx.moveTo(12,0);hx.lineTo(-6,-8);hx.lineTo(-6,8);hx.closePath();hx.fill();hx.restore();T(lbl,x-Math.cos(a)*20,y-Math.sin(a)*20+3,'#5f9',9,'center');}}
+function advHud(portrait){if(!ADV.on||G.kc||G.state!=='play')return;if(ADV.ph==='egress')exitMark();const left=ADV.limit-ADV.t,cx=VW/2,y0=portrait?150:82;
  T('TIME '+fmtT(left)+'.'+Math.floor((Math.max(0,left)%1)*10),cx,y0+14,left<15?((G.time*4|0)%2?'#f44':'#fff'):'#ffd23f',16,'center');
  const tg=ADV.tgt&&!ADV.tgt.dead?Math.hypot(P.p[0]-ADV.tgt.p[0],P.p[2]-ADV.tgt.p[2]):0,ex=AEG[AEG.length-1];T(ADV.ph==='egress'?'EGRESS ▸ 離脱ポイントまで '+(Math.hypot(P.p[0]-ex[0],P.p[2]-ex[1])/1000).toFixed(2)+' km':(tg?'TARGET '+(tg/1000).toFixed(2)+' km   ':'')+'💣 ×'+ADV.nb,cx,y0+30,ADV.ph==='egress'?'#6f9':'#cde',10,'center');
  const bx=VW-14,bh=portrait?120:90,by=VH*.5-bh/2,a=clamp(P.p[1]/(ADV.ceil*1.6),0,1),cl=ADV.ceil/(ADV.ceil*1.6);hx.fillStyle='rgba(0,0,0,.45)';hx.fillRect(bx-6,by,6,bh);
  hx.fillStyle=P.p[1]>ADV.ceil?'#f44':P.p[1]>ADV.ceil*.85?'#fc3':'#6f9';hx.fillRect(bx-6,by+bh*(1-a),6,bh*a);hx.fillStyle='#f44';hx.fillRect(bx-10,by+bh*(1-cl)-1,14,2);T('RADAR '+ADV.ceil*3,bx-12,by+bh*(1-cl)+3,'#f88',8,'right');
- if(P.p[1]>ADV.ceil&&(G.time*5|0)%2)T(ADV.ph==='egress'?'⚠ 敵に捕捉された — 振り切って離脱しろ！':'⚠ RADAR LOCK — 高度を下げろ！',cx,VH*.36,'#f44',15,'center');else if(P.p[1]>ADV.ceil*.88)T('▼ レーダー高度に接近',cx,VH*.36,'#fc3',12,'center');
+ if(advInBasin()&&ADV.ph!=='egress')T('盆地 — 高度制限なし',cx,VH*.36,'#6f9',11,'center');
+ else if(P.p[1]>ADV.ceil&&(G.time*5|0)%2)T(ADV.ph==='egress'?'⚠ 敵に捕捉された — 振り切って離脱しろ！':'⚠ RADAR LOCK — 高度を下げろ！',cx,VH*.36,'#f44',15,'center');else if(P.p[1]>ADV.ceil*.88)T('▼ レーダー高度に接近',cx,VH*.36,'#fc3',12,'center');
  if(advBombReady())T(TOUCH?'ミサイルボタンで 爆弾投下':'E で 爆弾投下',cx,VH*.36+18,'#ffd23f',12,'center');}
 // ===== チュートリアル：基本操作 → 旋回 → 加速 → 機銃 → ロックオン＆ミサイル → ミサイル回避 → 背後の敵への対処 =====
 const TUT={on:false,i:0,acc:0,tg:[],clr:0,wait:0};
@@ -1697,7 +1747,7 @@ function tutOverlay(){if(G.mode!=='tut'||!TUT.on||G.kc||G.state!=='play'||!P||!P
  const w=Math.min(VW-30,420),lines=tutWrap(ph.tx(),w-24,12),bh=26+lines.length*16,bx=VW/2-w/2,by=VH>VW?VH*.33:VH*.24;
  hx.fillStyle='rgba(8,14,34,.92)';hx.fillRect(bx,by,w,bh);hx.strokeStyle='#ffd23f';hx.lineWidth=2;hx.strokeRect(bx,by,w,bh);
  T('TUTORIAL — '+ph.g+'　▶ SLOW',bx+12,by+15,'#ffd23f',10,'left');lines.forEach((l,i)=>T(l,bx+12,by+33+i*16,'#fff',12,'left'));}
-function showOver(){if(G.mode==='adv')advExit();$('advWrap').style.display='';$('ovMsg').textContent=''+(G.mode==='sd'?'サドンデス':G.mode==='adv'?'アドベンチャー':'ノーマルプレイ')+' — MISSION FAILED\nSCORE '+G.score+(G.mode==='sd'?'   KILLS '+G.kills:'   WAVE '+G.wave)+'   HI '+G.hi+'\n+'+(G.earned||0)+' CR 獲得';$('hgb').style.display='';$('sdWrap').style.display='';modeBtn();crText();$('go').textContent='▶ ノーマルプレイ';$('goSub').style.display='';$('ov').classList.add('show');}
+function showOver(){stopAllAudio();if(G.mode==='adv')advExit();$('advWrap').style.display='';$('ovMsg').textContent=''+(G.mode==='sd'?'サドンデス':G.mode==='adv'?'アドベンチャー':'ノーマルプレイ')+' — MISSION FAILED\nSCORE '+G.score+(G.mode==='sd'?'   KILLS '+G.kills:'   WAVE '+G.wave)+'   HI '+G.hi+'\n+'+(G.earned||0)+' CR 獲得';$('hgb').style.display='';$('sdWrap').style.display='';modeBtn();crText();$('go').textContent='▶ ノーマルプレイ';$('goSub').style.display='';$('ov').classList.add('show');}
 function setPause(p){if(G.state!=='play'||G.pause===p)return;G.pause=p;if(!p)gyCalib();radioPause(p);if(!p)setTimeout(radioNext,300);for(const k in K)K[k]=0;MO.ab=false;tcReset();
  if(AC)p?AC.suspend():AC.resume();
  if(p){$('hgb').style.display='none';$('sdWrap').style.display='none';$('advWrap').style.display='none';$('ovMsg').textContent='⏸ PAUSE\nSCORE '+G.score+'   WAVE '+G.wave;$('go').textContent='▶ RESUME';$('goSub').style.display='none';$('pz').style.display='block';$('tsk').style.display=G.mode==='tut'?'':'none';$('ov').classList.add('show');}
