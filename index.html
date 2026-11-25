@@ -209,7 +209,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v8.9</span></div>
+<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v9.1</span></div>
 <div id="ovMsg"></div>
 <div id="mapSel" style="display:none"></div><button id="rsm" style="display:none">▶ RESUME</button><div class="tiles2" id="advWrap"><button id="srb" class="big"><span class="bt"><b>▶ 出撃</b><i>SORTIE</i></span><small>ノーマル／サドンデス</small><em id="srMap"></em></button><button id="msb" class="big"><span class="bt"><b>🎯 ミッション</b><i>MISSION</i></span><small>アドベンチャー／要塞攻略<br>VS ACE</small><em>特別作戦</em></button></div><button id="hgb" class="hgs"><span class="hgi">🛠</span><b>HANGAR</b><small>機体強化</small><em id="hgCr"></em><span id="hgBadge" class="badge"></span></button><div class="sub3g"><button id="vwb"></button><button id="invb"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button><button id="rdo"></button><button id="hlpb">❔ 操作方法</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div id="hlp" class="pk"><div class="pkb"><div class="pkh">HOW TO PLAY</div><div class="pks">操作方法</div>
@@ -1370,7 +1370,7 @@ function spawnCarrier(o={}){let p=null;for(let k=0;k<400&&!p;k++){const a=rnd(0,
  if(!p){const S=seaSpot([P.p[0]+rnd(-900,900),0,P.p[2]+rnd(-900,900)]);p=S?S.p:[Math.cos(1)*HALF*.92,0,Math.sin(1)*HALF*.92];}
  if(FI.on){const a=rnd(0,6.28),r=rnd(0,60);p=[Math.cos(a)*r,SEAY,Math.sin(a)*r];}
  const hp=Math.round(cvHpAt(G.wave)),e={type:'carrier',p,f:norm([-p[0]+rnd(-300,300),0,-p[2]+rnd(-300,300)]),bank:0,hp,max:hp,cd:CFG.cvLaunch*.4,gcd:2,mcd:8,rad:40,flash:0,sc:CFG.cvScore};
- fitShip(e);ebasis(e);E.push(e);if(o.dual)return e;
+ fitShip(e);ebasis(e);E.push(e);addWeak(e,[22,26,-12],15);if(o.dual)return e;
  G.sq.push({t:G.time+3.1,fn:()=>{if(e.dead||G.state!=='play')return;msg('WARNING','⚠ 大型海上空母 出現 — 弱点は甲板の艦橋（管制塔）',4);SFX.warn();
   radio('carrier',"Warning! Enemy supercarrier detected. It will launch fighters. Hit the island tower, Pixel One!",'警告！敵の大型空母を確認。艦載機を発進させるぞ。甲板の艦橋を狙え、ピクセル1！',{pri:1,cd:0});
   if(P.alive)kcTrigger('cvIntro',add(e.p,[0,10,0]),{intro:1,txt:['WARNING','ENEMY SUPERCARRIER','#ff9a40'],stopT:.01,dur:3.6,slow:1,push:.5});}});return e;} // 登場時：カメラを空母へ寄せて強調
@@ -1386,7 +1386,7 @@ function spawnBattleship(o={}){const nr=o.near;let p=null;for(let k=0;k<400&&!p;
  if(FI.on){if(nr){const v=norm([-nr.p[0]||1,0,-nr.p[2]]);p=[v[0]*190,SEAY,v[2]*190];}else{const a=rnd(0,6.28),r=rnd(0,100);p=[Math.cos(a)*r,SEAY,Math.sin(a)*r];}}
  const hp=Math.round(CFG.bsHp*cvHpAt(G.wave)),f=nr?nr.f.slice():norm([-p[0]+rnd(-300,300),0,-p[2]+rnd(-300,300)]),
   e={type:'battleship',p,f,bank:0,hp,max:hp,cd:4,gcd:1.5,mcd:6,rad:40,flash:0,sc:CFG.bsScore,ta:[f.slice(),f.slice(),mul(f,-1)]};
- fitShip(e);ebasis(e);E.push(e);if(o.dual)return e;
+ fitShip(e);ebasis(e);E.push(e);for(const sd of[-1,1])addWeak(e,[15*sd,6,-4],10);if(o.dual)return e;
  G.sq.push({t:G.time+3.1,fn:()=>{if(e.dead||G.state!=='play')return;msg('WARNING','⚠ 敵戦艦 出現 — 弱点は側面（前後は装甲が厚い）',5);SFX.warn();
   radio('battleship',"Warning! Enemy battleship inbound. Main guns, missiles and AA. Hit its sides, Pixel One!",'警告！敵戦艦が接近中。主砲・ミサイル・機銃を装備。弱点は側面だ！',{pri:1,cd:0});
   if(P.alive)kcTrigger('bsIntro',add(e.p,[0,12,0]),{intro:1,txt:['WARNING','ENEMY BATTLESHIP','#ff6a4a'],stopT:.01,dur:3.6,slow:1,push:.5});}});return e;}
@@ -1547,7 +1547,7 @@ function radioHud(){const s=RADIO.sub;if(!s||G.state==='title')return;const now=
 function refreshRadioBtn(){const b=$('rdo');if(b)b.textContent='📻 無線ボイス: '+(RADIO.on?'ON':'OFF')+(RADIO.ok?'':'（この端末は字幕のみ）');}
 function toggleRadio(){RADIO.on=!RADIO.on;STORE.set('pixsky_radio',RADIO.on?'1':'0');if(!RADIO.on)radioStop();refreshRadioBtn();if(G.state==='play')msg('',RADIO.on?'RADIO ON':'RADIO OFF',1);}
 function nextWave(){G.wave++;const w=G.wave;for(let i=0;i<CFG.fighters(w);i++)spawnFighter();for(let i=0;i<CFG.turrets(w);i++)spawnTurret();
- const boss=w%3===0;if(boss)spawnBoss();if(w>=CFG.fleetFrom&&w%CFG.bsEvery===0)spawnFleet();else if(w%CFG.bsEvery===0)spawnBattleship();else if(w%CFG.cvEvery===0)spawnCarrier();msg('WAVE '+w,boss?'⚠ FORTRESS APPROACHING':'ENEMY '+E.length+' UNITS',3);SFX.wave();if(w>1)radioWave();}
+ const boss=w%3===0;if(boss)spawnBoss();if(w>=CFG.fleetFrom&&w%CFG.bsEvery===0)spawnFleet();else if(w%CFG.bsEvery===0)spawnBattleship();else if(w%CFG.cvEvery===0)spawnCarrier();msg('WAVE '+w,boss?'⚠ FORTRESS APPROACHING':'ENEMY '+E.filter(e=>e.type!=='weak').length+' UNITS',3);SFX.wave();if(w>1)radioWave();}
 function msg(a,b='',t=2.5){G.msg=a;G.sub=b;G.msgT=t;}
 function reset(){MSL.forEach(stopV);newPlayer();E=[];BL=[];MSL=[];PT=[];TRAILS=[];G.sq=[];G.pops=[];G.wave=0;G.score=0;G.next=-1;G.state='play';G.deadT=0;G.slow=false;G.kc=null;G.kcQ=[];G.banked=0;G.earned=0;G.beams=[];G.warpFx=0;G.kills=0;G.fn=[];G.hi=+(STORE.get(hiKey())||0);
  camF=P.f.slice();camU=P.u.slice();
@@ -1555,16 +1555,19 @@ function reset(){MSL.forEach(stopV);newPlayer();E=[];BL=[];MSL=[];PT=[];TRAILS=[
 
 // ================= combat =================
 function hitSpheres(e){if(e.type==='battleship'){const o=[];for(const k of[0,1,-1,2,-2,3,-3,4,-4,5,-5])o.push([add(madd(e.p,e.f,k*21),[0,6,0]),Math.abs(k)>=5?9:Math.abs(k)>=4?11:13.5]);o.push([add(madd(e.p,e.f,12),[0,24,0]),12]);return o;}
- if(e.type==='carrier'){const o=[[cvIsl(e),14]];for(const k of[0,1,-1,2,-2,3,-3,4,-4])o.push([add(madd(e.p,e.f,k*20),[0,8,0]),18]);return o;}
+ if(e.type==='carrier'){const o=[];for(const k of[0,1,-1,2,-2,3,-3,4,-4])o.push([add(madd(e.p,e.f,k*20),[0,8,0]),18]);return o;}
  if(e.type==='boss')return[[madd(e.p,e.f,-15),15],[e.p,15],[madd(e.p,e.f,15),12],[madd(e.p,e.r,-28),9],[madd(e.p,e.r,28),9]];
- if(e.type==='turret')return[[add(e.p,[0,7,0]),e.rad]];if(e.type==='target')return[[add(e.p,[0,20,0]),30]];return[[e.p,e.rad]];}
+ if(e.type==='weak')return[[e.p,e.rad]];if(e.type==='turret')return[[add(e.p,[0,7,0]),e.rad]];if(e.type==='target')return[[add(e.p,[0,20,0]),30]];return[[e.p,e.rad]];}
 function segHit(a,b,c,r){const ab=sub(b,a),L=dot(ab,ab)||1e-6,t=clamp(dot(sub(c,a),ab)/L,0,1);const q=madd(a,ab,t);const d=sub(c,q);return dot(d,d)<r*r;}
 const cvIsl=e=>add(add(madd(e.p,e.f,-12),mul(e.r,22)),[0,26,0]); // 空母の艦橋（アイランド）＝弱点
+// ===== 艦船の弱点：本体とは別のロック対象（近距離のみロック可）。当てたダメージは本体へ倍率付きで入る =====
+const WEAK_LOCK=520;
+function addWeak(par,lp,rad){const w={type:'weak',par,lp,p:par.p.slice(),rad,hp:1,max:1,flash:0,sc:0,cd:99,passive:1};E.unshift(w);return w;}
+function weakPos(w){const e=w.par;return add(add(add(e.p,mul(e.r,w.lp[0])),mul(e.u||[0,1,0],w.lp[1])),mul(e.f,w.lp[2]));}
 function hurtE(e,d,p){if(e.dead)return;
+ if(e.type==='weak'){const par=e.par;if(par.dead){e.dead=true;return;}e.flash=1;par.flash=1;if(p&&G.time-(e.popT||0)>.5){e.popT=G.time;G.pops.push({p:p.slice(),t:.8,s:'WEAK!'});}hurtE(par,d*(par.type==='carrier'?CFG.cvWeak:CFG.bsWeak[0]),null);return;}
  if(e.type==='fpart'&&e.kind==='core'&&FORT.eng>0){d=0;if(p&&G.time-(e.popT||0)>.6){e.popT=G.time;G.pops.push({p:p.slice(),t:.8,s:'SHIELD'});}} // エンジンが残っている間コアは無敵
- if(e.type==='carrier'&&p){const w=dist(p,cvIsl(e))<20;if(w)d*=CFG.cvWeak;if(G.time-(e.popT||0)>.6){e.popT=G.time;if(w)G.pops.push({p:p.slice(),t:.8,s:'WEAK!'});}} // 艦橋ヒットで大ダメージ
- if(e.type==='battleship'){const src=KBY?KBY.p:P.p;let v=sub(src,e.p);v=norm([v[0],0,v[2]]);const sd=Math.abs(dot(v,e.r)),m=sd>.75?CFG.bsWeak[0]:sd>.45?1:CFG.bsWeak[1];d*=m; // 弱点は側面
-  if(p&&G.time-(e.popT||0)>.6){e.popT=G.time;G.pops.push({p:p.slice(),t:.8,s:m>1?'WEAK!':m<1?'ARMOR':''});}}e.hp-=d;e.flash=1;if(p)sparks(p);SFX.hit();
+e.hp-=d;e.flash=1;if(p)sparks(p);SFX.hit();
  if(e.hp<=0){e.dead=true;orphan(e);if(e.type==='fpart')fpartDie(e);if(e.ace)aceDie(e);const s=(e.type==='carrier'||e.type==='battleship')?6:e.type==='boss'?4:e.type==='turret'?1.6:1.3;const c=e.type==='turret'?add(e.p,[0,7,0]):e.p,fr=FRT[UL.frame];explode(c,s*fr.boom,fr.pal,fr.ring);
   {const cvb=e.type==='carrier'||e.type==='battleship';if(e.type==='boss'||cvb)for(let i=1;i<=(cvb?14:6);i++)G.sq.push({t:G.time+i*.18,fn:()=>explode(cvb?add(madd(c,e.f,rnd(-80,80)),[rnd(-15,15),10,0]):madd(c,rdir(),rnd(10,30)),(cvb?2.6:2)*fr.boom,fr.pal)});}
   G.score+=e.sc;radioKill(e);if(e.type==='carrier'||e.type==='battleship'){carrierBonus(e);addWreck(e);}if(UL.od&&P&&P.od<=0){P.odG=Math.min(1,P.odG+(e.type==='boss'?.5:.14)*UV.odGain());if(P.odG>=1&&!P.odR){P.odR=1;msg('','OVERDRIVE READY'+(TOUCH?'':' [H]'),1.5);}}G.pops.push({p:c.slice(),t:1.4,s:'+'+e.sc});
@@ -1791,12 +1794,12 @@ function upPlayer(dt){const inv=G.inv?-1:1;
   const o=madd(madd(madd(P.p,P.f,5),P.r,P.gs*1.6),P.u,-.4);BL.push({p:o,v:madd(mul(norm(add(P.f,mul(rdir(),.006))),540),P.f,P.spd),life:1.6,en:false,h:UV.gunHome(),od:P.od>0});
   part(o,mul(P.f,P.spd),.05,.9,[1,.95,.6],1,0,0);SFX.gun(1,20000,P.gs*.12);}
  if(P.ms<6&&G.mode!=='duel'){P.msT+=dt;if(P.msT>2.6){P.ms++;P.msT=0;}}
- let best=null,bc=Math.cos(UV.lockCone());if(P.lockE&&!P.lockE.dead){const d=sub(hitSpheres(P.lockE)[0][0],P.p),L=len(d);if(L<1500*UV.mslRange()&&dot(d,P.f)/L>Math.cos(.42))best=P.lockE;}
- if(!best)for(const e of E){const d=sub(hitSpheres(e)[0][0],P.p),L=len(d);if(L>1400*UV.mslRange())continue;const c=dot(d,P.f)/L;if(c>bc){bc=c;best=e;}}
+ let best=null,bc=Math.cos(UV.lockCone());if(P.lockE&&!P.lockE.dead){const d=sub(hitSpheres(P.lockE)[0][0],P.p),L=len(d);if(L<(P.lockE.type==='weak'?WEAK_LOCK*1.1:1500*UV.mslRange())&&dot(d,P.f)/L>Math.cos(.42))best=P.lockE;}
+ if(!best)for(const e of E){const d=sub(hitSpheres(e)[0][0],P.p),L=len(d);if(L>(e.type==='weak'?WEAK_LOCK:1400*UV.mslRange()))continue;const c=dot(d,P.f)/L;if(c>bc){bc=c;best=e;}}
  if(best&&best===P.lockE)P.lockT+=dt;else{P.lockE=best;P.lockT=0;}
  const was=P.locked;P.locked=!!best&&P.lockT>UV.lockT();if(P.locked&&!was)SFX.lock();
  const nl=UV.nLock();if(nl>1){const cw=Math.cos(.42+(UL.fcs>=3?.08:0)),cn=Math.cos(UV.lockCone()+.05);
-  for(const e of E){if(e.dead){e.lk=0;continue;}const d=sub(hitSpheres(e)[0][0],P.p),L=len(d),c=dot(d,P.f)/L;if(L<1500*UV.mslRange()&&c>cw)e.lk=(e.lk||0)+(c>cn||e.lk>=UV.lockT()?dt:0);else e.lk=0;}
+  for(const e of E){if(e.dead){e.lk=0;continue;}const d=sub(hitSpheres(e)[0][0],P.p),L=len(d),c=dot(d,P.f)/L;if(L<(e.type==='weak'?WEAK_LOCK:1500*UV.mslRange())&&c>cw)e.lk=(e.lk||0)+(c>cn||e.lk>=UV.lockT()?dt:0);else e.lk=0;}
   const ls=E.filter(e=>e.lk>=UV.lockT()).sort((a,b)=>b.lk-a.lk);if(P.locked&&!ls.includes(P.lockE))ls.unshift(P.lockE);P.locks=ls.slice(0,nl);}
  else P.locks=P.locked&&P.lockE?[P.lockE]:[];
  if(P.locks.length>P.nLk&&P.locks.length>1)SFX.lock();P.nLk=P.locks.length;
@@ -1809,7 +1812,7 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  const wf=angRate(P.pf,P.f,dt),wu=angRate(P.pu,P.u,dt),I=Math.max(clamp((wf*P.spd-55)/55,0,1),clamp((wu-2.6)/3,0,1)*.75);
  P.ti+=(I-P.ti)*Math.min(1,dt*10);P.pf=P.f.slice();P.pu=P.u.slice();
  trailEmit(P,[tipPos(P,5.7,-2.1),tipPos(P,-5.7,-2.1)],P.ti);}
-function upEnemies(dt){for(const e of E){e.flash=Math.max(0,e.flash-dt*6);if(e.type==='fpart'){fpartTick(e,dt);continue;}if(e.ace){e.cd=e.cd;aceTick(e,dt);continue;}e.cd-=dt;if(e.passive)e.cd=99;
+function upEnemies(dt){for(const e of E){e.flash=Math.max(0,e.flash-dt*6);if(e.type==='fpart'){fpartTick(e,dt);continue;}if(e.type==='weak'){e.flash=Math.max(0,e.flash-dt*6);if(e.par.dead)e.dead=true;else e.p=weakPos(e);continue;}if(e.ace){e.cd=e.cd;aceTick(e,dt);continue;}e.cd-=dt;if(e.passive)e.cd=99;
  if(e.type==='fighter'){const d=dist(P.p,e.p);let want=P.alive?norm(sub(madd(P.p,P.f,P.spd*.6),e.p)):norm([e.f[0],.05,e.f[2]]);
   if(P.alive&&P.braking&&!(e.ovT>0)&&d<300&&dot(sub(P.p,e.p),e.f)>d*.5){e.ovT=3.5;if(!G.ovMsgT||G.time>G.ovMsgT){G.ovMsgT=G.time+2;msg('','OVERSHOOT！ 敵が前に出た',1.4);}} // 逆噴射：背後の敵は止まれず追い越す
   if(e.ovT>0){e.ovT-=dt;want=norm([e.f[0],e.f[1]*.3,e.f[2]]);e.ev=0;}
@@ -1855,7 +1858,7 @@ function upEnemies(dt){for(const e of E){e.flash=Math.max(0,e.flash-dt*6);if(e.t
    e.mcd-=dt;if(e.mcd<=0){e.mcd=rnd(7,9);for(const sd of[-1,1])eMissile(add(add(madd(e.p,e.f,-44),mul(e.r,4*sd)),[0,14,0]),norm(add(mul(e.r,.3*sd),[0,1,0])));}}
   if(e.hp<e.max*.5&&Math.random()<dt*30)part(add(madd(e.p,e.f,rnd(-90,90)),[rnd(-9,9),12,0]),[0,6,0],rnd(2.5,3.5),3,[.16,.16,.18],0,-2,4,0,0,.55,Math.random()<.3?1:0);}
  const big_=e.type==='boss'||e.type==='carrier'||e.type==='battleship';
- if(P.alive&&!e.dead&&e.type!=='turret')for(const[c,r]of hitSpheres(e))if(dist(c,P.p)<r+3){hurtE(e,big_?0:99);P.inv=0;hurtP(big_?999:CFG.dmgRam);break;}}
+ if(P.alive&&!e.dead&&e.type!=='turret'&&e.type!=='weak')for(const[c,r]of hitSpheres(e))if(dist(c,P.p)<r+3){hurtE(e,big_?0:99);P.inv=0;hurtP(big_?999:CFG.dmgRam);break;}}
  E=E.filter(e=>!e.dead);}
 function upShots(dt){for(const b of BL){if(b.h&&!b.en){const sp=len(b.v),dv=mul(b.v,1/sp);let best=null,bc=.9;for(const e of E){const c=hitSpheres(e)[0][0],d=sub(c,b.p),L=len(d);if(L>600||L<1)continue;const cc=dot(d,dv)/L;if(cc>bc){bc=cc;best=c;}}if(best)b.v=mul(rotTo(dv,norm(sub(best,b.p)),b.h*dt),sp);}
   const a=b.p;b.p=madd(b.p,b.v,dt);b.life-=dt;
@@ -1943,7 +1946,7 @@ function render(){if(DK.on){envUniforms(1);renderDock();return;}envUniforms(0);g
  if(P&&P.fall&&!P.landed&&G.state==='dead')draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),new Float32Array([.15,.1,.08,.35]));
  if(G.state==='dead')drawPWreck();
  if(P&&P.alive&&!G.intro&&G.state!=='title'&&G.state!=='brief'&&(G.vs>.22||(G.kc&&G.kc.ph==='cam')))draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),P.od>0?new Float32Array([1,.85,.3,.2+.12*Math.sin(G.time*12)]):P.inv>0&&(G.time*20|0)%2?new Float32Array([.5,.9,1,.5]):null);
- for(const e of E){if(e.type==='fpart')continue;const T=e.flash>0?new Float32Array([1,1,1,e.flash]):null;
+ for(const e of E){if(e.type==='fpart'||e.type==='weak')continue;const T=e.flash>0?new Float32Array([1,1,1,e.flash]):null;
   if(e.type==='fighter'){if(e.ace){if(!MESH.ace)MESH.ace=aceJetM();draw(MESH.ace,mdl(e.r,e.u,e.f,e.p,1.05),T);}else draw(MESH.ef,mdl(e.r,e.u,e.f,e.p),T);}
   else if(e.type==='turret'){draw(MESH.tb,mdl([1,0,0],[0,1,0],[0,0,1],e.p),T);const b=basisF(e.aim);draw(MESH.th,mdl(b.r,b.u,e.aim,add(e.p,[0,10,0])),T);}
   else if(e.type==='carrier')draw(MESH.cv,mdl(e.r,e.u,e.f,e.p),T);
@@ -2042,7 +2045,7 @@ function hud(){const W=hc.width,H=hc.height;hx.setTransform(1,0,0,1,0,0);hx.clea
  if(P.alive){const pp=proj(madd(P.p,P.f,420));if(pp.w>0){hx.strokeStyle=P.over?'#f44':C;hx.beginPath();hx.arc(pp.x,pp.y,7,0,7);hx.stroke();hx.fillStyle=hx.strokeStyle;hx.fillRect(pp.x-1,pp.y-1,2,2);
   [[-1,0],[1,0],[0,1]].forEach(([a,b])=>hx.fillRect(pp.x+a*10-(a?2:.5),pp.y+b*10-(b?2:.5),a?4:1,b?4:1));}}
  const tf=Math.tan(FYE/2);
- for(const e of E){const c=hitSpheres(e)[0][0],p=proj(c),d=dist(c,P.p),col=e.type==='battleship'?'#f66':e.type==='carrier'?'#f94':e.type==='boss'?'#f6f':e.type==='turret'?'#fa4':'#f55',lk=e===P.lockE||P.locks.includes(e);if(e.dead||(e.type==='fpart'&&!lk&&d>650))continue; // 要塞の部位は近いときとロック中だけ表示
+ for(const e of E){const c=hitSpheres(e)[0][0],p=proj(c),d=dist(c,P.p),col=e.type==='battleship'?'#f66':e.type==='carrier'?'#f94':e.type==='boss'?'#f6f':e.type==='turret'?'#fa4':'#f55',lk=e===P.lockE||P.locks.includes(e);if(e.dead||(e.type==='fpart'&&!lk&&d>650)||(e.type==='weak'&&!lk&&d>WEAK_LOCK))continue; // 要塞の部位は近いときとロック中だけ表示
   if(p.w>0&&Math.abs(p.nx)<1.05&&Math.abs(p.ny)<1.05){const r=clamp(e.rad*1.4/p.w*(VH/2)/tf,5,60);hx.strokeStyle=col;hx.lineWidth=1.5;const q=r*.45;
    hx.beginPath();[[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([a,b])=>{hx.moveTo(p.x+a*r,p.y+b*r-b*q);hx.lineTo(p.x+a*r,p.y+b*r);hx.lineTo(p.x+a*r-a*q,p.y+b*r);});hx.stroke();
    if(lk){const L=P.locks.includes(e)||(e===P.lockE&&P.locked),rr=L?r+4:r+4+(1-Math.min(1,(e===P.lockE?P.lockT:e.lk||0)/UV.lockT()))*30;hx.strokeStyle=L?'#f33':'#ff3';if(!L||(G.time*8|0)%2){hx.beginPath();hx.moveTo(p.x,p.y-rr);hx.lineTo(p.x+rr,p.y);hx.lineTo(p.x,p.y+rr);hx.lineTo(p.x-rr,p.y);hx.closePath();hx.stroke();}
@@ -2060,7 +2063,7 @@ function hud(){const W=hc.width,H=hc.height;hx.setTransform(1,0,0,1,0,0);hx.clea
  else if(P.alive&&P.odR&&(G.time*3|0)%2)T('OVERDRIVE READY'+(TOUCH?' [OD]':' [H]'),cx,portrait?VH*.3:VH-70,'#ffd23f',12,'center');
  // panels
  T('SCORE '+String(G.score).padStart(7,'0'),12,20,'#fff',portrait?12:14);T('HI    '+String(G.hi).padStart(7,'0'),12,35,'#9ab',11);
- const wy0=portrait?52:20;T(G.mode==='adv'?'MISSION 01  CANYON RUN':G.mode==='tut'?'TUTORIAL':G.mode==='fort'?'AIR FORTRESS ASSAULT':G.mode==='duel'?'ACE DUEL':G.mode==='sd'?'SUDDEN DEATH  KILLS '+G.kills+'  ENEMY '+sdFighters()+'/'+sdTarget()+(E.some(e=>e.type==='boss')?'  +BOSS':''):'WAVE '+G.wave+'  ENEMY '+E.length,portrait?12:cx,wy0,'#ffd23f',portrait?12:14,portrait?'left':'center');
+ const wy0=portrait?52:20;T(G.mode==='adv'?'MISSION 01  CANYON RUN':G.mode==='tut'?'TUTORIAL':G.mode==='fort'?'AIR FORTRESS ASSAULT':G.mode==='duel'?'ACE DUEL':G.mode==='sd'?'SUDDEN DEATH  KILLS '+G.kills+'  ENEMY '+sdFighters()+'/'+sdTarget()+(E.some(e=>e.type==='boss')?'  +BOSS':''):'WAVE '+G.wave+'  ENEMY '+E.filter(e=>e.type!=='weak').length,portrait?12:cx,wy0,'#ffd23f',portrait?12:14,portrait?'left':'center');
  const boss=E.find(e=>e.type==='boss');let ty=portrait?66:36;
  if(boss){const bw=portrait?150:180,bx0=portrait?12:cx-bw/2;T('FORTRESS',bx0+(portrait?0:bw/2),ty,'#f6f',10,portrait?'left':'center');hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f4c';hx.fillRect(bx0+1,ty+5,(bw-2)*boss.hp/boss.max,4);ty+=24;}
  const bsE=E.find(e=>e.type==='battleship');if(bsE){const bw=portrait?150:180,bx0=portrait?12:cx-bw/2;T('BATTLESHIP  弱点:側面',bx0+(portrait?0:bw/2),ty,'#f66',10,portrait?'left':'center');hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f55';hx.fillRect(bx0+1,ty+5,(bw-2)*bsE.hp/bsE.max,4);ty+=24;}
@@ -2085,7 +2088,7 @@ function hud(){const W=hc.width,H=hc.height;hx.setTransform(1,0,0,1,0,0);hx.clea
  hx.beginPath();hx.arc(rx,ry,RR/2,0,7);hx.stroke();const sw=G.time*2.5;hx.beginPath();hx.moveTo(rx,ry);hx.lineTo(rx+Math.cos(sw)*RR,ry+Math.sin(sw)*RR);hx.stroke();
  const hd=norm([P.f[0],1e-4,P.f[2]]),hr=[-hd[2],0,hd[0]],rp=(p,f)=>{const d=sub(p,P.p);let x=dot(d,hr)*rs,y=-dot(d,hd)*rs;const l=Math.hypot(x,y);if(l>RR-3){x*=(RR-3)/l;y*=(RR-3)/l;}f(rx+x,ry+y);};
  if(G.mode==='fort'&&FORT.on)rp(FORT.p,(x,y)=>{hx.fillStyle='#d9f';hx.fillRect(x-7,y-3,14,6);});
- for(const e of E)if(!(e.type==='fpart'))rp(e.p,(x,y)=>{hx.fillStyle=e.type==='battleship'?'#f66':e.type==='carrier'?'#f94':e.type==='boss'?'#f6f':e.type==='turret'?'#fa4':'#f44';const z=(e.type==='carrier'||e.type==='battleship')?9:e.type==='boss'?6:3;hx.fillRect(x-z/2,y-z/2,z,z);});
+ for(const e of E)if(!(e.type==='fpart'||e.type==='weak'))rp(e.p,(x,y)=>{hx.fillStyle=e.type==='battleship'?'#f66':e.type==='carrier'?'#f94':e.type==='boss'?'#f6f':e.type==='turret'?'#fa4':'#f44';const z=(e.type==='carrier'||e.type==='battleship')?9:e.type==='boss'?6:3;hx.fillRect(x-z/2,y-z/2,z,z);});
  for(const m of MSL)if(m.en)rp(m.p,(x,y)=>{if((G.time*10|0)%2){hx.fillStyle='#fff';hx.fillRect(x-1,y-1,2,2);}});
  rp([0,0,0],(x,y)=>{hx.strokeStyle='#5df';hx.strokeRect(x-3,y-3,6,6);});hx.fillStyle='#fff';hx.beginPath();hx.moveTo(rx,ry-5);hx.lineTo(rx+4,ry+4);hx.lineTo(rx-4,ry+4);hx.fill();
  for(const u of G.fn)rp(u.p,(x,y)=>{hx.fillStyle='#39f';hx.fillRect(x-1,y-1,2,2);});
@@ -2162,7 +2165,7 @@ setInterval(()=>{if(Math.abs(parseFloat(cv.style.height)-viewH())>1||Math.abs(pa
 addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,200));G.px=SMALL?0:1;resize();
 let last=performance.now();
 function goFull(){if(!TOUCH)return;try{const d=document.documentElement,f=d.requestFullscreen||d.webkitRequestFullscreen;if(f&&!document.fullscreenElement){const r=f.call(d);if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
-function tcReset(){TC.lk=null;LOOK.yaw=LOOK.pit=0;TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
+function tcReset(){if(TC.free)TC.free.clear();TC.pinch=null;TC.bp=null;TC.lk=null;LOOK.yaw=LOOK.pit=0;TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
 function start(){duelRestore();FLR=[];G.wallFire=null;FORT.on=false;FORT.st='';G.safeT=0;TY.pend=[];TY.bolts=[];TY.fl=0;TY.zone=0;G.intro=null;INTRO=null;WRK=[];PWK=null;LIGHTS=[];{const wm=G.mode==='duel'?'island':G.mode==='fort'?(MAPDEF[G.map].night?'islandN':'island'):G.map;if(G.mode!=='adv'&&CURMAP!==wm&&!ADV.on)setMap(wm);}if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
  if(G.mode==='normal'||G.mode==='sd'||G.mode==='adv'||G.mode==='fort')introStart();
  if(G.mode!=='tut'&&G.mode!=='adv'&&G.mode!=='duel')radio('start',G.mode==='sd'?"Sky Control to Pixel One. Hostiles are endless. Stay alive.":"Sky Control to Pixel One. Weapons free. Good hunting.",G.mode==='sd'?'管制よりピクセル1へ。敵は途切れない。生き残れ。':'管制よりピクセル1へ。兵装使用許可。健闘を祈る。',{pri:1,cd:0});if(G.mode==='normal')radioWave();G.tipT=G.mode==='tut'||G.mode==='adv'?0:G.time+(TOUCH?8:10);G.pause=false;G.ts=1;}
@@ -2320,7 +2323,7 @@ function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.sai
 function introEnd(){jetStop(.5);const I=INTRO;if(!I)return;if(I.land){G.intro=null;INTRO=null;advFinish(true,I.lt);return;}if(I.t<11.2){I.t=11.2;introPose(11.2);}G.intro=null;INTRO=null;
  P.p=I.p.slice();P.f=I.f.slice();P.u=norm(sub(UP,mul(P.f,dot(UP,P.f))));P.r=norm(cross(P.f,P.u));P.spd=Math.max(UV.cruise(),100);P.inv=2;camF=P.f.slice();camU=P.u.slice();G.shake=0;
  if(G.mode==='adv'){ADV.t=0;{let bs=0,bd=1e9;for(let s2=0;s2<ADV.L*.3;s2+=4){const A=advAt(s2),d=Math.hypot(A.x-P.p[0],A.z-P.p[2]);if(d<bd){bd=d;bs=s2;}}const A=advAt(bs);P.p=[A.x,Math.max(P.p[1],Math.max(groundRaw(A.x,A.z),0)+55),A.z];P.f=A.T.slice();P.u=[0,1,0];P.r=norm(cross(P.f,P.u));camF=P.f.slice();camU=P.u.slice();} // ルートの中心・進行方向に合わせる
- msg('MISSION 01','CANYON RUN — ALT '+ADV.ceil*3+' 以下を維持して谷へ',3);}else if(G.mode!=='fort'&&G.mode!=='duel')msg(G.mode==='sd'?'SUDDEN DEATH':'WAVE '+G.wave,G.mode==='sd'?'敵が途切れず出続ける':'ENEMY '+E.filter(e=>!e.dead).length+' UNITS',2.2);}
+ msg('MISSION 01','CANYON RUN — ALT '+ADV.ceil*3+' 以下を維持して谷へ',3);}else if(G.mode!=='fort'&&G.mode!=='duel')msg(G.mode==='sd'?'SUDDEN DEATH':'WAVE '+G.wave,G.mode==='sd'?'敵が途切れず出続ける':'ENEMY '+E.filter(e=>!e.dead&&e.type!=='weak').length+' UNITS',2.2);}
 function introCam(){const I=INTRO,t=I.t;cup=[0,1,0];G.fogD=FOGD;
  if(I.land){if(I.ph==='app'&&t<2.4){eye=add(madd(I.p,I.f,-30),[0,7,0]);ctr=madd(I.p,I.f,60);fov=1;}else if(I.ph==='app'){eye=IW(I,38,26,-40);ctr=I.p;fov=.9;}else{const a=(t-4.2)*.15;eye=IW(I,30*Math.cos(a)+4,22,-10+30*Math.sin(a));ctr=I.p;fov=.9;}return;}
  if(I.ph==='elev'){eye=IW(I,24,19,-34);ctr=IW(I,-10,I.ey+1,-55);fov=.95;}
@@ -2648,7 +2651,7 @@ tp.addEventListener('pointerdown',e=>{e.preventDefault();if(G.intro){if(INTRO&&I
  if(G.state!=='play'||G.pause)return;const[x,y]=tpos(e);try{tp.setPointerCapture(e.pointerId);}catch(_){}
  for(const b of tcButtons())if(Math.hypot(x-b.x,y-b.y)<b.r+8){TC.ptr[e.pointerId]=b.id;tcPress(b.id,true);if(b.id==='look'||b.id==='look2')TC.lk={id:e.pointerId,x,y,y0:LOOK.yaw,p0:LOOK.pit};if(b.id==='boost'||b.id==='brake'){TC.bp={id:e.pointerId,x,y};if(TC.sid===null){TC.sid=e.pointerId;TC.ox=x;TC.oy=y;TC.sx=TC.sy=0;TC.sbtn=1;}}return;} // 加速・逆噴射ボタンは押したまま動かすと操縦もできる
  const now=performance.now();TC.free.set(e.pointerId,{x,y,t:now});
- if(TC.free.size===2&&!TC.pinch){const[[ia,a],[ib,b]]=[...TC.free];if(Math.abs(a.t-b.t)<350){if(TC.sid!==null){TC.sid=null;TC.sx=TC.sy=0;}
+ if(TC.free.size>=2&&!TC.pinch){const L=[...TC.free].sort((p,q)=>q[1].t-p[1].t),[[ia,a],[ib,b]]=L;if(Math.abs(a.t-b.t)<600){if(TC.sid!==null){TC.sid=null;TC.sx=TC.sy=0;}
    TC.pinch={a:ia,b:ib,d0:Math.max(8,Math.hypot(a.x-b.x,a.y-b.y)),cd0:G.cd};return;}}
  if(TC.pinch)return;
  if(x<VW*.55&&(TC.sid===null||TC.sbtn)){TC.sbtn=0;TC.sid=e.pointerId; // 左側の通常操作を優先（加減速ボタンでの操縦は補助）
