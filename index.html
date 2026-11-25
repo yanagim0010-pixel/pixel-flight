@@ -29,6 +29,7 @@ kbd{display:inline-block;background:#1c2648;border:2px solid #7ff;border-bottom-
 .tb{display:inline-block;border:2px solid #ffd23f;border-radius:50%;padding:0 6px;color:#ffd23f;font-weight:bold;font-size:11px}
 #go{font-family:inherit;font-size:22px;font-weight:bold;background:#ffd23f;color:#111;border:none;padding:10px 34px;cursor:pointer;box-shadow:0 0 0 3px #000,5px 5px 0 3px #000;letter-spacing:3px}
 #tub{position:fixed;top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left));z-index:12;width:42px;height:42px;border-radius:50%;font-size:22px;line-height:1;padding:0;background:rgba(20,30,60,.8);border:2px solid #7ff;cursor:pointer;box-shadow:0 0 10px rgba(94,240,255,.35)}
+#rtb{font-family:inherit;font-size:14px;font-weight:bold;background:#123a2a;color:#7fe0a8;border:2px solid #7fe0a8;padding:4px 18px;cursor:pointer;margin:0 4px}
 #pr,#inv,#hgb,#tsk,#rdo,#gyb{font-family:inherit;font-size:14px;font-weight:bold;background:#1c2648;color:#7ff;border:2px solid #7ff;padding:4px 18px;cursor:pointer;margin:0 4px}#pr:hover{background:#2a3a6a}
 .modes{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:4px}.mode{display:flex;flex-direction:column;align-items:center;gap:6px}.mode small{font-size:11px;color:#9ab}
 #mapSel{display:flex;justify-content:center;margin:2px 0 12px}.pk{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,10,.72);z-index:31}.pk.show{display:flex}
@@ -38,6 +39,7 @@ kbd{display:inline-block;background:#1c2648;border:2px solid #7ff;border-bottom-
 .pkl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}#fortWrap{display:contents}
 .pkc{font-family:inherit;display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;padding:8px 10px;background:#1c2648;color:#dff;border:2px solid #2c3d66;cursor:pointer;width:100%;box-sizing:border-box}.pkc b{font-size:15px}.pkc small{font-size:11px;color:#9ab;line-height:1.4}.pkc.sel{border-color:#5ef0ff;background:#123a52}.pkc:active{transform:translate(2px,2px)}
 .pkc.art{background-size:cover;background-position:center;min-height:92px;justify-content:flex-end;border-color:#3a5a88;text-shadow:0 1px 0 #000,0 0 6px #000}.pkc.art b{font-size:16px;color:#fff}.pkc.art small{color:#dbe6f2}.pkc.art.sel{border-color:#5ef0ff;box-shadow:0 0 0 2px #5ef0ff inset}.pkc.art:hover{border-color:#7fdcff}
+.pkc .mul{font-size:10px;color:#ffd23f;background:rgba(0,0,0,.55);padding:0 4px;margin-left:4px;vertical-align:middle}
 .pkx{font-family:inherit;margin-top:12px;font-size:13px;font-weight:bold;background:#1c2648;color:#7ff;border:2px solid #7ff;padding:4px 18px;cursor:pointer}
 #mpb,#msb{font-family:inherit;font-size:14px;font-weight:bold;padding:6px 16px;background:#1c2648;color:#5ef0ff;border:2px solid #5ef0ff;cursor:pointer;box-shadow:3px 3px 0 #000}.msw{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:4px}.msw small{font-size:11px;color:#9ab}
 .sub3{margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}#ctl summary{cursor:pointer;color:#9ab;font-size:12px;margin-top:12px;list-style:none}#ctl[open] summary{color:#5ef0ff}
@@ -209,7 +211,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v9.2</span></div>
+<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v10.3</span></div>
 <div id="ovMsg"></div>
 <div id="mapSel" style="display:none"></div><button id="rsm" style="display:none">▶ RESUME</button><div class="tiles2" id="advWrap"><button id="srb" class="big"><span class="bt"><b>▶ 出撃</b><i>SORTIE</i></span><small>ノーマル／サドンデス</small><em id="srMap"></em></button><button id="msb" class="big"><span class="bt"><b>🎯 ミッション</b><i>MISSION</i></span><small>アドベンチャー／要塞攻略<br>VS ACE</small><em>特別作戦</em></button></div><button id="hgb" class="hgs"><span class="hgi">🛠</span><b>HANGAR</b><small>機体強化</small><em id="hgCr"></em><span id="hgBadge" class="badge"></span></button><div class="sub3g"><button id="vwb"></button><button id="invb"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button><button id="rdo"></button><button id="hlpb">❔ 操作方法</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div id="hlp" class="pk"><div class="pkb"><div class="pkh">HOW TO PLAY</div><div class="pks">操作方法</div>
@@ -218,7 +220,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div><span class="tb">機銃</span> 長押し</div><div>機銃（撃ちすぎるとオーバーヒート）</div>
 <div><span class="tb">ミサイル</span></div><div>ミサイル（敵を照準に捉え続けるとロックオン）</div>
 <div><span class="tb">加速</span> 長押し</div><div>アフターバーナー（加速）</div>
-<div><span class="tb">フレア</span> / <span class="tb">反転</span></div><div>フレア（追ってくるミサイルをそらす・再使用7秒）/ 緊急反転</div>
+<div><span class="tb">フレア</span> / <span class="tb">反転</span></div><div>フレア（追ってくるミサイルをそらす・再使用4秒）/ 緊急反転</div>
 <div><span class="tb">ワープ</span> <span class="tb">覚醒</span></div><div>ワープ / オーバードライブ（ハンガーで解放）</div>
 <div>2本指</div><div>ピンチアウトでズームイン、ピンチインでズームアウト（広角）</div>
 <div><span class="tb">ファンネル</span></div><div>EX武装：ファンネル（全強化MAXで解放）</div>
@@ -235,7 +237,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div><kbd>Shift</kbd> / <kbd>X</kbd></div><div>アフターバーナー / ブレーキ</div>
 <div><kbd>Space</kbd> / <kbd>J</kbd></div><div>機銃（連射・オーバーヒート注意）</div>
 <div><kbd>F</kbd> / <kbd>K</kbd></div><div>ミサイル（ロックオンで誘導）</div>
-<div><kbd>R</kbd></div><div>フレア（追ってくるミサイルをそらす・再使用7秒）</div>
+<div><kbd>R</kbd></div><div>フレア（追ってくるミサイルをそらす・再使用4秒）</div>
 <div><kbd>T</kbd></div><div>インメルマンターン（緊急反転）</div>
 <div><kbd>G</kbd> / <kbd>H</kbd></div><div>ワープ / オーバードライブ（ハンガーで解放）</div>
 <div><kbd>N</kbd></div><div>無線ボイス（管制の英語の指示）ON/OFF</div>
@@ -246,7 +248,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div><kbd>P</kbd>/<kbd>Esc</kbd> <kbd>M</kbd> <kbd>O</kbd> <kbd>I</kbd></div><div>ポーズ / 消音 / ドット粗さ / 上下反転</div>
 </div><button class="pkx" id="hlpX">閉じる</button></div></div>
 <div id="crd" class="hint" style="display:none"></div>
-<div id="pz" style="display:none;margin-top:10px"><button id="pr">↻ RESTART</button><button id="tsk" style="display:none">✕ チュートリアル終了</button><button id="inv">⇅ 上下反転: OFF</button><div class="hint">RESUME で再開</div></div>
+<div id="pz" style="display:none;margin-top:10px"><button id="rtb">⚓ 帰還する</button><button id="pr">↻ RESTART</button><button id="tsk" style="display:none">✕ チュートリアル終了</button><button id="inv">⇅ 上下反転: OFF</button><div class="hint">RESUME で再開</div></div>
 <div class="hint">画像/音源/ライブラリ不使用 — 地形・機体・音すべてコード生成 ・ ヘッドホン推奨</div>
 </div></div>
 <div id="hg"><div id="dkView"></div><div class="dk-top"><div class="dk-title">HANGAR<span>DOCK-01</span></div><div id="hgcr" class="dk-cr"></div><button id="hgx">◀ BACK</button></div><div class="dk-hint">ドラッグで回転・ピンチ／ホイールでズーム</div><div class="dk-panel"><div class="dk-tabs" id="dkTabs"></div><div id="hgl"></div><details class="dk-more"><summary>その他（コード入力・データリセット）</summary><div class="hint">クレジットは出撃が終わるたびに「スコア÷10＋ウェーブ×30」獲得。進化は全部同時に有効です</div><div class="cheat"><input id="chc" type="text" placeholder="CODE" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="20"><button id="chb">OK</button></div><div id="chm"></div><div><button id="rst">⟲ データリセット</button><div id="rstm" class="hint" style="margin-top:4px">クレジット・進化・ハイスコアを初期状態に戻します（ラジオ設定は残ります）</div></div></details></div></div>
@@ -964,7 +966,8 @@ function flaresTick(dt){for(const f of FLR){f.t+=dt;if(f.t<0)continue;f.v[1]-=22
   const fl=.7+.3*Math.sin(G.time*40+f.life*7);part(f.p,[rnd(-1,1),rnd(-1,1),rnd(-1,1)],.12,2.6*fl,[1,.97,.82],1,0,-6,0);part(f.p,[0,0,0],.25,1.6,[1,.75,.3],1,0,-2,0);
   if(Math.random()<dt*30)part(f.p,[rnd(-2,2),rnd(1,4),rnd(-2,2)],rnd(1.2,2),1.4,[.85,.85,.88],0,-1,2.6,.5,0,.4);}
  FLR=FLR.filter(f=>f.t<f.life);}
-function doFlare(){if(G.kc||!P||!P.alive||(P.flCd||0)>0)return;P.flCd=CFG.flareCd;P.flareT=G.time;dropFlares(P,8);let n=0;for(const m of MSL)if(m.en&&!m.decoy&&dist(m.p,P.p)<1100&&(m.tgt===P||dist(m.p,P.p)<300)){if(decoyMissile(m))n++;}
+const flCd=()=>UL.flare>=1?2.6:4;
+function doFlare(){if(G.kc||!P||!P.alive||(P.flCd||0)>0)return;P.flCd=flCd();P.flareT=G.time;dropFlares(P,8);let n=0;for(const m of MSL)if(m.en&&!m.decoy&&dist(m.p,P.p)<1100&&(m.tgt===P||dist(m.p,P.p)<300)){if(decoyMissile(m))n++;}
  msg('',n?'FLARE — ミサイル '+n+' 発をそらした':'FLARE',1.2);}
 const MAPDEF={island:{name:'島',icon:'🏝',city:0,night:0},islandN:{name:'島・夜',icon:'🌙',city:0,night:1},city:{name:'市街地',icon:'🏙',city:1,night:0},cityN:{name:'市街地・夜',icon:'🌃',city:1,night:1},ruins:{name:'古代遺跡',icon:'🏛',city:0,night:0,ruins:1},ruinsN:{name:'古代遺跡・夜',icon:'🏛',city:0,night:1,ruins:1},ty:{name:'台風の目',icon:'🌀',city:0,night:0,ty:1},sky:{name:'浮島',icon:'☁️',city:0,night:0,fi:1},skyN:{name:'浮島・夜',icon:'🌌',city:0,night:1,fi:1}};
 const MAPC={},ISLHM=HM.slice();let CITYHM=null,CITYBH=null,CITYSL=null,SKYD=null,SKYN=null,SKYNC=null,CURMAP='';
@@ -1276,10 +1279,10 @@ const CFG={
  cvEvery:5, cvLaunch:14.7, cvMax:6, cvTotal:8, // 発進間隔(秒)／同時に飛ばせる最大数／1隻が発進させる総数の上限
   cvSpd:6, cvHp:[480,6], cvScore:15000, // 空母: …/ 体力（初期値, 1ウェーブごとの増加。ボスより緩やか）/ 撃沈スコア（クレジットはスコア÷10） // 大型海上空母: 出現ウェーブ間隔 / 艦載機の発進間隔(秒) / 同時に出せる艦載機数 / 速度
  bsEvery:10, fleetFrom:20, // 戦艦は10の倍数。WAVE20以降の10の倍数は空母＋戦艦の同時出現
-  flareCd:7, bsHp:1.2, bsScore:18000, bsSpd:8, bsMainCd:5, bsShellDmg:14, bsWeak:[1.5,.4], cvWeak:1.5, // 戦艦: 出現ウェーブ間隔 / 体力(空母の何倍) / 撃沈スコア / 速度 / 主砲の間隔(秒) / 主砲1発のダメージ / 側面に当てた倍率・前後に当てた倍率
+  flareCd:4, bsHp:1.2, bsScore:18000, bsSpd:8, bsMainCd:5, bsShellDmg:14, bsWeak:[1.5,.4], cvWeak:1.5, // 戦艦: 出現ウェーブ間隔 / 体力(空母の何倍) / 撃沈スコア / 速度 / 主砲の間隔(秒) / 主砲1発のダメージ / 側面に当てた倍率・前後に当てた倍率
  tonboCd:6, idleChat:5, chatGap:10, // 何もしない状態がこの秒数続くと管制が雑談／雑談が入ったら次の雑談まで最低10秒あける
  bHp:[110,8], bGunCd:.11, bMslCd:[6.5,8.5],
- dmgBullet:2, dmgMissile:14, dmgRam:25, mslMax:3, mslTurn:1.15, mslSpd:100,
+ dmgBullet:2, dmgMissile:14, dmgRam:25, mslMax:3, mslTurn:1.15, mslSpd:120,
  clearHeal:40, regenDelay:4, regenRate:3, // ウェーブクリア回復・被弾後◯秒で自然回復(毎秒)
  slowScale:.3, // スローモーション倍率
  exAmmo:3, exMax:30, exKills:6, exLife:20, exHold:1.8, exPause:.7, exRefill:30, exSpd:240, exRange:80, exFire:.6, exDmg:12, // EXファンネル: 回数/同時最大/撃墜で消える数/寿命秒/攻撃時に静止する最短秒/撃破後に静止する秒/1回分の回復秒/移動速度/攻撃距離/射撃間隔/ダメージ
@@ -1290,19 +1293,21 @@ const CFG={
 };
 // ===== 進化（周回で貯めたクレジットで強化。全部同時に有効） =====
 const UPG=[
- {id:'frame',name:'機体フレーム',tag:'基本性能',lv:['STRIKE BLUE','CRIMSON FANG','OBSIDIAN'],cost:[400,1200,3000],
+ {id:'frame',name:'機体フレーム',tag:'基本性能',lv:['STRIKE BLUE','CRIMSON FANG','OBSIDIAN'],cost:[500,1500,4000],
   d:['巡航速度+10%。機体が青に、撃破時の爆発が青い炎に','巡航速度+20%。真紅の機体、爆発がひと回り大きく赤く','巡航速度+30%。漆黒の機体、黒紫の大爆発＋衝撃波リング']},
- {id:'boost',name:'アフターバーナー',tag:'ブースト',lv:['AB-II','AB-III','HYPER AB'],cost:[300,900,2400],
+ {id:'boost',name:'アフターバーナー',tag:'ブースト',lv:['AB-II','AB-III','HYPER AB'],cost:[400,1200,3200],
   d:['持続+25%・最高速+8%','持続+60%・最高速+16%','持続+130%・最高速+28%・点火時にソニックブーム']},
- {id:'fcs',name:'FCS 射撃管制',tag:'ロックオン',lv:['FCS-2','FCS-3','FCS-X'],cost:[300,900,2400],
+ {id:'fcs',name:'FCS 射撃管制',tag:'ロックオン',lv:['FCS-2','FCS-3','FCS-X'],cost:[400,1200,3200],
   d:['ロック時間 0.55→0.42秒','ロック時間 0.30秒','ロック時間 0.18秒・ロック範囲拡大']},
- {id:'msl',name:'ミサイル',tag:'ミサイル系',lv:['ツインミサイル','トライミサイル','ライトニングレーザー','ファンネルミサイル'],cost:[500,1500,4000,6000],
+ {id:'msl',name:'ミサイル',tag:'ミサイル系',lv:['ツインミサイル','トライミサイル','ライトニングレーザー','ファンネルミサイル'],cost:[600,1800,12000,22000],
   d:['常に2発同時発射。ロックした敵へ振り分け、1機なら2発とも集中。射程+15%','常に3発同時発射。ロックした敵へ振り分け、1機なら3発とも集中。射程+30%','光速ビーム。最大3機ロック（弾数を1使う）。ロックが少ないほどビームが束ねられ強力に（3機:1本ずつ／2機:1.5倍×2本／1機:3倍の極太1本）。ほぼ回避不能。射程+45%','3発を機体の後方へ射出。鋭く5〜6回、不規則に折れ曲がりながら、それぞれ別の敵へ。ロック中の敵を優先し、標的が先に落ちたら次の敵へ向かう。射程+60%']},
- {id:'gun',name:'スマートガン',tag:'機銃',lv:['SG-1','SG-2','SG-3'],cost:[400,1200,3000],
+ {id:'gun',name:'スマートガン',tag:'機銃',lv:['SG-1','SG-2','SG-3'],cost:[500,1500,4000],
   d:['弾が近くの敵へゆるく追従する','追従強化・連射+30%','追従最大・連射+70%・熱がたまりにくい']},
- {id:'warp',name:'ブリンクドライブ',tag:'ワープ',lv:['BLINK','BLINK+'],cost:[1500,3500],
+ {id:'warp',name:'ブリンクドライブ',tag:'ワープ',lv:['BLINK','BLINK+'],cost:[2000,4500],
   d:['G／WARPボタンで前方へ瞬間移動。追ってくる敵ミサイルを振り切る（再使用9秒）','ワープ距離+20%・再使用5秒']},
- {id:'od',name:'オーバードライブ',tag:'覚醒',lv:['OVERDRIVE','OVERDRIVE MAX'],cost:[2000,4500],
+ {id:'flare',name:'フレア',tag:'フレア',lv:['FLARE-II','AUTO FLARE'],cost:[2500,7000],
+  d:['再使用時間 4秒 → 2.6秒','再使用2.6秒＋ミサイルが間近（約150m）まで迫ると自動でフレアを撒く']},
+ {id:'od',name:'オーバードライブ',tag:'覚醒',lv:['OVERDRIVE','OVERDRIVE MAX'],cost:[6000,14000],
   d:['撃破でゲージが溜まり、H／ODボタンで8秒間覚醒：ミサイル無限・オーバーヒートなし・連射1.5倍・即ロック','覚醒12秒・ゲージが1.4倍溜まりやすい']}];
 let UL={};try{UL=JSON.parse(STORE.get('pixsky_up')||'{}')||{};}catch(e){UL={};}UPG.forEach(u=>{UL[u.id]=clamp(UL[u.id]|0,0,u.cost.length);});
 let UO=null;try{UO=JSON.parse(STORE.get('pixsky_own')||'null');}catch(e){UO=null;}UO=UO||{};UPG.forEach(u=>{UO[u.id]=clamp(Math.max(UO[u.id]|0,UL[u.id]),0,u.cost.length);}); // 購入済みの段階（UL は装備中の段階）
@@ -1317,7 +1322,7 @@ const UV={cruise:()=>72*[1,1.1,1.2,1.3][UL.frame],bspd:()=>138*[1,1.08,1.16,1.28
  warpD:()=>UL.warp>=2?340:280,warpCd:()=>UL.warp>=2?5:9,odDur:()=>UL.od>=2?12:8,odGain:()=>UL.od>=2?1.4:1};
 const hiKey=()=>G.mode==='sd'?'pixsky_hi_sd':'pixsky_hi';
 const mslName=()=>['ミサイル','ツイン','トライ','レーザー','Fミサイル'][UL.msl]||'ミサイル';
-function bank(){duelRestore();if(G.banked||!G.score)return 0;G.banked=1;const g=Math.floor(G.score/10)+G.wave*30;CR+=g;G.earned=g;saveUp();return g;}
+function bank(){duelRestore();if(G.banked||!G.score)return 0;G.banked=1;const g=Math.floor((G.score/10+G.wave*30)*crMul());CR+=g;G.earned=g;saveUp();return g;}
 const G={state:'title',view:1,vs:1,cd:24,time:0,wave:0,score:0,hi:+(STORE.get('pixsky_hi')||0),msg:'',sub:'',msgT:0,next:-1,
  shake:0,hurt:0,pause:false,inv:false,px:3,pops:[],alertT:0,seekT:0,orb:0,fovB:0,deadT:0,tipT:0,slow:false,ts:1,sq:[],kc:null,kcQ:[],fogD:FOGD,beams:[],banked:0,earned:0,warpFx:0,mode:'normal',kills:0,fn:[]};
 let P,E=[],BL=[],MSL=[],PT=[],eye=[0,300,0],ctr=[0,0,0],cup=[0,1,0],fov=1.1,FYE=1.1,VP=I4,camF=[0,0,1],camU=[0,1,0],VW=640,VH=360;
@@ -1604,7 +1609,7 @@ function fireFunnel(){for(let i=0;i<3;i++){const sd=i-1,f=norm(add(add(mul(P.f,-
   const m={p:madd(madd(P.p,P.f,-4),P.r,sd*2.5),f,spd:55,tgt:null,life:6.5*UV.mslRange(),en:false,fun:1,kinks:5+(Math.random()<.5?1:0),kt:rnd(.2,.28),re:0};MSL.push(m);m.snd=mslVoice();}
  SFX.funnel();msg('','F MISSILE',.8);}
 // ===== EX武装：ファンネル（漏斗型ユニット。直線移動で接近→停止してビーム→次の敵へ） =====
-const exUnlocked=()=>UPG.every(u=>u.id==='tonbo'||UO[u.id]>=u.cost.length),exAvail=()=>EXON&&exUnlocked()&&G.mode!=='adv'&&G.mode!=='duel'; // アドベンチャーではEXファンネル使用禁止
+const exUnlocked=()=>UPG.every(u=>u.id==='tonbo'||u.id==='flare'||UO[u.id]>=u.cost.length),exAvail=()=>EXON&&exUnlocked()&&G.mode!=='adv'&&G.mode!=='duel'; // アドベンチャーではEXファンネル使用禁止
 function fireEX(){if(!exAvail()||G.kc||!P||!P.alive||G.state!=='play')return;const od=P.od>0;if(!od&&P.exc<=0)return;
  const n=Math.min(3,CFG.exMax-G.fn.length);if(n<=0){msg('','FUNNEL MAX '+CFG.exMax,.8);return;}if(!od)P.exc--;
  for(let i=0;i<n;i++){const a=i/3*Math.PI*2+rnd(-.3,.3),d=norm(add(add(mul(P.r,Math.cos(a)),mul(P.u,Math.sin(a)*.8+.3)),mul(P.f,.3)));
@@ -1757,6 +1762,8 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  else if(MO.on&&MO.in){const mx=mdz(MO.x),my=mdz(MO.y);P.mouse=true;
   if(!tp)tp=-my*inv;if(!tr){tr=mx;if(!mx)tr=lvl();}
   if(!ty)ty=mx*.25;}
+ if(TUT.on&&TUT.di){tp=TUT.di.p;tr=TUT.di.r;ty=0;} // チュートリアルのデモ操縦
+ else if(TUT.on&&TUT.hold&&Math.abs(bankA())>.3){const tb=Math.sign(bankA())*1.45;tr=clamp((tb-bankA())*1.6,-1,1);} // 引き起こし練習中は傾きを自動で保つ
  if(G.kc){const gh=P.p[1]-ground(P.p[0],P.p[2]);tp=gh<160||P.f[1]<-.25?.7:(P.f[1]>.35?-.4:0);tr=lvl();ty=0;P.inv=Math.max(P.inv,.6);}
  const k=Math.min(1,dt*7);P.cp+=(tp-P.cp)*k;P.cr+=(tr-P.cr)*k;P.cy+=(ty-P.cy)*k;
  if(P.man&&P.man.type==='tonbo'){const m=P.man;m.t+=dt;const k=clamp(m.t/m.dur,0,1),sm=k*k*(3-2*k),e=m.e&&!m.e.dead?m.e:null;
@@ -1824,6 +1831,8 @@ function upEnemies(dt){for(const e of E){e.flash=Math.max(0,e.flash-dt*6);if(e.t
   if(OBST()){e.obT=(e.obT||0)-dt;if(e.obT<=0){e.obT=.12;const L=Math.max(180,e.spd*1.3),c=clearDist(e.p,want,L);if(c<L){if(!(e.avT>0)||clearDist(e.p,e.avd,L)<L*.6)e.avd=avoidDir(e,want,L);e.avT=.7;}}if(e.avT>0){e.avT-=dt;want=e.avd;}} // 障害物（ビル・家具・橋）を先読みして回避
   const nf=rotTo(e.f,want,e.turn*dt),lat=dot(sub(nf,e.f),e.r0)/dt;e.f=nf;e.bank+=(clamp(lat*1.4,-1.3,1.3)-e.bank)*Math.min(1,dt*3);ebasis(e);
   e.p=madd(e.p,e.f,e.spd*dt);e.age=(e.age||0)+dt;if(OBST()&&solidAt(e.p,2)){if(e.age<2){e.p[1]+=40;}else{hurtE(e,e.hp+1,e.p);continue;}} // それでもぶつかったら墜落
+  if(G.mode!=='tut'&&!e.passive&&P.alive&&G.state==='play'){const inC=d<1000&&d>180&&dot(norm(sub(P.p,e.p)),e.f)>.93;e.mlk=inC?(e.mlk||0)+dt:Math.max(0,(e.mlk||0)-dt*1.5);e.mcd2=(e.mcd2||rnd(4,9))-dt; // 雑魚敵もロックオン→ミサイル
+   if(e.mlk>2.4&&e.mcd2<=0){e.mlk=0;e.mcd2=rnd(11,16);eMissile(madd(e.p,e.f,5),e.f.slice());}}
   if(P.alive&&e.ev<=0&&e.cd<=0&&d<CFG.fRange&&dot(norm(sub(P.p,e.p)),e.f)>CFG.fCone){e.burst=CFG.fBurst;e.cd=rnd(...CFG.fCd)-Math.min(.8,G.wave*.05);}
   if(e.burst>0){e.burst-=dt;e.bt-=dt;if(e.bt<=0){e.bt=.09;eBullet(madd(e.p,e.f,4),390,CFG.fSpread);spatial(e.p,(v,lp,pan)=>SFX.gun(v*.6,lp,pan),1500);}}
   if(Math.random()<dt*8)part(madd(e.p,e.f,-3),[0,0,0],.12,.5,[1,.4,.2],1);
@@ -1879,16 +1888,16 @@ function upShots(dt){for(const b of BL){if(b.h&&!b.en){const sp=len(b.v),dv=mul(
  const n0=PT.length;for(let i=0;i<n0;i++){const t=PT[i];if(t.deb&&t.life>0&&Math.random()<dt*28)part(t.p,[rnd(-1,1),rnd(1,3),rnd(-1,1)],rnd(1,1.8),.5,[.2,.19,.19],0,-1,1.6,.5,0,.5,1);}
  for(const t of PT){t.life-=dt;t.v[1]-=t.g*dt;if(t.drag){const k=Math.max(0,1-t.drag*dt);t.v=mul(t.v,k);}t.p=madd(t.p,t.v,dt);}
  PT=PT.filter(t=>t.life>0);}
-function update(dt){upLights(dt);flaresTick(dt);if(P)P.flCd=Math.max(0,(P.flCd||0)-dt);if(FORT.st)fortTick(dt);{if(G._kcw&&!G.kc&&!G.intro)G.safeT=2.5;G._kcw=!!(G.kc||G.intro);G.safeT=Math.max(0,(G.safeT||0)-dt);}if(CURMAP==='ty'&&eye)tyTick(dt);G.time+=dt;G.warpFx=Math.max(0,G.warpFx-dt);upBeams(dt);G.msgT-=dt;G.shake*=Math.pow(.02,dt);G.hurt=Math.max(0,G.hurt-dt*1.5);G.pops.forEach(p=>{p.t-=dt;p.p[1]+=dt*8});G.pops=G.pops.filter(p=>p.t>0);
+function update(dt){upLights(dt);flaresTick(dt);if(P){P.flCd=Math.max(0,(P.flCd||0)-dt);if(UL.flare>=2&&P.alive&&G.state==='play'&&!G.intro&&P.flCd<=0&&MSL.some(m=>m.en&&m.tgt===P&&!m.decoy&&dist(m.p,P.p)<150)){doFlare();msg('','AUTO FLARE',1);}}if(FORT.st)fortTick(dt);{if(G._kcw&&!G.kc&&!G.intro)G.safeT=2.5;G._kcw=!!(G.kc||G.intro);G.safeT=Math.max(0,(G.safeT||0)-dt);}if(CURMAP==='ty'&&eye)tyTick(dt);G.time+=dt;G.warpFx=Math.max(0,G.warpFx-dt);upBeams(dt);G.msgT-=dt;G.shake*=Math.pow(.02,dt);G.hurt=Math.max(0,G.hurt-dt*1.5);G.pops.forEach(p=>{p.t-=dt;p.p[1]+=dt*8});G.pops=G.pops.filter(p=>p.t>0);
  if(G.sq.length){const due=G.sq.filter(q=>q.t<=G.time);if(due.length){G.sq=G.sq.filter(q=>q.t>G.time);due.forEach(q=>q.fn());}}
  if(G.state==='title'||G.state==='brief'){upShots(dt);trailsUpdate();return;}
  if(G.intro){introTick(dt);upShots(dt);trailsUpdate();return;}
  if(G.state==='play')upPlayer(dt);
  upEnemies(dt);upShots(dt);upFunnels(dt);trailsUpdate();
  if(G.state==='play'){
-  if(G.mode==='normal'&&!E.length&&G.next<0&&G.wave===10&&G.mode==='normal'&&STORE.get('pixsky_clear')!=='1'&&P.alive){markWave(10);G.next=1e9;startEnding();}
+  if(G.mode==='normal'&&!E.length&&G.next<0&&!G.rtb&&G.wave===10&&G.mode==='normal'&&STORE.get('pixsky_clear')!=='1'&&P.alive){markWave(10);G.next=1e9;startEnding();}
   upWrecks(dt);if(G.mode==='tut')tutTick(dt);if(G.mode==='adv')advTick(dt);
-  if(G.mode==='normal'&&!E.length&&G.next<0){markWave(G.wave);G.next=3.2;P.hp=Math.min(100,P.hp+CFG.clearHeal);P.ms=6;msg('WAVE CLEAR','+'+CFG.clearHeal+' HP / MISSILE FULL',3);tone(880,.3,'triangle',.1);radio('clear',"Sector clear. Good work, Pixel One. Stand by.",'空域クリア。よくやった、ピクセル1。次に備えよ。',{cd:0});}
+  if(G.mode==='normal'&&!E.length&&G.next<0&&!G.rtb){markWave(G.wave);G.next=3.2;P.hp=Math.min(100,P.hp+CFG.clearHeal);P.ms=6;msg('WAVE CLEAR','+'+CFG.clearHeal+' HP / MISSILE FULL',3);tone(880,.3,'triangle',.1);radio('clear',"Sector clear. Good work, Pixel One. Stand by.",'空域クリア。よくやった、ピクセル1。次に備えよ。',{cd:0});}
   if(G.next>=0){G.next-=dt;if(G.next<0){G.next=-1;nextWave();}}
   G.alertT-=dt;if(P.alive&&MSL.some(m=>m.en&&m.tgt===P)&&G.alertT<=0){G.alertT=.22;SFX.alert();}}
  if(G.state==='dead'){G.deadT+=dt;pFallTick(dt);if(P.landed&&G.deadT>5&&!$('ov').classList.contains('show')&&!DK.on)showOver();}}
@@ -1933,6 +1942,8 @@ function camera(dt){if(G.state==='brief'){advBriefCam(dt);return;}if(G.intro){in
  if((LOOK.yaw||LOOK.pit)&&P&&P.alive&&!G.kc&&G.state==='play'&&Math.abs(LOOK.yaw)+Math.abs(LOOK.pit)>.002){const rot=(v,ax,a)=>{const c=Math.cos(a),sn=Math.sin(a);return add(add(mul(v,c),mul(cross(ax,v),sn)),mul(ax,dot(ax,v)*(1-c)));};
   if(G.vs<.5){const fe=madd(madd(P.p,P.u,1.25),P.f,1);let d=rot(P.f,P.u,LOOK.yaw);d=rot(d,norm(cross(d,P.u)),LOOK.pit);eye=fe;ctr=add(fe,d);cup=P.u.slice();} // FPS：コックピットから首を振って見回す
   else{const up=[0,1,0],fh=norm([camF[0],0,camF[2]]);let b=rot(mul(fh,-1),up,LOOK.yaw);const sd=norm(cross(b,up));b=rot(b,sd,-LOOK.pit-.22);eye=madd(P.p,b,G.cd*1.05);const gy=ground(eye[0],eye[2])+2;if(eye[1]<gy)eye[1]=gy;ctr=P.p.slice();cup=up;}} // TPS：機体を中心に回り込む
+ if(G.mode==='tut'&&TUT.on&&TUT.cam&&P&&P.alive&&!G.kc&&G.state==='play'){if(TUT.cam==='rear'){eye=add(madd(P.p,P.f,16),mul(P.u,9));ctr=add(madd(P.p,P.f,-160),mul(P.u,-4));cup=P.u.slice();fov=1.2;}
+  else{const m=enemyMsl()[0],tg=m?lerp(P.p,m.p,.5):madd(P.p,P.f,-40);eye=add(add(madd(P.p,P.f,-30),mul(P.r,70)),[0,22,0]);ctr=tg;cup=[0,1,0];fov=1.15;}} // チュートリアル：後方カメラ／横からの客観カメラ
  if((K.KeyQ||TC.back)&&P&&P.alive&&!G.kc&&G.state==='play'){eye=add(madd(P.p,P.f,16),mul(P.u,10));ctr=add(madd(P.p,P.f,-160),mul(P.u,-4));cup=P.u.slice();fov=1.15;} // 後方確認
  if(G.kc&&G.kc.type==='scramble'){const bc=ABC,y0=groundRaw(bc[0],bc[1]-140);eye=[bc[0]+40,y0+18,bc[1]-205];ctr=[bc[0]+60,y0+16,bc[1]-140];cup=[0,1,0];fov=1.05;} // 迎撃機の発進を滑走路脇から
  G.fogD=G.kc&&G.kc.ph==='cam'&&G.kc.type!=='scramble'&&G.kc.type!=='samIntro'?FOGD*.35:FOGD*(ENV.fd||1);
@@ -2054,7 +2065,7 @@ function hud(){const W=hc.width,H=hc.height;hx.setTransform(1,0,0,1,0,0);hx.clea
    if(e.hp<e.max&&e.type!=='boss'){hx.fillStyle='#000';hx.fillRect(p.x-r,p.y-r-6,r*2,3);hx.fillStyle=col;hx.fillRect(p.x-r,p.y-r-6,r*2*e.hp/e.max,3);}}
   else{let dx=p.nx,dy=p.ny;if(p.w<0){dx=-dx;dy=-dy;}const a=Math.atan2(-dy*VH/2,dx*VW/2),x=cx+Math.cos(a)*(VW/2-18),y=cy+Math.sin(a)*(VH/2-18);
    hx.fillStyle=col;hx.save();hx.translate(x,y);hx.rotate(a);hx.beginPath();hx.moveTo(8,0);hx.lineTo(-5,-6);hx.lineTo(-5,6);hx.fill();hx.restore();}}
- for(const m of MSL)if(m.en&&m.tgt===P){const p=proj(m.p);if(p.w>0&&Math.abs(p.nx)<1&&Math.abs(p.ny)<1&&(G.time*10|0)%2){hx.strokeStyle='#f33';hx.strokeRect(p.x-5,p.y-5,10,10);}}
+ for(const m of MSL)if(m.en&&(m.tgt===P||m.decoy)){const p=proj(m.p);const dc=!!m.decoy;if(p.w>0&&Math.abs(p.nx)<1&&Math.abs(p.ny)<1&&(G.time*8|0)%2){hx.strokeStyle=dc?'#d4e84a':'#f33';hx.strokeRect(p.x-5,p.y-5,10,10);}} // フレアにそらされたミサイルも橙色で表示し続ける
  for(const pp of G.pops){const p=proj(pp.p);if(p.w>0)T(pp.s,p.x,p.y,'#ffd23f',13,'center');}
  drawBeams(false);
  if(G.warpFx>0){const k=G.warpFx/.4;hx.fillStyle='rgba(120,230,255,'+.35*k+')';hx.fillRect(0,0,VW,VH);hx.strokeStyle='rgba(255,255,255,'+.8*k+')';hx.lineWidth=2;
@@ -2068,13 +2079,13 @@ function hud(){const W=hc.width,H=hc.height;hx.setTransform(1,0,0,1,0,0);hx.clea
  if(boss){const bw=portrait?150:180,bx0=portrait?12:cx-bw/2;T('FORTRESS',bx0+(portrait?0:bw/2),ty,'#f6f',10,portrait?'left':'center');hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f4c';hx.fillRect(bx0+1,ty+5,(bw-2)*boss.hp/boss.max,4);ty+=24;}
  const bsE=E.find(e=>e.type==='battleship');if(bsE){const bw=portrait?150:180,bx0=portrait?12:cx-bw/2;T('BATTLESHIP  弱点:側面',bx0+(portrait?0:bw/2),ty,'#f66',10,portrait?'left':'center');hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f55';hx.fillRect(bx0+1,ty+5,(bw-2)*bsE.hp/bsE.max,4);ty+=24;}
  if(G.mode==='fort'&&FORT.on){const bw=portrait?150:200,bx0=portrait?12:cx-bw/2,core=E.find(e=>e.type==='fpart'&&e.kind==='core');T('AIR FORTRESS  ENG '+FORT.eng+'/4  MAIN '+E.filter(e=>e.type==='fpart'&&e.kind==='main'&&!e.dead).length+'/3  '+(FORT.last?'CORE:EXPOSED':'CORE:SEALED'),bx0+(portrait?0:bw/2),ty,FORT.last?'#f96':'#d9f',10,portrait?'left':'center');if(core){hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f84';hx.fillRect(bx0+1,ty+5,(bw-2)*core.hp/core.max,4);}ty+=24;}
- fortHud();duelHud();
+ fortHud();duelHud();if(G.mode!=='duel'&&P&&P.alive&&G.state==='play'&&E.some(e=>e.type==='fighter'&&!e.dead&&e.mlk>.6)){if((G.time*6|0)%2)T('⚠ LOCK-ON WARNING',VW/2,VH*.32,'#ff6040',12,'center');if(!G.lkT||G.time>G.lkT){G.lkT=G.time+.3;tone(1250,.05,'square',.025);}}
  const cvE=E.find(e=>e.type==='carrier');if(cvE){const bw=portrait?150:180,bx0=portrait?12:cx-bw/2;T('CARRIER  弱点:艦橋',bx0+(portrait?0:bw/2),ty,'#f94',10,portrait?'left':'center');hx.fillStyle='#000';hx.fillRect(bx0,ty+4,bw,6);hx.fillStyle='#f84';hx.fillRect(bx0+1,ty+5,(bw-2)*cvE.hp/cvE.max,4);ty+=24;
   {const ip=cvIsl(cvE),q=proj(ip);if(q.w>0&&dist(ip,P.p)<1600&&G.state==='play'){const pu=.5+.5*Math.sin(G.time*8),r=7+pu*3;hx.strokeStyle='rgba(255,150,60,'+(.55+.45*pu)+')';hx.lineWidth=2;hx.beginPath();hx.moveTo(q.x,q.y-r);hx.lineTo(q.x+r,q.y);hx.lineTo(q.x,q.y+r);hx.lineTo(q.x-r,q.y);hx.closePath();hx.stroke();T('WEAK',q.x,q.y-r-4,'#fa6',9,'center');}}}
  if(sa>.01)T('◆ SLOW ×'+G.ts.toFixed(2)+' ◆'+(TOUCH?'':'  [Z]'),cx,portrait?VH*.2:(boss?60:42),'#9cf',12,'center');
  const BW=TOUCH?72:104,xr=(UL.warp?1:0)+(UL.od?1:0)+(exAvail()?1:0),bx=48,by=TOUCH?(portrait?ty+26:72):VH-44-12*xr;
  bar(bx,by,BW,P.hp/100,P.hp<35?'#f44':'#5f8','機体');bar(bx,by+12,BW,P.boost,'#5df','加速');bar(bx,by+24,BW,P.heat,P.over?((G.time*8|0)%2?'#f44':'#622'):'#fa3','機銃熱');
- let yy=by+36;bar(bx,yy,BW,1-Math.max(0,P.flCd||0)/CFG.flareCd,(P.flCd||0)>0?'#a73':'#ffb347','フレア');yy+=12;if(UL.warp){bar(bx,yy,BW,1-Math.max(0,P.warpCd)/UV.warpCd(),'#5ef0ff','ワープ');yy+=12;}if(UL.od)bar(bx,yy,BW,P.od>0?P.od/UV.odDur():P.odG,P.od>0||P.odG>=1?((G.time*6|0)%2?'#ffd23f':'#fff'):'#c93','覚醒');
+ let yy=by+36;bar(bx,yy,BW,1-Math.max(0,P.flCd||0)/flCd(),(P.flCd||0)>0?'#a73':'#ffb347','フレア');yy+=12;if(UL.warp){bar(bx,yy,BW,1-Math.max(0,P.warpCd)/UV.warpCd(),'#5ef0ff','ワープ');yy+=12;}if(UL.od)bar(bx,yy,BW,P.od>0?P.od/UV.odDur():P.odG,P.od>0||P.odG>=1?((G.time*6|0)%2?'#ffd23f':'#fff'):'#c93','覚醒');
  if(UL.od)yy+=12;if(exAvail()){T('ファンネル',bx-4,yy+6,'#6bf',8,'right');for(let i=0;i<CFG.exAmmo;i++){hx.fillStyle=i<P.exc?'#6bf':'#334';hx.fillRect(bx+i*14,yy,11,6);}T('稼働 '+G.fn.length+'/'+CFG.exMax,bx+46,yy+6,'#9cf',9,'left');}
  T('ミサイル',bx-4,by-8,'#ccd',9,'right');
  {for(let i=0;i<6;i++){hx.fillStyle=i<P.ms?'#fff':'#334';hx.fillRect(bx+i*12,by-15,9,6);}if(P.ms<6){hx.fillStyle='#8ab';hx.fillRect(bx+P.ms*12,by-8,9*P.msT/2.6,1);}}
@@ -2142,7 +2153,7 @@ function drawTouch(){
  // buttons
  for(const b of tcButtons()){const pr=!!TC.pr[b.id];hx.globalAlpha=pr?.8:.26;hx.fillStyle=pr?b.c:'#0a1430';hx.beginPath();hx.arc(b.x,b.y,b.r,0,7);hx.fill();
   hx.globalAlpha=pr?1:.55;hx.strokeStyle=b.c;hx.lineWidth=2;hx.beginPath();hx.arc(b.x,b.y,b.r,0,7);hx.stroke();
-  let v=null;if(b.id==='fire')v=1-P.heat;if(b.id==='roll')v=1-Math.max(0,P.flCd||0)/CFG.flareCd;if(b.id==='boost')v=P.boost;if(b.id==='msl')v=P.ms/6;if(b.id==='warp')v=1-Math.max(0,P.warpCd)/UV.warpCd();if(b.id==='tonbo')v=1-Math.max(0,P.tbCd||0)/CFG.tonboCd;if(b.id==='ex')v=P.exc/CFG.exAmmo;if(b.id==='od')v=P.od>0?P.od/UV.odDur():P.odG;
+  let v=null;if(b.id==='fire')v=1-P.heat;if(b.id==='roll')v=1-Math.max(0,P.flCd||0)/flCd();if(b.id==='boost')v=P.boost;if(b.id==='msl')v=P.ms/6;if(b.id==='warp')v=1-Math.max(0,P.warpCd)/UV.warpCd();if(b.id==='tonbo')v=1-Math.max(0,P.tbCd||0)/CFG.tonboCd;if(b.id==='ex')v=P.exc/CFG.exAmmo;if(b.id==='od')v=P.od>0?P.od/UV.odDur():P.odG;
   if(v!==null){hx.lineWidth=3;hx.strokeStyle=b.id==='fire'&&P.over?'#f44':'#fff';hx.beginPath();hx.arc(b.x,b.y,b.r+4,-Math.PI/2,-Math.PI/2+Math.PI*2*clamp(v,0,1));hx.stroke();}
   if(b.id==='slow'&&G.slow){hx.lineWidth=3;hx.strokeStyle='#9cf';hx.beginPath();hx.arc(b.x,b.y,b.r+4,0,7);hx.stroke();}
   hx.globalAlpha=1;hx.globalAlpha=pr?1:.9;const ic=pr?'#000':'#fff';if(b.top){icon(b.id,b.x,b.y,b.r*.6,ic);T(b.l,b.x,b.y+b.r+10,'#dde',8,'center');}else{icon(b.id,b.x,b.y-b.r*.17,b.r*.5,ic);T(b.l,b.x,b.y+b.r*.66,ic,b.r>30?11:b.l.length>4?7:8,'center');}hx.globalAlpha=1;
@@ -2166,7 +2177,7 @@ addEventListener('resize',resize);addEventListener('orientationchange',()=>setTi
 let last=performance.now();
 function goFull(){if(!TOUCH)return;try{const d=document.documentElement,f=d.requestFullscreen||d.webkitRequestFullscreen;if(f&&!document.fullscreenElement){const r=f.call(d);if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
 function tcReset(){if(TC.free)TC.free.clear();TC.pinch=null;TC.bp=null;TC.lk=null;LOOK.yaw=LOOK.pit=0;TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
-function start(){duelRestore();FLR=[];G.wallFire=null;FORT.on=false;FORT.st='';G.safeT=0;TY.pend=[];TY.bolts=[];TY.fl=0;TY.zone=0;G.intro=null;INTRO=null;WRK=[];PWK=null;LIGHTS=[];{const wm=G.mode==='duel'?'island':G.mode==='fort'?(MAPDEF[G.map].night?'islandN':'island'):G.map;if(G.mode!=='adv'&&CURMAP!==wm&&!ADV.on)setMap(wm);}if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
+function start(){G.rtb=0;duelRestore();FLR=[];G.wallFire=null;FORT.on=false;FORT.st='';G.safeT=0;TY.pend=[];TY.bolts=[];TY.fl=0;TY.zone=0;G.intro=null;INTRO=null;WRK=[];PWK=null;LIGHTS=[];{const wm=(G.mode==='duel'||G.mode==='tut')?'island':G.mode==='fort'?(MAPDEF[G.map].night?'islandN':'island'):G.map;if(G.mode!=='adv'&&CURMAP!==wm&&!ADV.on)setMap(wm);}if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
  if(G.mode==='normal'||G.mode==='sd'||G.mode==='adv'||G.mode==='fort')introStart();
  if(G.mode!=='tut'&&G.mode!=='adv'&&G.mode!=='duel')radio('start',G.mode==='sd'?"Sky Control to Pixel One. Hostiles are endless. Stay alive.":"Sky Control to Pixel One. Weapons free. Good hunting.",G.mode==='sd'?'管制よりピクセル1へ。敵は途切れない。生き残れ。':'管制よりピクセル1へ。兵装使用許可。健闘を祈る。',{pri:1,cd:0});if(G.mode==='normal')radioWave();G.tipT=G.mode==='tut'||G.mode==='adv'?0:G.time+(TOUCH?8:10);G.pause=false;G.ts=1;}
 // ===== 空母・戦艦の撃沈演出：中央で真っ二つに折れて炎上し、ゆっくり沈んで消える =====
@@ -2255,12 +2266,12 @@ function igniteFx(){if(!on())return;nz(.5,.22,'lowpass',900,120,1,MS,0,.005);osc
 function catFx(){if(!on())return;nz(1.4,.16,'highpass',4500,2000,.8,MS,0,.01);osc('sine',55,30,.5,.35,MS,0,.003);nz(.35,.3,'lowpass',500,90,1,MS,0,.003);nz(.9,.1,'bandpass',1200,300,2,MS,.05,.02);} // カタパルト射出：蒸気の噴出＋ドンという衝撃
 const swp=(f0,f1,d,v,ty)=>{try{if(on())osc(ty||'sawtooth',f0,f1,d,v,MS);}catch(e){}};
 function introStart(o){o=o||{};const f0=norm([P.f[0],0,P.f[2]]),seaOK=(cp,cf)=>{const cr=[cf[2],0,-cf[0]];for(const z of[-110,-40,40,110,220,340,460])for(const x of[-34,0,34]){const q=add(add(cp,mul(cr,x)),mul(cf,z));if(FI.on?!seaAt(q[0],q[2]):(groundRaw(q[0],q[2])>-6||Math.hypot(q[0],q[2])>HALF*.9))return false;}return true;};
- let cp=null,cf=null;if(o.land){cp=[1985,0,240];cf=[0,0,1];}else if(G.mode==='adv'){let sE=0;while(sE<ADV.L&&advAt(sE).z<-1760)sE+=5;const A=advAt(sE);cf=A.T.slice();const cr0=basisF(cf).r;cp=sub(sub([A.x,0,A.z],mul(cf,457)),mul(cr0,-10));cp[1]=0;} // 発進後にルートの中心へ出るよう空母を配置 // アドベンチャー：南の海から発進／東の海の空母へ帰還
+ let cp=null,cf=null;if(o.land&&o.ret){const S=seaSpot(madd(P.p,P.f,500));if(S){cp=[S.p[0],0,S.p[2]];cf=S.f;}else{cp=[1985,0,240];cf=[0,0,1];}}else if(o.land){cp=[1985,0,240];cf=[0,0,1];}else if(G.mode==='adv'){let sE=0;while(sE<ADV.L&&advAt(sE).z<-1760)sE+=5;const A=advAt(sE);cf=A.T.slice();const cr0=basisF(cf).r;cp=sub(sub([A.x,0,A.z],mul(cf,457)),mul(cr0,-10));cp[1]=0;} // 発進後にルートの中心へ出るよう空母を配置 // アドベンチャー：南の海から発進／東の海の空母へ帰還
  if(FI.on&&!cp){const a=Math.atan2(-P.p[0],-P.p[2])+rnd(-.5,.5),f=[Math.sin(a),0,Math.cos(a)];cp=[-f[0]*175,0,-f[2]*175];cf=f;} // 浮島：天空湖の中央に空母を置く
  for(let k=0;k<24&&!cp;k++){const a=(k%2?1:-1)*Math.ceil(k/2)*.26,f=[f0[0]*Math.cos(a)-f0[2]*Math.sin(a),0,f0[0]*Math.sin(a)+f0[2]*Math.cos(a)],c=[P.p[0]-f[0]*420,0,P.p[2]-f[2]*420];if(seaOK(c,f)){cp=c;cf=f;}}
  for(let k=0;k<500&&!cp;k++){const a=rnd(0,6.28),R=rnd(200,1700),c=[P.p[0]+Math.cos(a)*R,0,P.p[2]+Math.sin(a)*R],f=norm([-c[0]+rnd(-400,400),0,-c[2]+rnd(-400,400)]);if(seaOK(c,f)){cp=c;cf=f;}}
  if(!cp){let bd=1e9;for(let gx=-HALF*.8;gx<=HALF*.8;gx+=120)for(let gz=-HALF*.8;gz<=HALF*.8;gz+=120)for(let k=0;k<8;k++){const a=k*Math.PI/4,f=[Math.sin(a),0,Math.cos(a)],c=[gx,0,gz],d=Math.hypot(gx-P.p[0],gz-P.p[2]);if(d<bd&&seaOK(c,f)){bd=d;cp=c;cf=f;}}} // 近くに無ければマップ全体から一番近い海を探す
- if(!cp)return;cp[1]=SEAY;const b=basisF(cf);INTRO={t:0,cp,cf,cr:b.r,cu:b.u,said:{},land:!!o.land,lt:o.lt||0};G.intro=INTRO;P.inv=99;MSL=[];
+ if(!cp)return;cp[1]=SEAY;const b=basisF(cf);INTRO={t:0,cp,cf,cr:b.r,cu:b.u,said:{},land:!!o.land,ret:!!o.ret,lt:o.lt||0};G.intro=INTRO;P.inv=99;MSL=[];
  if(!MESH.elev){const m=new MB();m.box(0,0,0,18,1,22,[.3,.31,.35]);m.box(0,.55,0,18.4,.1,.6,[1,.8,.15],.5);m.box(0,.55,-10.8,18.4,.1,.6,[1,.8,.15],.5);m.box(0,.55,10.8,18.4,.1,.6,[1,.8,.15],.5);MESH.elev=m.build();
   const h=new MB();h.box(0,0,0,19,.1,23,[.02,.02,.03]);MESH.hole=h.build();}
  introPose(0);}
@@ -2306,7 +2317,7 @@ function introPose(t){const I=INTRO,GY=13+2.45*PJS;let z=-55,y=GY,vy=0,v=0,gear=
  const f=norm(add(mul(I.cf,v||1),[0,vy*(v?1:0),0])),pp=IW(I,-10,y,z);I.p=pp;I.f=f;I.v=v;I.gear=gear;I.ey=y;return pp;}
 function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.said[k]){I.said[k]=1;fn();}};introPose(t);
  if(I.land){once('a',()=>msg('','RETURN TO BASE — 着艦進入',2.5));if(t>4.2)once('td',()=>{tone(90,.3,'square',.1);SFX.hit();G.shake=.6;msg('','TOUCHDOWN',1.6);for(let i=0;i<16;i++)part(add(I.p,[rnd(-3,3),-2,rnd(-3,3)]),[rnd(-5,5),rnd(3,9),rnd(-12,-2)],1.4,rnd(2,3.5),[.75,.75,.75],0,0,2,.4,0,1);});
-  if(t>5.6)once('ok',()=>{msg('MISSION COMPLETE','おかえり、ピクセル1',3);SFX.wave();});if(t>=8)introEnd();return;}
+  if(t>5.6)once('ok',()=>{msg(I.ret?'RETURN TO BASE':'MISSION COMPLETE','おかえり、ピクセル1',3);SFX.wave();});if(t>=8)introEnd();return;}
  const b=basisF(I.f),noz=madd(I.p,I.f,-6.6);
  once('elev',()=>{swp(48,70,2.3,.03,'triangle');msg('','SORTIE — 甲板へ移動',2);});
  if(t>2.4)once('clank',()=>{tone(140,.14,'square',.1);tone(90,.2,'square',.08);});
@@ -2320,7 +2331,13 @@ function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.sai
  if(I.ph==='cat'&&Math.random()<.8)part(IW(I,-10+rnd(-2,2),13.5,-55+rnd(0,20)),[rnd(-4,4),rnd(6,14),rnd(-4,4)],1.6,.9,[.92,.94,.98],1); // カタパルトの蒸気
  if(I.ph==='fly')part(noz,mul(I.f,-40),.3,.2,[.5,.85,1],1);
  if(t>=11.2)introEnd();}
-function introEnd(){jetStop(.5);const I=INTRO;if(!I)return;if(I.land){G.intro=null;INTRO=null;advFinish(true,I.lt);return;}if(I.t<11.2){I.t=11.2;introPose(11.2);}G.intro=null;INTRO=null;
+// ===== 帰還：ポーズメニューから空母へ着艦して終了（それまでの獲得クレジットはそのまま） =====
+function doRTB(){if(G.state!=='play'||!P||!P.alive||G.mode==='tut'||G.mode==='adv')return;setPause(false);G.kc=null;G.kcQ=[];MSL=[];BL=[];P.inv=1e9;
+ if(G.mode==='duel'){DUEL.e=null;}G.rtb=1;
+ radio('rtb',"Copy, Pixel One. RTB approved. Mother is waiting for you.",'了解、ピクセル1。帰還を許可する。母艦が待ってるぞ。',{pri:1,cd:0});msg('RTB','空母へ帰還する',2);G.sq.push({t:G.time+1.2,fn:()=>{if(P.alive&&G.state==='play'){E=[];MSL=[];BL=[];if(G.mode==='fort'){FORT.on=false;FORT.st='';}introStart({land:1,ret:1});}}});}
+function rtbFinish(){const hi=G.score>+(STORE.get(hiKey())||0);if(hi)STORE.set(hiKey(),G.score);G.hi=Math.max(G.hi,G.score);bank();E=[];MSL=[];G.state='title';showOver();
+ $('ovMsg').textContent='RETURN TO BASE — 帰還成功\nSCORE '+G.score+(G.mode==='normal'?'   WAVE '+G.wave:'')+'\n+'+(G.earned||0)+' CR 獲得';crText();}
+function introEnd(){jetStop(.5);const I=INTRO;if(!I)return;if(I.ret){G.intro=null;INTRO=null;rtbFinish();return;}if(I.land){G.intro=null;INTRO=null;advFinish(true,I.lt);return;}if(I.t<11.2){I.t=11.2;introPose(11.2);}G.intro=null;INTRO=null;
  P.p=I.p.slice();P.f=I.f.slice();P.u=norm(sub(UP,mul(P.f,dot(UP,P.f))));P.r=norm(cross(P.f,P.u));P.spd=Math.max(UV.cruise(),100);P.inv=2;camF=P.f.slice();camU=P.u.slice();G.shake=0;
  if(G.mode==='adv'){ADV.t=0;{let bs=0,bd=1e9;for(let s2=0;s2<ADV.L*.3;s2+=4){const A=advAt(s2),d=Math.hypot(A.x-P.p[0],A.z-P.p[2]);if(d<bd){bd=d;bs=s2;}}const A=advAt(bs);P.p=[A.x,Math.max(P.p[1],Math.max(groundRaw(A.x,A.z),0)+55),A.z];P.f=A.T.slice();P.u=[0,1,0];P.r=norm(cross(P.f,P.u));camF=P.f.slice();camU=P.u.slice();} // ルートの中心・進行方向に合わせる
  msg('MISSION 01','CANYON RUN — ALT '+ADV.ceil*3+' 以下を維持して谷へ',3);}else if(G.mode!=='fort'&&G.mode!=='duel')msg(G.mode==='sd'?'SUDDEN DEATH':'WAVE '+G.wave,G.mode==='sd'?'敵が途切れず出続ける':'ENEMY '+E.filter(e=>!e.dead&&e.type!=='weak').length+' UNITS',2.2);}
@@ -2498,14 +2515,19 @@ const TPH=[
  {g:'基本操作',focus:'stick',arrow:'ud',slow:.45,tx:()=>TOUCH?'画面左のスティックを上下に動かしてみよう。機首が上下に動きます':'W / S（↑ / ↓）で機首を上下に動かしてみよう',
   en:"Welcome aboard, Pixel One. First, move the stick up and down. Feel the nose respond.",ja:'ようこそ、ピクセル1。まずはスティックを上下に。機首の動きを感じろ。',
   tick(rt){if(Math.abs(P.cp)>.3)TUT.acc+=rt;return TUT.acc/1.4;}},
- {g:'旋回',focus:'stick',arrow:'lr',slow:.3,tx:()=>TOUCH?'① スティックを左か右に倒して、機体を横に傾けよう':'① A / D（← / →）で、機体を横に傾けよう',
-  en:"Now let's turn. First, roll her over. Tip the stick left or right.",ja:'次は旋回だ。まずスティックを左右に倒して、機体を横に傾けろ。',
+ {g:'旋回',slow:0,tx:()=>'【お手本】旋回は「①横に傾ける → ②スティックを'+(pullDir()==='up'?'上':'下')+'に引く」の2ステップ。まずは見ていよう',
+  en:"Watch first. To turn: roll into the bank, then pull the nose. Let me show you.",ja:'まず見ておけ。旋回は、機体を傾けてから機首を引く。お手本を見せる。',
+  init(){tutAlt();TUT.dt=0;TUT.dn=0;TUT.di={p:0,r:0,st:''};},tick(rt){TUT.dt+=rt;const c=TUT.dt%5.6,n=Math.floor(TUT.dt/5.6),sd=n%2?-1:1,pu=1;if(n!==TUT.dn){TUT.dn=n;tutAlt();}
+   const hb=clamp((sd*1.48-bankA())*3,-1,1);if(c<1.6){TUT.di={p:0,r:hb,st:'① 横に倒す'};}else if(c<4.2){TUT.di={p:pu,r:hb,st:'② '+(pullDir()==='up'?'上':'下')+'に引く → 旋回！'};}else TUT.di={p:0,r:clamp(-bankA()*2.2,-1,1),st:'③ 離すと水平に戻る'};
+   if(TUT.dt>=11.2){TUT.di=null;return 1;}return TUT.dt/11.2;}},
+ {g:'旋回',focus:'stick',arrow:'lr',slow:.3,tx:()=>TOUCH?'やってみよう！ ① スティックを右に倒して、機体を横に傾けよう':'やってみよう！ ① D（→）で機体を横に傾けよう',
+  en:"Your turn. First, roll her over.",ja:'今度はお前の番だ。まず機体を傾けろ。',init(){tutAlt();},
   tick(rt){if(Math.abs(bankA())>.9)TUT.acc+=rt;return TUT.acc/.3;}},
- {g:'旋回',focus:'stick',arrow:'pull',slow:.3,tx:()=>(TOUCH?'② 傾けたまま、スティックを'+(pullDir()==='up'?'上':'下')+'に倒そう。機首が引き起こされ、傾けた方向へ旋回します':'② 傾けたまま '+(pullDir()==='up'?'W（↑）':'S（↓）')+' で機首を引き起こすと、傾けた方向へ旋回します'),
-  en:"Good. Keep the bank, and pull the nose. That's how you turn.",ja:'いいぞ。傾けたまま機首を引き起こせ。それが旋回だ。',
-  init(){TUT.hd=Math.atan2(P.f[0],P.f[2]);},tick(rt){const h=Math.atan2(P.f[0],P.f[2]);let d=h-TUT.hd;d=Math.atan2(Math.sin(d),Math.cos(d));TUT.hd=h;if(Math.abs(bankA())>.5)TUT.acc+=Math.abs(d);return TUT.acc/1.6;}},
- {g:'旋回',focus:'stick',arrow:'release',slow:0,tx:()=>TOUCH?'③ スティックを離すと、機体は自動で水平に戻ります':'③ キーを離すと、機体は自動で水平に戻ります',
-  en:"Let go of the stick. She'll level herself out.",ja:'スティックを離せ。機体は自分で水平に戻る。',tick(rt){if(Math.abs(bankA())<.2&&TC.sid===null)TUT.acc+=rt;return TUT.acc/.8;}},
+ {g:'旋回',focus:'stick',arrow:'pull',slow:.3,tx:()=>(TOUCH?'② 傾いたね！ 今度はスティックを'+(pullDir()==='up'?'上':'下')+'へ（右から'+(pullDir()==='up'?'上':'下')+'へ指を移す）。傾きはそのまま保たれ、機体がぐーっと曲がります':'② 傾いたら D を離して '+(pullDir()==='up'?'W（↑）':'S（↓）')+' を押し続けよう。傾きはそのまま保たれ、機体が曲がります'),
+  en:"Good. Now pull the nose. The bank will hold.",ja:'いいぞ。次は機首を引け。傾きはそのまま保たれる。',
+  init(){TUT.hd=Math.atan2(P.f[0],P.f[2]);TUT.hold=1;},tick(rt){const h=Math.atan2(P.f[0],P.f[2]);let d=h-TUT.hd;d=Math.atan2(Math.sin(d),Math.cos(d));TUT.hd=h;if(Math.abs(bankA())>.5)TUT.acc+=Math.abs(d);return TUT.acc/1.6;}},
+ {g:'旋回',focus:'stick',arrow:'release',slow:0,tx:()=>TOUCH?'③ ぐるっと曲がれた！ スティックを離すと、機体は自動で水平に戻ります':'③ キーを離すと、機体は自動で水平に戻ります',
+  en:"Let go of the stick. She'll level herself out.",ja:'スティックを離せ。機体は自分で水平に戻る。',init(){TUT.hold=0;},tick(rt){if(Math.abs(bankA())<.2&&TC.sid===null)TUT.acc+=rt;return TUT.acc/.8;}},
  {g:'加速',focus:'boost',slow:.35,until:boosting_,tx:()=>TOUCH?'光っている加速ボタンを押し続けよう（ブースト）':'Shift を押し続けてブースト！',
   en:"Light the afterburner. Hold it down!",ja:'アフターバーナー点火だ。押し続けろ！',tick(rt){if(P.boosting)TUT.acc+=rt;return TUT.acc/1.6;}},
  {g:'機銃',focus:'fire',slow:.3,until:firing,tx:()=>TOUCH?'前方に標的。光っている機銃ボタンを押して撃とう！':'前方に標的。Space（左クリック）で機銃を撃とう！',
@@ -2516,38 +2538,63 @@ const TPH=[
  {g:'ミサイル',focus:'msl',slow:.3,tx:()=>TOUCH?'ロックオン完了！ 光っているミサイルボタンを押せ！':'ロックオン完了！ E（右クリック）でミサイル発射！',
   init(){TUT.ms0=P.ms;},tick(){return P.ms<TUT.ms0||MSL.some(m=>!m.en)?1:0;}},
  {g:'ミサイル',slow:0,tx:()=>'ミサイルが敵を追いかける。残りも撃墜しよう',tick(){return tutProg();}},
- {g:'ミサイル回避',slow:0,tx:()=>'後ろから敵ミサイルが接近中… 警告に注意',en:"Missile inbound on your six! Wait for it...",ja:'後方からミサイル接近！ 引きつけろ…',
-  init(){TUT.mt=1;},tick(rt){if(TUT.mt>0){TUT.mt-=rt;if(TUT.mt<=0)tutMissile();return 0;}const m=enemyMsl()[0];if(!m){TUT.mt=.8;return 0;}return dist(m.p,P.p)<230?1:0;}},
- {g:'ミサイル回避',focus:'roll',slow:.22,tx:()=>TOUCH?'今だ！ 光っているフレアボタンで回避！':'今だ！ R でフレア！',en:"Now! Flares!",ja:'今だ！フレアを撒け！',
-  tick(){return P.flareT&&G.time-P.flareT<1.5?1:0;}},
- {g:'ミサイル回避',slow:0,tx:()=>'フレアがミサイルを引き付けた！ 再使用まで7秒',tick(rt){TUT.acc+=rt;return enemyMsl().length?Math.min(.9,TUT.acc/2):1;}},
- {g:'背後の敵',focus:'boost',slow:.3,until:boosting_,tx:()=>TOUCH?'背後に敵機！ まず加速ボタンを押し続けて…':'背後に敵機！ まず Shift で加速しながら…',
-  en:"Bandit on your six! Hit the burner, then pull an emergency turn!",ja:'背後に敵機！加速して、緊急転回しろ！',
-  init(){const e=spawnFighter();e.passive=1;e.hp=e.max=6;e.p=add(madd(P.p,P.f,-150),[0,6,0]);e.f=P.f.slice();ebasis(e);TUT.tg=[e];},tick(){return P.boosting?1:0;}},
- {g:'背後の敵',focus:'turn',slow:.3,tx:()=>TOUCH?'…加速したまま、光っている反転ボタンで緊急転回！':'…加速したまま T で緊急転回！',tick(){return P.man&&P.man.type==='imm'?1:0;}},
- {g:'背後の敵',slow:0,tx:()=>'敵を正面に捉えよう。そのまま撃墜してもOK',tick(rt){const e=TUT.tg[0];if(!e||e.dead)return 1;const v=sub(e.p,P.p),d=len(v);if(dot(v,P.f)/d>.9&&d<650)TUT.acc+=rt;return TUT.acc/.4;}}];
+ {g:'ミサイル回避',slow:0,tx:()=>'⚠ 後方から敵ミサイルが接近中！（後方カメラ）',en:"Missile inbound on your six! Wait for it...",ja:'後方からミサイル接近！ 引きつけろ…',
+  init(){TUT.mt=.6;TUT.cam='rear';},tick(rt){if(TUT.mt>0){TUT.mt-=rt;if(TUT.mt<=0)tutMissile();return 0;}const m=enemyMsl()[0];if(!m){TUT.mt=.8;return 0;}return dist(m.p,P.p)<230?1:0;}},
+ {g:'ミサイル回避',focus:'roll',slow:.22,tx:()=>TOUCH?'今だ！ 光っているフレアボタンを押せ！':'今だ！ R でフレア！',en:"Now! Flares!",ja:'今だ！フレアを撒け！',
+  init(){TUT.cam='rear';},tick(){return P.flareT&&G.time-P.flareT<1.5?1:0;}},
+ {g:'ミサイル回避',slow:0,tx:()=>'フレアがミサイルを引き付けて爆発させた！ フレアは再使用まで4秒',init(){TUT.cam='rear';TUT.acc=0;},tick(rt){TUT.acc+=rt;return enemyMsl().length?Math.min(.8,TUT.acc/3):Math.min(1,TUT.acc/1.6);}},
+ {g:'背後の敵',slow:0,tx:()=>'⚠ 真後ろに敵機！（後方カメラ）このままでは撃たれる…',
+  en:"Bandit on your six! Check your tail!",ja:'背後に敵機！後ろを見ろ！',
+  init(){tutCenter();const e=spawnFighter();e.passive=1;e.hp=e.max=6;e.p=add(madd(P.p,P.f,-130),[0,5,0]);e.f=P.f.slice();e.spd=P.spd;e.base=P.spd;ebasis(e);TUT.tg=[e];TUT.cam='rear';TUT.acc=0;},
+  tick(rt){const e=TUT.tg[0];if(e&&!e.dead){e.spd=P.spd*.98;}TUT.acc+=rt;return TUT.acc/2.6;}},
+ {g:'背後の敵',focus:'boost',slow:.3,until:boosting_,radar:1,tx:()=>(TOUCH?'加速ボタンを押し続けて振り切れ！':'Shift を押し続けて振り切れ！')+' 右上のレーダーで、敵（赤い点）が自機（中央）から離れていくのを確認しよう',
+  en:"Hit the burner and extend! Watch the radar until he's well behind you.",ja:'アフターバーナーで距離を取れ！レーダーで敵が離れたのを確認しろ。',
+  tick(){const e=TUT.tg[0];if(!e||e.dead)return 1;e.spd=Math.min(e.spd,UV.cruise()*.7);P.boost=Math.max(P.boost,.35);return clamp((dist(e.p,P.p)-130)/(400-130),0,1);}},
+ {g:'背後の敵',focus:'turn',slow:.3,radar:1,tx:()=>TOUCH?'十分に離れた！ 光っている反転ボタンで緊急転回！':'十分に離れた！ T で緊急転回！',
+  en:"That's enough room. Now, reverse!",ja:'十分離れた。今だ、反転しろ！',tick(){return P.man&&P.man.type==='imm'?1:0;}},
+ {g:'背後の敵',slow:.45,tx:()=>'敵が正面に来た！ 画面の中央に捉え続けてロックオン（□が赤く）',
+  en:"He's in front of you. Lock him up!",ja:'敵が正面だ。ロックオンしろ！',until:()=>P.locked||(P.locks&&P.locks.length),
+  init(){P.ms=6;},tick(){const e=TUT.tg[0];if(!e||e.dead)return 1;if(P.man)return 0;return (P.locks&&P.locks.length)||P.locked?1:0;}},
+ {g:'背後の敵',focus:'msl',slow:.3,tx:()=>TOUCH?'ロックオン完了！ 光っているミサイルボタンを押せ！':'ロックオン完了！ E（右クリック）でミサイル発射！',
+  init(){TUT.ms0=P.ms;},tick(){const e=TUT.tg[0];if(!e||e.dead)return 1;return P.ms<TUT.ms0||MSL.some(m=>!m.en)?1:0;}},
+ {g:'背後の敵',slow:0,tx:()=>'ミサイルが敵を追いかける… 撃墜せよ！',init(){TUT.acc=0;},tick(rt){const e=TUT.tg[0];if(!e||e.dead)return 1;TUT.acc+=rt;if(TUT.acc>7){TUT.acc=0;P.ms=Math.max(P.ms,2);}return .3;}},
+ {g:'視点',focus:'view',slow:.35,tx:()=>(TOUCH?'最後に視点の切り替え。上の「'+(TUT.v0>.5?'TPS':'FPS')+'」ボタンを押すと、':'最後に視点の切り替え。V キーを押すと、')+(TUT.v0>.5?'コックピット視点（FPS・一人称）になります':'機体の後ろからの視点（TPS・三人称）になります'),
+  en:"Last thing. You can switch between cockpit view and chase view any time.",ja:'最後だ。視点はいつでもコックピットと後方視点を切り替えられる。',
+  init(){TUT.v0=G.view;},tick(){return G.view!==TUT.v0?1:0;}},
+ {g:'視点',focus:'view',slow:.35,tx:()=>G.view>.5?'TPS（三人称）になった！':(TOUCH?'これがFPS（一人称）。もう一度ボタンを押してTPS（三人称）に戻そう':'これがFPS（一人称）。もう一度 V でTPS（三人称）に戻そう'),
+  init(){TUT.acc=0;},tick(rt){if(G.view>.5)TUT.acc+=rt;return TUT.acc/.4;}},
+ {g:'視点',slow:0,tx:()=>TOUCH?'TPSでは2本指でズームできる。指を広げると寄る・狭めると引く。試してみよう':'TPSではマウスホイールでズームできる。試してみよう',
+  en:"In chase view, pinch to zoom in and out.",ja:'後方視点では、ピンチで寄ったり引いたりできる。',
+  init(){TUT.acc=0;TUT.cd0=G.cd;TUT.tt=0;},tick(rt){TUT.tt+=rt;TUT.acc+=Math.abs(G.cd-TUT.cd0);TUT.cd0=G.cd;return Math.max(TUT.acc/40,TUT.tt/14);}}];
 const TGROUPS=[...new Set(TPH.map(p=>p.g))];
 function tutTargets(n,d,sp){TUT.tg=[];for(let k=0;k<n;k++){const e=spawnFighter();e.passive=1;e.spd=34;e.turn=.25;e.hp=e.max=Math.min(e.max,8);
  e.p=add(madd(madd(P.p,P.f,d),P.r,(k-(n-1)/2)*sp),[0,(k%2?10:-6),0]);e.p[1]=Math.max(e.p[1],ground(e.p[0],e.p[2])+80);e.f=norm([P.f[0],0,P.f[2]]);ebasis(e);TUT.tg.push(e);}}
 function dummyM(){const m=new MB(),w=[.95,.95,.95],r=[1,.2,.2];m.box(0,0,0,6,6,6,w);m.box(0,0,0,7.2,2.2,7.2,r,.5);m.box(0,0,0,2.2,7.2,7.2,r,.5);m.box(0,0,0,2.4,2.4,7.6,[1,.9,.2],1);return m.build();}
-function tutDummies(){if(!MESH.dummy)MESH.dummy=dummyM();TUT.tg=[];const c=madd(P.p,P.f,260);for(let k=0;k<3;k++){const p=add(madd(c,P.r,(k-1)*34),[0,(k===1?12:-4),0]);p[1]=Math.max(p[1],ground(p[0],p[2])+60);const e={type:'dummy',p,p0:p.slice(),hp:5,max:5,rad:8,flash:0,sc:50,cd:99};E.push(e);TUT.tg.push(e);}}
+function tutDummies(){if(!MESH.dummy)MESH.dummy=dummyM();TUT.tg=[];for(let k=0;k<2;k++){const p=k?add(madd(madd(P.p,P.f,300),P.r,22),mul(P.u,8)):madd(madd(P.p,P.f,220),P.u,-1.2);p[1]=Math.max(p[1],ground(p[0],p[2])+60);const e={type:'dummy',p,p0:p.slice(),hp:5,max:5,rad:8,flash:0,sc:50,cd:99};E.push(e);TUT.tg.push(e);}}
 const tutProg=()=>TUT.tg.length?TUT.tg.filter(e=>e.dead).length/TUT.tg.length:1;
+function tutAlt(){let g=0;for(let a=0;a<6.28;a+=.52)for(const r of[0,150,320])g=Math.max(g,ground(P.p[0]+Math.cos(a)*r,P.p[2]+Math.sin(a)*r)); // 旋回の練習：地上が見えて曲がっているのが分かる高度に下げて水平に
+ P.p[1]=g+170;P.f=norm([P.f[0],0,P.f[2]]);P.u=[0,1,0];P.r=norm(cross(P.f,P.u));P.cr=P.cp=0;camF=P.f.slice();camU=P.u.slice();}
+function tutCenter(){const h=Math.hypot(P.p[0],P.p[2]);let d=h>1?[-P.p[0]/h,0,-P.p[2]/h]:norm([P.f[0],0,P.f[2]]);const st=mul(d,-Math.min(h,700)); // 背後の敵：始める前にマップ中心へ向かう位置・向きに整える（離脱中に空域外へ出ないように）
+ P.p=[st[0],Math.max(520,ground(st[0],st[2])+320),st[2]];if(h<=1)P.p=[-d[0]*700,P.p[1],-d[2]*700];P.f=d;P.u=[0,1,0];P.r=norm(cross(P.f,P.u));P.man=null;P.oob=false;P.auto=false;camF=P.f.slice();camU=P.u.slice();MSL=[];msg('','中央空域へ移動',1.2);}
 function tutMissile(){const q=add(madd(P.p,P.f,-240),[0,15,0]);eMissile(q,norm(sub(P.p,q)));}
 function tutStart(){TUT.on=true;TUT.i=-1;G.wave=0;P.p=[0,Math.max(520,ground(0,0)+300),0];msg('TUTORIAL','基本操作を覚えよう',2.5);SFX.wave();tutNext();}
 function tutNext(){const prev=TPH[TUT.i];TUT.i++;const ph=TPH[TUT.i];
  if(!ph||!prev||ph.g!==prev.g){for(const e of E)if((e.passive||e.type==='dummy')&&!e.dead)e.dead=true;E=E.filter(e=>!e.dead);TUT.tg=[];}
- TUT.acc=0;TUT.clr=0;TUT.pr=0;TUT.rel=false;if(!ph){tutEnd(true);return;}ph.init&&ph.init();if(ph.en)radio('tut'+TUT.i,ph.en,ph.ja,{pri:1,cd:0});}
+ TUT.acc=0;TUT.clr=0;TUT.pr=0;TUT.rel=false;TUT.cam=null;TUT.di=null;TUT.hold=0;if(!ph){tutEnd(true);return;}ph.init&&ph.init();if(ph.en)radio('tut'+TUT.i,ph.en,ph.ja,{pri:1,cd:0});}
 function tutTick(dt){if(!TUT.on||!P.alive)return;P.hp=Math.max(P.hp,40);const rt=dt/Math.max(.05,G.ts);
  if(TUT.wait>0){TUT.slow=0;TUT.wait-=rt;if(TUT.wait<=0)tutNext();return;}
  const ph=TPH[TUT.i];if(!ph)return;if(ph.until&&ph.until())TUT.rel=true; // 指示どおり押したらスローを解除
  TUT.slow=ph.slow&&!TUT.rel?ph.slow:0;const pr=clamp(ph.tick(rt),0,1);TUT.pr=pr;
  for(const e of TUT.tg)if(!e.dead&&e.type!=='dummy'&&dist(e.p,P.p)>1800){e.p=add(madd(P.p,P.f,500),[rnd(-60,60),0,rnd(-60,60)]);}
  if(pr>=1){const nx=TPH[TUT.i+1],last=!nx||nx.g!==ph.g;TUT.clr=1;TUT.slow=0;TUT.wait=last?1.4:.35;if(last){SFX.wave();msg('','✓ CLEAR — '+ph.g,1.3);}else tone(1100,.08,'triangle',.06);}}
-function tutEnd(ok){const first=STORE.get('pixsky_tut')!=='1';STORE.set('pixsky_tut','1');TUT.on=false;TUT.slow=0;
+function tutEnd(ok){TUT.cam=null;TUT.di=null;TUT.hold=0;const first=STORE.get('pixsky_tut')!=='1';STORE.set('pixsky_tut','1');TUT.on=false;TUT.slow=0;
  if(ok){msg('TUTORIAL COMPLETE',first?'初回ボーナス +300 CR':'おつかれさま！',3.5);radio('tutend',"That's everything, Pixel One. You're ready for the real thing. Good luck out there.",'以上だ、ピクセル1。もう実戦に出られる。健闘を祈る。',{pri:1,cd:0});if(first){CR+=300;saveUp();}
   G.sq.push({t:G.time+4,fn:()=>{tutToTitle(ok,first);}});}else tutToTitle(false,false);}
 function tutToTitle(ok,first){E=[];MSL=[];G.state='title';G.mode='normal';showOver();$('ovMsg').textContent=ok?'チュートリアル完了！'+(first?'\n初回ボーナス +300 CR':'')+'\nノーマルプレイで出撃しよう':'チュートリアルを終了しました\n左上の 🎓 からいつでも再挑戦できます';crText();}
-function tutHud(portrait){if(!TUT.on||G.kc)return;const ph=TPH[TUT.i];if(!ph)return;if(ph.focus&&TUT.slow&&TOUCH)return; // 照らし出し表示中は tutOverlay が説明を出す
+function tutHud(portrait){if(!TUT.on||G.kc)return;const ph=TPH[TUT.i];if(!ph)return;
+ if(ph.radar){const t=performance.now()/1000,rx=VW-62,ry=62;hx.strokeStyle='rgba(255,230,90,'+(.6+.4*Math.sin(t*6))+')';hx.lineWidth=3;hx.beginPath();hx.arc(rx,ry,56+Math.sin(t*6)*3,0,7);hx.stroke();T('◀ レーダーを確認',rx-62,ry+64,'#ffe35a',11,'right');}
+ if(TUT.di&&TOUCH){const[x,y]=stickHome(),R_=SR;hx.globalAlpha=.85;hx.strokeStyle='#ffe35a';hx.lineWidth=2;hx.beginPath();hx.arc(x,y,R_,0,7);hx.stroke();hx.fillStyle='rgba(255,227,90,.8)';hx.beginPath();hx.arc(x+TUT.di.r*R_*.75,y+(TUT.di.p?(pullDir()==='up'?-1:1):0)*R_*.75,16,0,7);hx.fill();hx.globalAlpha=1;T('DEMO',x,y-R_-6,'#ffe35a',11,'center');}
+ if(TUT.di)T(TUT.di.st,VW/2,VH*.62,'#ffe35a',16,'center');if(ph.focus&&TUT.slow&&TOUCH)return; // 照らし出し表示中は tutOverlay が説明を出す
  const w=portrait?Math.min(VW-24,400):Math.min(250,VW*.32),x=portrait?VW/2-w/2:8,y=portrait?VH*.34:VH*.31,tx=ph.tx(),lines=tutWrap(tx,w-20);const h=34+lines.length*14+10,gi=TGROUPS.indexOf(ph.g);
  hx.fillStyle='rgba(5,10,25,.8)';hx.fillRect(x,y,w,h);hx.strokeStyle=TUT.clr?'#7f7':'#5ef0ff';hx.lineWidth=1.5;hx.strokeRect(x,y,w,h);
  T('TUTORIAL  '+(gi+1)+'/'+TGROUPS.length+'  '+ph.g,x+10,y+15,'#ffd23f',11,'left');lines.forEach((l,i)=>T(l,x+10,y+32+i*14,'#e8f6ff',11,'left'));
@@ -2567,7 +2614,7 @@ function tutOverlay(){if(G.mode!=='tut'||!TUT.on||G.kc||G.state!=='play'||!P||!P
 function showOver(){duelRestore();$('rsm').style.display='none';stopAllAudio();$('mapSel').style.display='';if(G.mode==='adv')advExit();$('advWrap').style.display='';$('fortWrap').style.display='';$('ovMsg').textContent=''+(G.mode==='sd'?'サドンデス':G.mode==='adv'?'アドベンチャー':G.mode==='fort'?'要塞攻略':G.mode==='duel'?'VS ACE':'ノーマルプレイ')+' — MISSION FAILED\nSCORE '+G.score+(G.mode==='sd'?'   KILLS '+G.kills:G.mode==='fort'||G.mode==='duel'?'':'   WAVE '+G.wave)+'   HI '+G.hi+'\n+'+(G.earned||0)+' CR 獲得';$('hgb').style.display='';$('sdWrap').style.display='';modeBtn();crText();$('go').textContent='ノーマルプレイ';$('goSub').style.display='';$('ov').classList.add('show');if(G.mode==='fort'&&FORT.st!=='dying'&&FORT.t0){const T_={eng:4,main:3,aa:12,vls:4},c=k=>(FORT.kc[k]||0)+'/'+T_[k];if(FORT.kc)$('ovMsg').textContent+='\n撃破：エンジン '+c('eng')+'・主砲 '+c('main')+'・機銃座 '+c('aa')+'・発射台 '+c('vls');}}
 function setPause(p){if(G.state!=='play'||G.pause===p)return;G.pause=p;if(!p)gyCalib();radioPause(p);if(!p)setTimeout(radioNext,300);for(const k in K)K[k]=0;MO.ab=false;tcReset();
  if(AC)p?AC.suspend():AC.resume();
- if(p){$('hgb').style.display='none';$('sdWrap').style.display='none';$('mapSel').style.display='none';$('advWrap').style.display='none';$('fortWrap').style.display='none';$('ovMsg').textContent='⏸ PAUSE\nSCORE '+G.score+'   WAVE '+G.wave;$('go').textContent='▶ RESUME';$('rsm').style.display='';$('goSub').style.display='none';$('pz').style.display='block';$('tsk').style.display=G.mode==='tut'?'':'none';$('ov').classList.add('show');}
+ if(p){$('hgb').style.display='none';$('sdWrap').style.display='none';$('mapSel').style.display='none';$('advWrap').style.display='none';$('fortWrap').style.display='none';$('ovMsg').textContent='⏸ PAUSE\nSCORE '+G.score+'   WAVE '+G.wave;$('go').textContent='▶ RESUME';$('rsm').style.display='';$('goSub').style.display='none';$('pz').style.display='block';$('rtb').style.display=(G.mode==='tut'||G.mode==='adv')?'none':'';$('tsk').style.display=G.mode==='tut'?'':'none';$('ov').classList.add('show');}
  else{$('ov').classList.remove('show');$('rsm').style.display='none';$('pz').style.display='none';$('go').blur();last=performance.now();}}
 $('endC').onclick=()=>endClose(true);$('endT').onclick=()=>endClose(false);
 function tutAsk(mode,go){if(STORE.get('pixsky_tut')){go();return;}askBox('TUTORIAL','<div class="nm">🎓 はじめてのプレイ</div><div class="ds" style="text-align:center">チュートリアルをしますか？<br>操作をスローモーションで1つずつ練習できます<br><small>（あとから左上の 🎓 でいつでもプレイ可能）</small></div>','チュートリアルへ',()=>{G.mode='tut';start();},'スキップ',()=>{STORE.set('pixsky_tut','skip');go();});}
@@ -2577,7 +2624,7 @@ $('lnb').onclick=()=>{if(G.selMode==='sd'&&isLocked('sdb'))G.selMode='normal';co
 function modeBtn(){}
 // ===== 解放条件：ミッション＝ノーマルでWAVE5を1度クリア、サドンデス＝WAVE10を1度クリア =====
 const maxWave=()=>Math.max(+(STORE.get('pixsky_maxw')||0),STORE.get('pixsky_clear')==='1'?10:0,['pixsky_adv1','pixsky_fort1','pixsky_duel1'].some(k=>STORE.get(k)==='1')?5:0); // 既にミッションをクリア済みの人は解放扱い
-function markWave(w){if(G.mode==='normal'&&w>=5&&(G.map==='island'||G.map==='islandN')&&STORE.get('pixsky_mapu')!=='1'){STORE.set('pixsky_mapu','1');G.sq.push({t:G.time+6.5,fn:()=>msg('UNLOCKED','🗺 すべてのマップが解放された！',3.5)});}
+function markWave(w){{const gi=mapGi(G.map);if(G.mode==='normal'&&w>=5&&gi===mapLv()-1&&gi<MGRP.length-1){STORE.set('pixsky_mapl',String(gi+2));const nm=MGRP[gi+1];G.sq.push({t:G.time+6.5,fn:()=>msg('UNLOCKED','🗺 新マップ「'+nm.ic+' '+nm.n+'」が解放された！',3.5)});}}
  if(G.mode==='normal'&&w>maxWave()){STORE.set('pixsky_maxw',w);if(w===5)G.sq.push({t:G.time+3.5,fn:()=>msg('UNLOCKED','🎯 ミッションが解放された！',3.5)});if(w===10)G.sq.push({t:G.time+3.5,fn:()=>msg('UNLOCKED','☠ サドンデスが解放された！',3.5)});}}
 const UNL={msb:{w:5,n:'🎯 ミッション'},sdb:{w:10,n:'☠ サドンデス'}},isLocked=id=>maxWave()<UNL[id].w;
 function lockRefresh(){for(const id in UNL){const el=$(id),L=isLocked(id);el.classList.toggle('locked',L);let t=el.querySelector('.lk');if(L&&!t){t=document.createElement('span');t.className='lk';el.appendChild(t);}if(t)t.textContent=L?'🔒 WAVE '+UNL[id].w+' クリアで解放':'';if(!L&&t)t.remove();}}
@@ -2586,6 +2633,7 @@ $('sdb').onclick=()=>{if(isLocked('sdb')){lockInfo('sdb');return;}selMode('sd');
 $('ftb').onclick=()=>tutAsk('fort',()=>{G.mode='fort';start();});
 $('tub').onclick=()=>askBox('TUTORIAL','<div class="nm">🎓 チュートリアル</div><div class="ds" style="text-align:center">チュートリアルをプレイしますか？<br>基本操作・機銃・ミサイル・回避などを7ステップで練習します</div>','プレイする',()=>{G.mode='tut';start();});
 $('advb').onclick=()=>tutAsk('adv',()=>advBrief());$('bfGo').onclick=()=>{G.mode='adv';start();};$('bfRe').onclick=()=>{ADV.briefT=0;};$('bfBk').onclick=()=>{$('brief').classList.remove('show');advExit();G.state='title';G.mode='normal';$('ov').classList.add('show');};$('tsk').onclick=()=>{G.pause=false;radioPause(false);$('pz').style.display='none';tutEnd(false);};
+$('rtb').onclick=()=>doRTB();
 $('pr').onclick=()=>{bank();G.pause=false;$('pz').style.display='none';start();};
 function setsRefresh(){const iv='⇅ 上下反転：<b>'+(G.inv?'ON':'OFF')+'</b>';$('inv').innerHTML=iv;$('invb').innerHTML=iv;$('vwb').innerHTML='👁 視点：<b>'+(G.view>.5?'三人称':'一人称')+'</b>';}
 function setInv(v){G.inv=v;STORE.set('pixsky_inv',v?'1':'0');setsRefresh();}
@@ -2799,7 +2847,7 @@ function tryCode(){const v=$('chc').value.trim().toLowerCase();$('chc').value=''
 $('chb').onclick=tryCode;$('chc').addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();tryCode();}});$('chc').addEventListener('keyup',e=>e.stopPropagation());
 {let arm=0,tm=0;const rb=$('rst'),reset=()=>{arm=0;rb.classList.remove('arm');rb.textContent='⟲ データリセット';};
  rb.onclick=()=>{if(!arm){arm=1;rb.classList.add('arm');rb.textContent='⚠ もう一度押すと全データを消去';clearTimeout(tm);tm=setTimeout(reset,3000);return;}
-  clearTimeout(tm);['pixsky_up','pixsky_own','pixsky_cr','pixsky_ex','pixsky_hi','pixsky_hi_sd','pixsky_clear','pixsky_tut','pixsky_maxw','pixsky_mapu','pixsky_camo','pixsky_adv1','pixsky_fort1','pixsky_duel1'].forEach(k=>STORE.del(k)); // リセット：保存データを消して初期状態で読み込み直す
+  clearTimeout(tm);['pixsky_up','pixsky_own','pixsky_cr','pixsky_ex','pixsky_hi','pixsky_hi_sd','pixsky_clear','pixsky_tut','pixsky_maxw','pixsky_mapu','pixsky_mapl','pixsky_camo','pixsky_adv1','pixsky_fort1','pixsky_duel1'].forEach(k=>STORE.del(k)); // リセット：保存データを消して初期状態で読み込み直す
   rb.textContent='リセットしました';setTimeout(()=>location.reload(),300);};}
 $('hgb').onclick=()=>{DK.on=true;DK.ovWas=$('ov').classList.contains('show');$('ov').classList.remove('show');renderHangar();$('hg').classList.add('show');};
 $('hgx').onclick=()=>{DK.on=false;$('hg').classList.remove('show');if(DK.ovWas)$('ov').classList.add('show');crText();};
@@ -2812,7 +2860,7 @@ $('dkcOk').onclick=confOk;$('dkcNo').onclick=()=>{$('dkConf').classList.remove('
   const d=DK.drag;if(!d||d.id!==e.pointerId)return;DK.yaw=d.yaw-(e.clientX-d.x)*.009;DK.pitch=clamp(d.pitch+(e.clientY-d.y)*.006,.03,1.05);});
  const up=e=>{DK.pts.delete(e.pointerId);if(DK.pts.size<2)DK.pin=null;if(DK.drag&&DK.drag.id===e.pointerId)DK.drag=null;DK.idle=0;};v.addEventListener('pointerup',up);v.addEventListener('pointercancel',up);
  v.addEventListener('wheel',e=>{e.preventDefault();DK.zoom=clamp(DK.zoom*Math.exp(e.deltaY*.0012),.42,1.4);DK.idle=0;},{passive:false});}
-G.map=MAPDEF[STORE.get('pixsky_map')]?STORE.get('pixsky_map'):'island';if(!(STORE.get('pixsky_mapu')==='1'||STORE.get('pixsky_clear')==='1')&&G.map!=='island'&&G.map!=='islandN')G.map='island'; // 未解放のマップは島に戻す
+G.map=MAPDEF[STORE.get('pixsky_map')]?STORE.get('pixsky_map'):'island';
 // ===== メニュー用の背景イラスト（SVGをコードで生成・暗めに表示して文字を読みやすく） =====
 const JET=(x,y,s,c,a)=>`<g transform="translate(${x} ${y}) rotate(${a||0}) scale(${s})"><path d="M14 0 L4 -2 L-2 -10 L-5 -10 L-3 -2 L-10 -2 L-13 -6 L-15 -6 L-14 0 L-15 6 L-13 6 L-10 2 L-3 2 L-5 10 L-2 10 L4 2 Z" fill="${c}"/></g>`;
 const ARTS={
@@ -2870,11 +2918,19 @@ function setMapSel(k){if(k===G.map){renderMapSel();return;}$('mpkL').style.opaci
 function renderMapSel(){const g=mgOf(G.map),nt=G.map===g.night;$('srMap').textContent='MAP：'+g.ic+' '+g.n+(g.night?(nt?'・夜':'・昼'):'');
  $('mpkT').innerHTML='<button data-t="0" class="'+(nt?'':'sel')+'">☀ 昼</button><button data-t="1" class="'+(nt?'sel':'')+'"'+(g.night?'':' disabled')+'>🌙 夜</button>';
  $('mpkT').querySelectorAll('button').forEach(b=>b.onclick=()=>{const t=+b.dataset.t;setMapSel(t&&g.night?g.night:g.day);});
- $('mpkL').innerHTML=MGRP.map((m,i)=>{const L=i>0&&!mapsOpen();return '<button class="pkc'+(m===g?' sel':'')+(L?' locked':'')+'" data-i="'+i+'"><b>'+(L?'🔒 ':m.ic+' ')+m.n+'</b><small>'+(L?'🔒 島でWAVE 5クリアで解放':m.d+(m.night?'':'（昼のみ）'))+'</small></button>';}).join('');
+ $('mpkL').innerHTML=MGRP.map((m,i)=>{const L=i>=mapLv();return '<button class="pkc'+(m===g?' sel':'')+(L?' locked':'')+'" data-i="'+i+'"><b>'+(L?'🔒 ':m.ic+' ')+m.n+(!L&&(i||(nt&&m.night))?' <span class="mul">CR×'+(+(MCRMUL[i]+(nt&&m.night?.15:0)).toFixed(2))+'</span>':'')+'</b><small>'+(L?(i===mapLv()?'🔒 '+MGRP[i-1].n+'でWAVE 5 or '+MPRICE[i].toLocaleString()+' CR':'🔒 '+MGRP[i-1].n+'の解放後'):m.d+(m.night?'':'（昼のみ）'))+'</small></button>';}).join('');
  $('mpkL').querySelectorAll('button').forEach(b=>artBg(b,MGRP[+b.dataset.i].art,nt));
- $('mpkL').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,m=MGRP[i];if(i>0&&!mapsOpen()){mapLockInfo();return;}setMapSel(nt&&m.night?m.night:m.day);});}
-function mapsOpen(){return STORE.get('pixsky_mapu')==='1'||STORE.get('pixsky_clear')==='1';}
-function mapLockInfo(){tone(220,.08,'square',.05);askBox('LOCKED','<div class="nm">🔒 マップ</div><div class="ds" style="text-align:center">マップ <b style="color:#ffd23f">🏝 島</b>（昼・夜どちらでも）のノーマルプレイで<br><b style="color:#ffd23f">WAVE 5</b> をクリアすると、すべてのマップが解放されます。</div>','OK',()=>{});$('dkcNo').style.display='none';}
+ $('mpkL').querySelectorAll('button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,m=MGRP[i];if(i>=mapLv()){mapLockInfo(i);return;}setMapSel(nt&&m.night?m.night:m.day);});}
+const MPRICE=[0,4000,8000,14000,22000],MCRMUL=[1,1.1,1.2,1.3,1.4]; // マップの解放価格・獲得クレジット倍率（島→市街地→古代遺跡→台風の目→浮島）
+if(STORE.get('pixsky_mapu')==='1'){if(!STORE.get('pixsky_mapl'))STORE.set('pixsky_mapl','5');STORE.del('pixsky_mapu');} // 旧バージョンの「全マップ解放」を一度だけ引き継ぐ
+function mapLv(){return clamp(+(STORE.get('pixsky_mapl')||1),1,5);}
+const mapGi=k=>MGRP.indexOf(mgOf(k)),crMul=()=>(G.mode==='normal'||G.mode==='sd')?MCRMUL[Math.max(0,mapGi(G.map))]+(MAPDEF[G.map]&&MAPDEF[G.map].night?.15:0):1; // 夜戦は+0.15
+if(mapGi(G.map)>=mapLv())G.map='island'; // 未解放のマップは島に戻す
+function mapLockInfo(i){tone(220,.08,'square',.05);const m=MGRP[i],L=mapLv();
+ if(i>L){askBox('LOCKED','<div class="nm">🔒 '+m.ic+' '+m.n+'</div><div class="ds" style="text-align:center">先に <b style="color:#ffd23f">'+MGRP[i-1].ic+' '+MGRP[i-1].n+'</b> を解放してください。<br><small>マップは 島 → 市街地 → 古代遺跡 → 台風の目 → 浮島 の順に解放されます</small></div>','OK',()=>{});$('dkcNo').style.display='none';return;}
+ const p=MPRICE[i],pv=MGRP[i-1],ok=CR>=p,body='<div class="nm">🔒 '+m.ic+' '+m.n+'</div><div class="ds" style="text-align:center"><b style="color:#ffd23f">'+pv.ic+' '+pv.n+'</b> のノーマルプレイで <b style="color:#ffd23f">WAVE 5</b> をクリアすると解放<br>または <b style="color:#ffd23f">'+p.toLocaleString()+' CR</b> で今すぐ解放<br><small>所持 '+CR.toLocaleString()+' CR'+(ok?'':'（あと '+(p-CR).toLocaleString()+' CR）')+'　／　獲得クレジット ×'+MCRMUL[i]+'（夜は+0.15）</small></div>';
+ if(ok)askBox('UNLOCK',body,p.toLocaleString()+' CR で解放',()=>{CR-=p;STORE.set('pixsky_mapl',String(i+1));saveUp();crText();SFX.wave&&SFX.wave();renderMapSel();},'やめる');
+ else{askBox('LOCKED',body,'OK',()=>{});$('dkcNo').style.display='none';}}
 $('hlpb').onclick=()=>$('hlp').classList.add('show');$('hlpX').onclick=()=>$('hlp').classList.remove('show');$('hlp').onclick=e=>{if(e.target.id==='hlp')$('hlp').classList.remove('show');};
 $('mpkX').onclick=()=>$('mpk').classList.remove('show');$('mpk').onclick=e=>{if(e.target.id==='mpk')$('mpk').classList.remove('show');};
 $('msb').onclick=()=>{if(isLocked('msb')){lockInfo('msb');return;}$('msk').classList.add('show');tone(520,.04,'square',.04);};$('mskX').onclick=()=>$('msk').classList.remove('show');$('msk').onclick=e=>{if(e.target.id==='msk')$('msk').classList.remove('show');};
