@@ -186,6 +186,11 @@ body.touch #hlpb{grid-column:1/-1}
 .srk .pkc.locked small{color:#ddd}
 .srk .modes{position:static}
 @media (max-height:520px){#lnb{padding:8px;font-size:18px;margin-top:8px}}
+
+.camo{margin:10px 0 6px;padding:8px;border:1px solid #5a3a8a;background:rgba(40,20,70,.35)}.camo .ch{font-size:12px;font-weight:bold;color:#c9a0ff;margin-bottom:6px}.camo .ch small{font-weight:normal;color:#9a8ab8;margin-left:6px;font-size:10px}
+.cps{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cpb{font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;background:#111526;border:2px solid #2c3354;cursor:pointer;color:#aab}
+.cpb span{display:block;width:100%;height:22px;border:1px solid #000}.cpb i{font-style:normal;font-size:9px;white-space:nowrap;overflow:hidden;max-width:100%}.cpb.ace{border-color:#6a2a2a}.cpb.lk{filter:grayscale(1) brightness(.45)}.cpb.lk i{color:#aaa}.cpb.ace i{color:#ff9a9a}.cpb.on{border-color:#b070ff;color:#fff;box-shadow:0 0 8px rgba(176,112,255,.6)}
+@media (max-width:520px){.cps{grid-template-columns:repeat(4,1fr)}}
 </style></head><body>
 <canvas id="gl"></canvas><canvas id="hud"></canvas><div id="tp"></div>
 <div id="end"><div class="stars"></div><div class="roll" id="endRoll">
@@ -204,7 +209,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v7.6</span></div>
+<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v8.2</span></div>
 <div id="ovMsg"></div>
 <div id="mapSel" style="display:none"></div><button id="rsm" style="display:none">▶ RESUME</button><div class="tiles2" id="advWrap"><button id="srb" class="big"><span class="bt"><b>▶ 出撃</b><i>SORTIE</i></span><small>ノーマル／サドンデス</small><em id="srMap"></em></button><button id="msb" class="big"><span class="bt"><b>🎯 ミッション</b><i>MISSION</i></span><small>アドベンチャー／要塞攻略<br>VS ACE</small><em>特別作戦</em></button></div><button id="hgb" class="hgs"><span class="hgi">🛠</span><b>HANGAR</b><small>機体強化</small><em id="hgCr"></em><span id="hgBadge" class="badge"></span></button><div class="sub3g"><button id="vwb"></button><button id="invb"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button><button id="rdo"></button><button id="hlpb">❔ 操作方法</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div id="hlp" class="pk"><div class="pkb"><div class="pkh">HOW TO PLAY</div><div class="pks">操作方法</div>
@@ -846,7 +851,7 @@ function ruinsMesh(night){const m=new MB(),vt=(i,j)=>[i*CS-HALF,HM[j*(N+1)+i],j*
 const ENVFD={night:0,fog:[.64,.79,.97],amb:1.05,sun:1.1,L:LDIR,lk:.7,fd:.45},ENVFN={night:1,fog:[.05,.07,.15],amb:.72,sun:.55,L:MDIR,lk:1.7,fd:.55};let SKYFD=null,SKYFN=null;
 // ===== ミッション：VS ACE（敵エースとの一騎打ち）。自機は無強化・ミサイル6発のみ（補充なし）。エースはミサイルを最初の2発は必ずかわし、2発までは耐える =====
 // ===== 敵エース機：双発・双垂直尾翼の制空戦闘機。空中用グレー迷彩（スプリッター） =====
-function aceJetM(){const m=new MB(),L=[.63,.66,.7],M_=[.5,.54,.59],D=[.38,.41,.46],U=[.7,.72,.75],BK=[.09,.09,.1],MT=[.3,.31,.34];
+function aceJetM(gear){const m=new MB(),L=[.63,.66,.7],M_=[.5,.54,.59],D=[.38,.41,.46],U=[.7,.72,.75],BK=[.09,.09,.1],MT=[.3,.31,.34];
  const camo=(i,k)=>{const h=hash2(i*7+k*3,91);return k>=5&&k<=8?U:h<.38?L:h<.72?M_:D;};
  loft(m,[[-7.4,.85,.62,0],[-6.4,1.05,.74,0],[-4.4,1.32,.88,.05],[-1.6,1.38,1,.1],[1.5,1.08,.96,.16],[3.6,.76,.76,.1],[5.6,.46,.48,0],[7.1,.18,.2,-.06],[8.5,.02,.02,-.1]],12,M_,camo);
  loft(m,[[.5,.06,.06,.96],[1.5,.44,.46,.96],[3.1,.44,.52,.96],[4.3,.05,.06,.8]],8,[.1,.12,.18],(i,k)=>i===1&&(k===3||k===4)?[.5,.45,.3]:[.1,.12,.18],true); // キャノピー（金色の反射）
@@ -865,6 +870,7 @@ function aceJetM(){const m=new MB(),L=[.63,.66,.7],M_=[.5,.54,.59],D=[.38,.41,.4
  // ノズル（左右）とアフターバーナーの芯
  for(const s of[-1,1]){const n=8,P_=(k,z,r)=>[s*.68+Math.cos(k/n*6.2832)*r,Math.sin(k/n*6.2832)*r,z];for(let k=0;k<n;k++){qOut(m,P_(k,-7.3,.6),P_(k+1,-7.3,.6),P_(k+1,-8.3,.5),P_(k,-8.3,.5),[s*.68,0,-7.8],k%2?MT:[.22,.22,.24]);m.t([s*.68,0,-8.0],P_(k,-8.28,.42),P_(k+1,-8.28,.42),[1,.55,.2],.9);}}
  m.box(0,.95,-3.8,.5,.12,2.2,D);m.box(0,-.9,-.5,.35,.12,3,[.25,.26,.28]);
+ if(gear){for(const s of[-1,1]){m.box(s*1.8,-1.1,-1.6,.22,1.9,.22,[.32,.33,.36]);m.box(s*1.8,-2.1,-1.6,.45,.7,.7,[.08,.08,.09]);}m.box(0,-1.2,4.6,.2,1.9,.2,[.32,.33,.36]);m.box(0,-2.15,4.6,.4,.6,.6,[.08,.08,.09]);} // ドック用の脚
  const out=m.build();
  // 翼下のミサイルはロフトの原点ずれを補正するため別メッシュにせず位置オフセットで追加済み
  return out;}
@@ -942,9 +948,9 @@ function aceGunHit(e){const now=G.time;DUEL.gh=(DUEL.gh||[]).filter(t=>now-t<1);
 function aceDie(e){explode(e.p,3);radio('acedown',"Splash the ace! Banshee is down! That was real flying, Pixel One!",'エース撃墜！バンシー撃墜だ！見事な飛びっぷりだったぞ、ピクセル1！',{pri:1,cd:0});
  G.sq.push({t:G.time+.6,fn:()=>aceSay('last',"Impossible... who ARE you...?",'馬鹿な…お前は一体…',0)});MSL=MSL.filter(m=>!m.en);P.inv=99;
  kcTrigger('aceDown',e.p,{intro:1,txt:['ACE DOWN','BANSHEE IS SPLASHED','#ffd23f'],stopT:.01,dur:4.5,slow:1,push:.25,R:90});G.sq.push({t:G.time+7,fn:()=>{if(G.mode==='duel'&&G.state==='play')duelFinish();}});}
-function duelFinish(){const first=STORE.get('pixsky_duel1')!=='1',tm=Math.round(G.time-DUEL.t0),ms=P.ms|0,rw=(first?6000:2000)+Math.max(0,300-tm)*5+ms*200+Math.round(P.hp)*5;duelRestore();CR+=rw;STORE.set('pixsky_duel1','1');saveUp();
+function duelFinish(){const first=STORE.get('pixsky_duel1')!=='1';if(first)G.sq.push({t:0,fn:()=>{}});const _f=first,tm=Math.round(G.time-DUEL.t0),ms=P.ms|0,rw=(first?6000:2000)+Math.max(0,300-tm)*5+ms*200+Math.round(P.hp)*5;duelRestore();CR+=rw;STORE.set('pixsky_duel1','1');saveUp();
  if(G.score>+(STORE.get('pixsky_hi')||0))STORE.set('pixsky_hi',G.score);bank();E=[];MSL=[];G.state='title';showOver();
- $('ovMsg').textContent='VS ACE — MISSION COMPLETE\nタイム '+Math.floor(tm/60)+'分'+(tm%60)+'秒   残弾 '+ms+'/6   機体 '+Math.round(P.hp)+'%\n報酬 +'+rw+' CR'+(first?'（初回クリア）':'')+'\n＋スコア分 '+(G.earned||0)+' CR';crText();}
+ $('ovMsg').textContent='VS ACE — MISSION COMPLETE\nタイム '+Math.floor(tm/60)+'分'+(tm%60)+'秒   残弾 '+ms+'/6   機体 '+Math.round(P.hp)+'%\n報酬 +'+rw+' CR'+(first?'（初回クリア）':'')+'\n＋スコア分 '+(G.earned||0)+' CR'+(_f?'\n★ HANGAR にエース機《BANSHEE》スキンが追加された！':'');crText();}
 function duelHud(){if(G.mode!=='duel'||!DUEL.e||G.state!=='play')return;const e=DUEL.e,W=VW,bw=Math.min(200,W*.5),x0=W/2-bw/2,y=VH>VW?118:88;
  T('VS ACE  BANSHEE',W/2,y,'#ff6a6a',11,'center');hx.fillStyle='#000';hx.fillRect(x0,y+4,bw,6);hx.fillStyle='#f55';hx.fillRect(x0+1,y+5,(bw-2)*Math.max(0,e.hp)/e.max,4);
  T('MSL '+(P.ms|0)+'/6  補充なし',W/2,y+22,P.ms>0?'#9df':'#f66',10,'center');
@@ -1134,7 +1140,7 @@ function funnelM(){const m=new MB(),b=[.55,.66,.88],F=2.1,B=-1.2,w=1.0,n=.11,bk=
  m.q(bk[3],bk[2],bk[1],bk[0],[.25,.32,.5]);m.box(0,0,F+.1,.22,.22,.22,[.55,.85,1],1);m.box(0,0,B-.08,1.15,1.15,.16,[.3,.5,.95],.7);return m.build();}
 MESH.fu=funnelM();
 const PJS=.9; // 戦闘中も精密モデルを使う（大きさは従来機に合わせて0.9倍）
-function pjFine(){const k=(UL.frame||0)+'_'+(UL.boost||0)+'_ng';if(!DJM[k])DJM[k]=dockJetM(UL.frame||0,UL.boost||0,true);return DJM[k];}
+function pjFine(){const k=(UL.frame||0)+'_'+(UL.boost||0)+'_ng_'+camoKey();if(!DJM[k])DJM[k]=dockJetM(UL.frame||0,UL.boost||0,true);return DJM[k];}
 function pjMesh(){const t=UL.frame;if(!t)return MESH.pj;if(!PJM[t])PJM[t]=jet(...PJC[t]);return PJM[t];}
 const UCB=new MB().box(0,0,0,2,2,2,[1,1,1]).a,UCN=36,BA=new Float32Array(1700*36*10),DB=gl.createBuffer();
 let wi=0;function bcube(p,s,c,e){if(wi+360>BA.length)return;for(let k=0;k<UCN;k++){const o=k*10;
@@ -2290,7 +2296,7 @@ function introCam(){const I=INTRO,t=I.t;cup=[0,1,0];G.fogD=FOGD;
 function introDraw(){const I=INTRO;if(!I)return;if(!MESH.fcv)MESH.fcv=fcarrierM();draw(MESH.fcv,mdl(I.cr,I.cu,I.cf,I.cp));
  const TG=new Float32Array([.55,.6,.66,.55]);for(const[x,,z,a]of FC_PARK){const f=norm(add(mul(I.cf,Math.cos(a+Math.PI*.5)),mul(I.cr,Math.sin(a+Math.PI*.5)))),bb=basisF(f);draw(MESH.pj,mdl(bb.r,bb.u,f,IW(I,x,14.6,z),.9),TG);} // 駐機中の僚機
  if(I.ph==='elev'){draw(MESH.hole,mdl(I.cr,I.cu,I.cf,IW(I,-10,13.03,-55)));draw(MESH.elev,mdl(I.cr,I.cu,I.cf,IW(I,-10,I.ey-2.95,-55)));}
- const b=basisF(I.f);if(I.gear){const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl;if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,I.f,I.p,PJS));}else draw(pjFine(),mdl(b.r,b.u,I.f,I.p,PJS));}
+ const b=basisF(I.f);if(I.gear){const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl+'_'+camoKey();if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,I.f,I.p,PJS));}else draw(pjFine(),mdl(b.r,b.u,I.f,I.p,PJS));}
 function introHud(){const bar=VH*.11;hx.fillStyle='#000';hx.fillRect(0,0,VW,bar);hx.fillRect(0,VH-bar,VW,bar);
  const I=INTRO,cap={elev:'FLIGHT DECK',ign:'ENGINE START',cat:'CATAPULT LAUNCH',fly:'SORTIE',app:'RETURN TO BASE',trap:'TRAP',stop:'MISSION COMPLETE'}[I.ph]||'';T(cap,16,VH-bar/2+4,'#ffd23f',12,'left');T((TOUCH?'タップ':'キー')+'でスキップ ▶▶',VW-16,VH-bar/2+4,'#aab',10,'right');
  if(G.msgT>0&&G.sub)T(G.sub,VW/2,bar+26,'#fff',14,'center');}
@@ -2644,6 +2650,7 @@ function renderHangar(){$('hgcr').innerHTML=(DBG?'<span style="color:#ff3d6e">DE
    +'<div class="cur">EQUIPPED ▸ '+(l?'Lv'+l+' '+u.lv[l-1]:'OFF')+'　/　OWNED ▸ Lv'+o+'/'+mx+'</div><div class="lvs">'+lv+'</div>'
    +'<p>'+(l?u.d[l-1]:'この装備は使わない（OFF）')+'</p>'+(!full?'<p class="nx">NEXT ▸ Lv'+(o+1)+' '+u.lv[o]+'：'+u.d[o]+'</p>':'')
    +(DBG?'':'<button class="dkbuy" data-u="'+u.id+'"'+(full||CR<c?' disabled':'')+'>'+(full?'MAX — 強化完了':CR<c?'Lv'+(o+1)+' 強化 — '+c+' CR（あと '+(c-CR)+' CR）':'Lv'+(o+1)+' へ強化 — '+c+' CR')+'</button>')
+   +(u.id==='frame'?'<div class="camo"><div class="ch">◆ 迷彩カラー／スキン <small>'+(DBG||o>=3?'迷彩は Lv3 特典'+(l===3?'':'（Lv3装備時に反映）'):'機体フレーム Lv3 で迷彩カラーも解放')+'</small></div><div class="cps">'+(DBG||o>=3?CAMO:[]).map((p,i)=>'<button class="cpb'+(i===camoSel()&&!aceSkin()?' on':'')+'" data-c="'+i+'" title="'+p.n+'"><span style="background:linear-gradient(135deg,'+p.c.slice(0,3).map((c,j)=>'rgb('+c.map(v=>Math.min(255,v*255*(p.c[1][0]>.4?1:2.2)|0))+') '+(j*33)+'% '+((j+1)*33)+'%').join(',')+');border-bottom:4px solid rgb('+p.a.map(v=>v*255|0)+')"></span><i>'+p.n+'</i></button>').join('')+'<button class="cpb ace'+(aceSkin()?' on':'')+(duelWon()||DBG?'':' lk')+'" data-c="ace" title="BANSHEE"><span style="background:linear-gradient(135deg,#a1a8b3 0 33%,#7b828c 33% 66%,#555c66 66%);border-bottom:4px solid #ff4a4a"></span><i>'+(duelWon()||DBG?'BANSHEE':'🔒 BANSHEE')+'</i></button>'+'</div>'+(aceSkin()?'<div class="sub" style="color:#ff9a9a">★ エース機《BANSHEE》スキン装着中：機体強化の見た目に関わらず、戦ったエース機の姿で出撃します（性能は今の強化のまま）</div>':'')+'</div>':'')
    +'<div class="sub">購入した段階までは、数字を押していつでも切り替えられます</div></div>';}
  else h='<div class="dkcard" style="border-left-color:#8cf">'+exRow().replace('class="row" style="border-top:2px solid #4af"','')+'</div>';
  if(DBG)h='<div style="margin-bottom:8px"><button class="allb" data-all="max">ALL MAX</button> <button class="allb" data-all="0">ALL OFF</button></div>'+h;
@@ -2651,6 +2658,7 @@ function renderHangar(){$('hgcr').innerHTML=(DBG?'<span style="color:#ff3d6e">DE
  const fx=big=>{saveUp();initAudio();if(AC&&AC.state==='suspended')AC.resume();if(big)SFX.wave();else tone(880,.06,'square',.05);renderHangar();crText();};
  $('dkTabs').querySelectorAll('.dkt').forEach(b=>b.onclick=()=>{DK.sel=b.dataset.t;tone(660,.04,'square',.04);renderHangar();});
  $('hgl').querySelectorAll('.dkbuy').forEach(b=>b.onclick=()=>openConf(UPG.find(x=>x.id===b.dataset.u)));
+ $('hgl').querySelectorAll('.cpb').forEach(b=>b.onclick=()=>{if(b.classList.contains('lk')){tone(220,.08,'square',.05);askBox('LOCKED','<div class="nm">🔒 エース機《BANSHEE》スキン</div><div class="ds" style="text-align:center">ミッション <b style="color:#ffd23f">⚔ VS ACE</b> で敵エース《BANSHEE》に勝つと解放されます。</div>','OK',()=>{});$('dkcNo').style.display='none';return;}STORE.set('pixsky_camo',b.dataset.c);fx(b.dataset.c==='ace');});
  $('hgl').querySelectorAll('.lvb').forEach(b=>{if(b.classList.contains('exb'))return;b.onclick=()=>{const id=b.dataset.u,k=+b.dataset.l;if(!DBG&&k>UO[id])return;UL[id]=k;if(DBG)UO[id]=Math.max(UO[id],k);fx(0);};});
  $('hgl').querySelectorAll('.exb').forEach(b=>b.onclick=()=>{EXON=b.dataset.ex==='1';fx(1);});
  $('hgl').querySelectorAll('.allb').forEach(b=>b.onclick=()=>{UPG.forEach(u=>{if(b.dataset.all==='max'){UL[u.id]=UO[u.id]=u.cost.length;}else UL[u.id]=0;});fx(1);});
@@ -2670,35 +2678,52 @@ function prism(m,pts,tv,col,em,ecol){const h=mul(tv,.5),T_=pts.map(q=>add(q,h)),
 function loft(m,secs,n,col,colF,arc){for(let i=0;i<secs.length-1;i++){const r=(q,k)=>{const a=arc?Math.PI*k/n:Math.PI*2*k/n+Math.PI/n;return[q[1]*Math.cos(a),q[3]+q[2]*Math.sin(a),q[0]];};
   const c=[0,(secs[i][3]+secs[i+1][3])/2,(secs[i][0]+secs[i+1][0])/2];for(let k=0;k<(arc?n:n);k++){const A=r(secs[i],k),B=r(secs[i],k+1),C=r(secs[i+1],k+1),D=r(secs[i+1],k);qOut(m,A,B,C,D,c,colF?colF(i,k):col);}}}
 const DJM=[];
-function dockJetM(lv,bl,ng){bl=bl||0;const P_=[[[.8,.82,.86],[.24,.27,.33],[.3,.85,1],[.4,.9,1]],...PJC.slice(1)][lv],[bd,dk,ac,gl]=P_,m=new MB(),gl2=[.18,.4,.55],gray=[.32,.33,.36],blk=[.08,.08,.09];
- const F=[[-6,.95,.75,0],[-5.2,1.25,.92,0],[-3.2,1.48,1.02,.05],[-1,1.42,1.08,.1],[1,1.12,1.02,.12],[3,.82,.86,.06],[4.8,.52,.56,0],[6.1,.24,.27,-.05],[7.3,.03,.03,-.1]];
- loft(m,F,10,bd,(i,k)=>i>=6&&lv>=2?(lv===3?[.05,.05,.06]:[.12,.12,.13]):(k===2||k===3)&&i<6&&i>0?mul(bd,.82):bd); // 胴体（ノーズは段階で色替え）
- loft(m,[[.3,.03,.03,.95],[1,.46,.44,.98],[2,.56,.56,1],[3,.44,.4,.96],[3.9,.03,.03,.86]],6,gl2,()=>gl2,true); // キャノピー
- for(const z of[1.2,2.5])m.box(0,1.5,z,1.15,.14,.14,lv===1?[.9,.95,1]:dk); // キャノピーの枠
+// OBSIDIAN（機体フレームLv3）専用の迷彩パレット：明・中・暗・腹
+const CAMO=[{n:'オブシディアン',a:[.7,.2,1],c:[[.17,.17,.2],[.07,.07,.085],[.025,.025,.03],[.2,.2,.23]]},{n:'ミッドナイト',a:[.2,.75,1],c:[[.12,.16,.3],[.05,.07,.14],[.02,.025,.06],[.15,.18,.3]]},
+ {n:'ウッドランド',a:[.55,1,.3],c:[[.16,.21,.13],[.07,.09,.055],[.025,.03,.02],[.19,.22,.16]]},{n:'デザート',a:[1,.6,.15],c:[[.3,.23,.14],[.13,.1,.06],[.045,.035,.025],[.3,.26,.19]]},
+ {n:'ブラッドムーン',a:[1,.15,.2],c:[[.3,.07,.09],[.12,.03,.04],[.04,.01,.015],[.26,.1,.12]]},{n:'ファントム',a:[1,.3,.85],c:[[.22,.14,.3],[.09,.055,.13],[.03,.02,.05],[.24,.17,.3]]},{n:'アークティック',a:[.15,.5,1],c:[[.88,.89,.92],[.68,.7,.74],[.46,.48,.53],[.92,.93,.95]]}];
+const duelWon=()=>STORE.get('pixsky_duel1')==='1',aceSkin=()=>STORE.get('pixsky_camo')==='ace'&&duelWon(),camoSel=()=>aceSkin()?0:clamp(+(STORE.get('pixsky_camo')||0)|0,0,CAMO.length-1),camoKey=()=>aceSkin()?'ace':camoSel(); // VS ACE勝利でエース機《BANSHEE》スキンが解放
+function dockJetM(lv,bl,ng){if(aceSkin())return aceJetM(!ng);bl=bl||0;const P0=[[[.8,.82,.86],[.24,.27,.33],[.3,.85,1],[.4,.9,1]],...PJC.slice(1)][lv],P_=lv===3?[P0[0],P0[1],CAMO[camoSel()].a,CAMO[camoSel()].a.map(v=>Math.min(1,v+.15))]:P0,[bd,dk,ac,gl]=P_,m=new MB(),gl2=[.18,.4,.55],gray=[.32,.33,.36],blk=[.08,.08,.09];
+ const F=[[-6,.86,.68,0],[-5.2,1.12,.84,0],[-3.2,1.32,.94,.05],[-1,1.3,.98,.1],[1,1.06,.95,.13],[3,.82,.82,.1],[5,.58,.58,.04],[6.8,.36,.38,-.02],[8.3,.17,.19,-.06],[9.5,.02,.02,-.08]];
+ // 迷彩：ベースカラーから明・中・暗の3トーンのスプリッター迷彩（腹側は明るめ）
+ const lift=(c,t)=>c.map(v=>Math.min(1,v+(1-v)*t)),CP=CAMO[camoSel()],C1=lv===3?CP.c[0]:lift(bd,.18),C2=lv===3?CP.c[1]:bd,C3=lv===3?CP.c[2]:mul(bd,.68),CB=lv===3?CP.c[3]:lift(bd,.32);
+ const camo=(i,k)=>{const h=hash2(i*7+k*3,91+lv*13);return k>=5&&k<=9?CB:h<.36?C1:h<.7?C2:C3;};
+ loft(m,F,10,bd,(i,k)=>i>=8&&lv>=2?(lv===3?[.05,.05,.06]:[.12,.12,.13]):camo(i,k)); // 胴体（長く細身に・ノーズは段階で色替え）
+ loft(m,[[1.4,.03,.03,.93],[2.2,.44,.42,.96],[3.3,.52,.52,.98],[4.4,.4,.38,.94],[5.4,.03,.03,.82]],6,gl2,(i,k)=>i===1&&(k===2||k===3)?[.5,.45,.3]:gl2,true); // キャノピー（細長く前寄り・金色の反射）
+ m.mir(sd=>prism(m,[[.32*sd,-.02,7.8],[1.2*sd,-.02,4.2],[1.5*sd,-.02,2.2],[.85*sd,-.02,2.2]],[0,.14,0],C2)); // ノーズのチャイン
+ const tri=(a,b,c,col,y)=>m.t([a[0],y,a[1]],[b[0],y,b[1]],[c[0],y,c[1]],col);
+ for(const z of[2.6,3.9])m.box(0,1.47,z,1.02,.12,.12,lv===1?[.9,.95,1]:dk); // キャノピーの枠
  m.mir(sd=>{m.box(1.45*sd,-.35,.6,.75,1.05,3.2,dk);m.box(1.45*sd,-.35,2.22,.6,.85,.06,blk); // エアインテーク
-  prism(m,[[1.2*sd,-.08,1.6],[6.3*sd,-.08,-2.4],[6.3*sd,-.08,-3.5],[1.2*sd,-.08,-4.1]],[0,.26,0],bd,0,mul(bd,.85)); // 主翼
-  prism(m,[[1.05*sd,.05,-3.6],[3.9*sd,.05,-5.5],[3.9*sd,.05,-6.3],[1.05*sd,.05,-6.1]],[0,.2,0],bd); // 水平尾翼
-  const cx=.75*sd,tx=1.65*sd;prism(m,[[cx,.95,-2.5],[cx,.95,-5.9],[tx,4.1,-6.3],[tx,4.1,-4.7]],[.2*Math.cos(.26),-.2*Math.sin(.26)*sd,0],bd); // 垂直尾翼（外傾）
+  prism(m,[[1.1*sd,-.08,2.4],[6.3*sd,-.08,-2.4],[6.3*sd,-.08,-3.5],[1.1*sd,-.08,-4.2]],[0,.22,0],C2,0,mul(bd,.85)); // 主翼（後退角を強めに）
+  {const W=[[1.1*sd,2.4],[3.7*sd,0],[2.4*sd,-1.2],[6.3*sd,-2.4],[4.9*sd,-2.9],[3*sd,-3.9],[6.3*sd,-3.5],[1.1*sd,-4.2]],y=.04;tri(W[0],W[1],W[2],C1,y);tri(W[1],W[3],W[4],C3,y);tri(W[2],W[4],W[5],C1,y);tri(W[4],W[6],W[5],C3,y);tri(W[0],W[2],[1.1*sd,-1],C3,y);} // 主翼上面の迷彩
+  prism(m,[[1.0*sd,.05,-3.7],[4.1*sd,.05,-5.8],[4.1*sd,.05,-6.5],[1.0*sd,.05,-6.2]],[0,.18,0],C3); // 水平尾翼
+  const cx=.75*sd,tx=1.65*sd;prism(m,[[cx,.9,-2.3],[cx,.9,-5.9],[tx,4.1,-6.4],[tx,4.1,-5]],[.18*Math.cos(.26),-.18*Math.sin(.26)*sd,0],C3); // 垂直尾翼（外傾）
+  m.t([lerp([cx,.9,-3],[tx,4.1,-5.2],.5)[0]+.12*sd,2.4,-4.3],[lerp([cx,.9,-3],[tx,4.1,-5.2],.5)[0]+.12*sd,2.4,-5.6],[tx+.1*sd,3.6,-6],C1); // 尾翼の迷彩
   m.box(tx,4.15,-5.5,.24,.2,1.6,ac,.4);m.box(tx,4.2,-6.2,.18,.18,.18,[1,.2,.2],1); // 尾翼端・衝突防止灯
   m.box(6.35*sd,-.08,-2.95,.18,.34,1.3,ac,.25);m.box(6.4*sd,-.05,-2.4,.12,.12,.12,sd>0?[.2,1,.3]:[1,.2,.2],1); // 翼端・航法灯
   // 降着装置（ドックでは脚を出して駐機）
   if(!ng){m.box(1.7*sd,-1.1,-1.3,.22,1.9,.22,gray);m.box(1.7*sd,-2.1,-1.3,.45,.7,.7,blk);}m.box(1.25*sd,-.7,-1.3,.9,.08,.6,dk);});
- if(!ng){m.box(0,-1.2,4.4,.2,1.9,.2,gray);m.box(0,-2.15,4.4,.4,.6,.6,blk);}m.box(0,.08,7.6,.05,.05,.9,gray); // 前脚・ピトー管
+ if(!ng){m.box(0,-1.2,4.4,.2,1.9,.2,gray);m.box(0,-2.15,4.4,.4,.6,.6,blk);}m.box(0,-.06,9.8,.05,.05,.9,gray); // 前脚・ピトー管
  // ノズル：アフターバーナーの強化段階で形が変わる
  if(bl===0){m.box(0,0,-6.15,1.5,1.25,.25,dk);m.box(0,0,-6.25,1.15,.95,.1,gl,1);m.box(0,0,-6.3,.7,.6,.06,[1,1,.85],1);}
  else if(bl<3){const L=bl===1?-6.9:-7.3,nz=[.3,.31,.34];loft(m,[[-5.9,1.0,.86,0],[-6.4,.92,.8,0],[L,.82,.72,0]],10,nz,(i,k)=>k%2?[.22,.23,.26]:nz);
   m.box(0,0,L+.06,1.4,1.2,.08,[.05,.05,.06]);m.box(0,0,L+.02,1.05,.9,.06,bl===1?gl:[.45,.8,1],1);m.box(0,0,L-.01,.55,.48,.04,[1,1,.9],1);
   if(bl===2){for(const a of[0,1.05,2.1,3.14,4.2,5.25])m.box(Math.cos(a)*.86,Math.sin(a)*.76,L+.25,.14,.14,.55,[.6,.62,.66]);m.box(0,0,-6.2,2,1.7,.12,[1,.75,.2],.5);}}
  else{for(const sd of[-1,1]){const x=.62*sd,nz=[.24,.25,.28];m.box(x,0,-6.3,.95,.95,.7,nz);m.box(x,0,-6.67,.75,.75,.06,[1,.55,.2],1);m.box(x,0,-6.7,.38,.38,.04,[1,1,.85],1);
-   for(const t of[-1,1])m.box(x,.55*t,-6.85,.8,.08,.5,[.55,.4,.15]);}m.box(0,0,-6.05,2.4,1.3,.14,[.6,.35,1],.6);} 
- m.box(0,-.95,-1,.9,.25,4.5,mul(bd,.75)); // 腹部
+   for(const t of[-1,1])m.box(x,.55*t,-6.85,.8,.08,.5,[.55,.4,.15]);}m.box(0,0,-6.05,2.4,1.3,.14,lv===3?ac:[.6,.35,1],.6);} 
+ m.box(0,-.9,-1,.85,.22,4.5,mul(bd,.75)); // 腹部
  if(lv===0){m.mir(sd=>m.box(1.43*sd,.1,-1.2,.04,.18,7.6,ac,.3));m.box(0,1.12,-3.5,.2,.06,3.2,ac,.25);}
  if(lv===1){m.mir(sd=>{for(let k=0;k<5;k++)m.box(1.44*sd,.18+((k%2)?.22:-.12),-3+k*1.45,.04,.16,1.5,[.92,.96,1],.25);m.box(5.6*sd,.12,-3,1,.04,1,[.92,.96,1]);});m.box(0,1.13,-2,.18,.05,5,[.92,.96,1]);}
- if(lv===2){m.mir(sd=>{prism(m,[[.85*sd,.15,3.4],[2.5*sd,.15,2.6],[2.5*sd,.15,2.2],[.85*sd,.15,2.1]],[0,.12,0],bd); // カナード
+ if(lv===2){m.mir(sd=>{prism(m,[[.85*sd,.15,4.4],[2.5*sd,.15,3.6],[2.5*sd,.15,3.2],[.85*sd,.15,3.1]],[0,.12,0],bd); // カナード
    for(let k=0;k<3;k++)prism(m,[[(2+k*1.2)*sd,.09,-1.4-k*.5],[(2.6+k*1.2)*sd,.09,-1.9-k*.5],[(2+k*1.2)*sd,.09,-2.4-k*.5]],[0,.04,0],ac,.35); // 金のシェブロン
    m.box(1.65*sd,3.2,-5.4,.05,.3,1.8,ac,.35);});}
- if(lv===3){m.mir(sd=>{m.box(3.6*sd,.06,-2.4,4.6,.03,.06,ac,1);m.box(1.46*sd,.3,-1,.03,.05,8,ac,1);m.box(.9*sd,-1.05,-3.8,.1,.6,3,dk);m.box(1.62*sd,3.5,-5.6,.05,.05,1.8,ac,1);
-   prism(m,[[6.3*sd,-.08,-2.4],[7.2*sd,-.08,-3.7],[6.3*sd,-.08,-3.5]],[0,.2,0],bd);});m.box(0,0,-6.33,1.2,1,.05,ac,1);}
+ if(lv===3){const G_=ac;m.mir(sd=>{ // OBSIDIAN：金のワンポイント（主翼前縁の細い金線・尾翼のチェッカー帯・ノーズのセーバートゥース）
+   const a=[1.25*sd,.07,2.25],b=[6.25*sd,.07,-2.35],X=norm(sub(b,a));obox(m,lerp(a,b,.5),X,UP,len(sub(b,a)),.04,.16,G_,.45);
+   for(let k=0;k<4;k++){const y=3.55-k*.0,z=-5.25-k*.32;m.box(1.62*sd+.11*sd,3.55,z,.03,.32,.16,k%2?[.12,.12,.14]:G_,k%2?0:.5);}m.box(1.73*sd,3.3,-5.7,.03,.05,1.4,G_,.45);
+   for(let k=0;k<3;k++)m.t([(1.31-k*.02)*sd,.25,5.6-k*.9],[(1.31-k*.02)*sd,.25,4.9-k*.9],[(1.2-k*.03)*sd,.62,5.25-k*.9],G_,.4);
+   prism(m,[[6.3*sd,-.08,-2.4],[7.0*sd,-.08,-3.5],[6.3*sd,-.08,-3.5]],[0,.2,0],C3);});
+  for(let k=0;k<2;k++){const z=-.4-k*.7;m.t([-.55,1.38,z],[0,1.42,z+.55],[0,1.42,z+.3],G_,.4);m.t([.55,1.38,z],[0,1.42,z+.3],[0,1.42,z+.55],G_,.4);} // 背中の金シェブロン
+  m.box(0,0,-6.33,1.2,1,.05,G_,.6);}
  return m.build();}
 function dockM(){const m=new MB(),fl=[.1,.11,.14],pl=[.2,.21,.25],yl=[1,.78,.1],bk=[.05,.05,.06],gr=[.24,.25,.3],ln=[.12,.3,.38];
  m.box(0,-1.5,0,700,1,700,fl);for(let i=-330;i<=330;i+=30){m.box(i,-.95,0,.3,.1,700,ln,.7);m.box(0,-.95,i,700,.1,.3,ln,.7);}
@@ -2721,8 +2746,8 @@ function renderDock(dt){const W=cv.width,H=cv.height,as=W/H;gl.viewport(0,0,W,H)
  draw(MESH.dock,I4);
  const S=3.1,p=[0,.56+2.45*S,0],F=[0,0,1],b=basisF(F),loc=(x,y,z)=>add(add(add(p,mul(b.r,x*S)),mul(b.u,y*S)),mul(F,z*S));
  const T=DK.fx>0?new Float32Array([1,.85,.3,Math.min(.6,DK.fx*.5)]):null;
- const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl;if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,F,p,S),T);
- const ml=UL.msl||0;if(ml===4){if(!MESH.pod)MESH.pod=podM();for(const x of[-3.7,3.7])draw(MESH.pod,mdl(b.r,b.u,F,loc(x,-.95,-2),S*.95));}
+ const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl+'_'+camoKey();if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,F,p,S),T);
+ const ml=aceSkin()?0:(UL.msl||0);if(ml===4){if(!MESH.pod)MESH.pod=podM();for(const x of[-3.7,3.7])draw(MESH.pod,mdl(b.r,b.u,F,loc(x,-.95,-2),S*.95));}
  else if(ml===3){if(!MESH.lzt)MESH.lzt=lzTubeM();for(const x of[-3.5,3.5,0])draw(MESH.lzt,mdl(b.r,b.u,F,loc(x,x?-.62:-1.45,x?-1.9:-.6),S*.95));}
  else{const ms=ml>=2?[-3.2,3.2,0]:ml>=1?[-3.2,3.2]:[-3.2];for(const x of ms)draw(MESH.pm,mdl(b.r,b.u,F,loc(x*1.1,x?-.5:-1.3,x?-1.6:-.4),S*.7));}
  if(exAvail())for(let k=0;k<3;k++){const a=DK.t*.9+k*2.094,q=add(p,[Math.cos(a)*15,7+Math.sin(DK.t*2+k)*1.5,Math.sin(a)*15]),f=norm([-Math.sin(a),-.15,Math.cos(a)]),bb=basisF(f);draw(MESH.fu,mdl(bb.r,bb.u,f,q,2.2));}}
@@ -2732,7 +2757,7 @@ function tryCode(){const v=$('chc').value.trim().toLowerCase();$('chc').value=''
 $('chb').onclick=tryCode;$('chc').addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){e.preventDefault();tryCode();}});$('chc').addEventListener('keyup',e=>e.stopPropagation());
 {let arm=0,tm=0;const rb=$('rst'),reset=()=>{arm=0;rb.classList.remove('arm');rb.textContent='⟲ データリセット';};
  rb.onclick=()=>{if(!arm){arm=1;rb.classList.add('arm');rb.textContent='⚠ もう一度押すと全データを消去';clearTimeout(tm);tm=setTimeout(reset,3000);return;}
-  clearTimeout(tm);['pixsky_up','pixsky_own','pixsky_cr','pixsky_ex','pixsky_hi','pixsky_hi_sd','pixsky_clear','pixsky_tut','pixsky_maxw','pixsky_mapu','pixsky_adv1','pixsky_fort1','pixsky_duel1'].forEach(k=>STORE.del(k)); // リセット：保存データを消して初期状態で読み込み直す
+  clearTimeout(tm);['pixsky_up','pixsky_own','pixsky_cr','pixsky_ex','pixsky_hi','pixsky_hi_sd','pixsky_clear','pixsky_tut','pixsky_maxw','pixsky_mapu','pixsky_camo','pixsky_adv1','pixsky_fort1','pixsky_duel1'].forEach(k=>STORE.del(k)); // リセット：保存データを消して初期状態で読み込み直す
   rb.textContent='リセットしました';setTimeout(()=>location.reload(),300);};}
 $('hgb').onclick=()=>{DK.on=true;DK.ovWas=$('ov').classList.contains('show');$('ov').classList.remove('show');renderHangar();$('hg').classList.add('show');};
 $('hgx').onclick=()=>{DK.on=false;$('hg').classList.remove('show');if(DK.ovWas)$('ov').classList.add('show');crText();};
