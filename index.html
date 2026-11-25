@@ -209,7 +209,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v8.7</span></div>
+<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v8.9</span></div>
 <div id="ovMsg"></div>
 <div id="mapSel" style="display:none"></div><button id="rsm" style="display:none">▶ RESUME</button><div class="tiles2" id="advWrap"><button id="srb" class="big"><span class="bt"><b>▶ 出撃</b><i>SORTIE</i></span><small>ノーマル／サドンデス</small><em id="srMap"></em></button><button id="msb" class="big"><span class="bt"><b>🎯 ミッション</b><i>MISSION</i></span><small>アドベンチャー／要塞攻略<br>VS ACE</small><em>特別作戦</em></button></div><button id="hgb" class="hgs"><span class="hgi">🛠</span><b>HANGAR</b><small>機体強化</small><em id="hgCr"></em><span id="hgBadge" class="badge"></span></button><div class="sub3g"><button id="vwb"></button><button id="invb"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button><button id="rdo"></button><button id="hlpb">❔ 操作方法</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div id="hlp" class="pk"><div class="pkb"><div class="pkh">HOW TO PLAY</div><div class="pks">操作方法</div>
@@ -846,7 +846,7 @@ function ruinsMesh(night){const m=new MB(),vt=(i,j)=>[i*CS-HALF,HM[j*(N+1)+i],j*
  const palm=(x,y,z)=>{const h=R(14,22);m.box(x,y+h/2,z,1,h,1,[.45,.36,.25]);for(let k=0;k<6;k++){const a=k*1.05;m.box(x+Math.cos(a)*3,y+h,z+Math.sin(a)*3,Math.abs(Math.cos(a))*5+1,.5,Math.abs(Math.sin(a))*5+1,[.25,.5,.22]);}};
  for(let k=0;k<70;k++){const x=R(-1800,1500),z=R(800,1250),g=groundRaw(x,z);if(g>2&&g<30&&!busy(x,z))palm(x,g,z);}for(let z=100;z<1100;z+=60)for(const s of[-1,1])palm(s*110,RRY,z+30);
  // 港の岸壁
- m.box(0,4,1225,700,8,30,S2);
+ m.box(0,4,1225,700,8,30,S2);bhSet(0,1225,700,30,8); // 港の岸壁（船が下に入り込まないように）
  addClouds(m,night,night?18:28);return m.build();}
 const ENVFD={night:0,fog:[.64,.79,.97],amb:1.05,sun:1.1,L:LDIR,lk:.7,fd:.45},ENVFN={night:1,fog:[.05,.07,.15],amb:.72,sun:.55,L:MDIR,lk:1.7,fd:.55};let SKYFD=null,SKYFN=null;
 // ===== ミッション：VS ACE（敵エースとの一騎打ち）。自機は無強化・ミサイル6発のみ（補充なし）。エースはミサイルを最初の2発は必ずかわし、2発までは耐える =====
@@ -1367,7 +1367,7 @@ function spawnTurret(){if(FI.on){const L=FI.isl.filter(I=>I.R>=140&&!I.lake);for
 // ===== 大型海上空母：海上をとてもゆっくり進み、一定間隔で艦載機を発進させる（1隻あたり最大8機）（ボスの約3倍の大きさ・4倍の体力） =====
 function spawnCarrier(o={}){let p=null;for(let k=0;k<400&&!p;k++){const a=rnd(0,6.28),R=rnd(800,1500),x=clamp(P.p[0]+Math.cos(a)*R,-HALF*.8,HALF*.8),z=clamp(P.p[2]+Math.sin(a)*R,-HALF*.8,HALF*.8);
   let ok=true;for(let i=-2;i<=2&&ok;i++)for(let j=-1;j<=1;j++)if(groundRaw(x+i*45,z+j*30)>-4){ok=false;break;}if(ok)p=[x,0,z];}
- if(!p){const a=rnd(0,6.28);p=[Math.cos(a)*HALF*.92,0,Math.sin(a)*HALF*.92];}
+ if(!p){const S=seaSpot([P.p[0]+rnd(-900,900),0,P.p[2]+rnd(-900,900)]);p=S?S.p:[Math.cos(1)*HALF*.92,0,Math.sin(1)*HALF*.92];}
  if(FI.on){const a=rnd(0,6.28),r=rnd(0,60);p=[Math.cos(a)*r,SEAY,Math.sin(a)*r];}
  const hp=Math.round(cvHpAt(G.wave)),e={type:'carrier',p,f:norm([-p[0]+rnd(-300,300),0,-p[2]+rnd(-300,300)]),bank:0,hp,max:hp,cd:CFG.cvLaunch*.4,gcd:2,mcd:8,rad:40,flash:0,sc:CFG.cvScore};
  fitShip(e);ebasis(e);E.push(e);if(o.dual)return e;
@@ -1382,7 +1382,7 @@ const cvHpAt=w=>CFG.cvHp[0]+Math.max(0,w-CFG.cvEvery)*CFG.cvHp[1];
 function spawnBattleship(o={}){const nr=o.near;let p=null;for(let k=0;k<400&&!p;k++){const a=rnd(0,6.28),R=nr?rnd(260,420):rnd(900,1500),c=nr?nr.p:P.p,x=clamp(c[0]+Math.cos(a)*R,-HALF*.8,HALF*.8),z=clamp(c[2]+Math.sin(a)*R,-HALF*.8,HALF*.8);
   let ok=true;for(let i=-2;i<=2&&ok;i++)for(let j=-1;j<=1;j++)if(groundRaw(x+i*45,z+j*30)>-4){ok=false;break;}if(ok&&nr&&dist([x,0,z],nr.p)<250)ok=false;if(ok)p=[x,0,z];}
  if(!p&&nr){const a=rnd(0,6.28);p=[nr.p[0]+Math.cos(a)*300,0,nr.p[2]+Math.sin(a)*300];}
- if(!p){const a=rnd(0,6.28);p=[Math.cos(a)*HALF*.92,0,Math.sin(a)*HALF*.92];}
+ if(!p){const S=seaSpot([P.p[0]+rnd(-900,900),0,P.p[2]+rnd(-900,900)]);p=S?S.p:[Math.cos(1)*HALF*.92,0,Math.sin(1)*HALF*.92];}
  if(FI.on){if(nr){const v=norm([-nr.p[0]||1,0,-nr.p[2]]);p=[v[0]*190,SEAY,v[2]*190];}else{const a=rnd(0,6.28),r=rnd(0,100);p=[Math.cos(a)*r,SEAY,Math.sin(a)*r];}}
  const hp=Math.round(CFG.bsHp*cvHpAt(G.wave)),f=nr?nr.f.slice():norm([-p[0]+rnd(-300,300),0,-p[2]+rnd(-300,300)]),
   e={type:'battleship',p,f,bank:0,hp,max:hp,cd:4,gcd:1.5,mcd:6,rad:40,flash:0,sc:CFG.bsScore,ta:[f.slice(),f.slice(),mul(f,-1)]};
@@ -1397,13 +1397,16 @@ function spawnFleet(){const cv=spawnCarrier({dual:1}),bs=spawnBattleship({dual:1
   if(P.alive){const a=add(cv.p,[0,10,0]),b=add(bs.p,[0,12,0]);kcTrigger('dualIntro',lerp(a,b,.5),{intro:1,dual:[cv,bs],txt:['WARNING','CARRIER + BATTLESHIP','#ff7a40'],stopT:.01,dur:4.2,slow:1,push:.18});}}});}
 // ===== 艦船の航行：陸地（地上判定）や作戦空域の外には進まない =====
 const SHIP_L=120,SHIP_W=16;
-function seaAt(x,z){if(FI.on){const I=FI.isl[0];return Math.hypot(x-I.c[0],z-I.c[2])<I.lake-12;}return groundRaw(x,z)<-5&&Math.hypot(x,z)<HALF*.88;}
+function seaAt(x,z){if(FI.on){const I=FI.isl[0];return Math.hypot(x-I.c[0],z-I.c[2])<I.lake-12;}return groundRaw(x,z)<-5&&Math.hypot(x,z)<HALF*.88&&!(BH&&bhAt(x,z)>0)&&!(SLABS.length&&slabHit([x,45,z],30));}
+function spawnOK(p,f){const r=[f[2],0,-f[0]];for(let o=-170;o<=170;o+=34)for(const w of[-34,0,34]){const q=madd(madd(p,f,o),r,w);if(!seaAt(q[0],q[2]))return false;}return true;} // 出現時は船体＋余白が丸ごと海
 function hullBad(p,f){const r=[f[2],0,-f[0]];let n=0;for(const o of[-SHIP_L,-SHIP_L*.5,0,SHIP_L*.5,SHIP_L])for(const w of[-SHIP_W,0,SHIP_W]){const q=madd(madd(p,f,o),r,w);if(!seaAt(q[0],q[2]))n++;}return n;}
 function hullOK(p,f){return hullBad(p,f)===0;}
 function headClear(p,f){for(const d of[SHIP_L+20,SHIP_L+70,SHIP_L+130,SHIP_L+200])for(const w of[-SHIP_W-6,0,SHIP_W+6]){const q=madd(madd(p,f,d),[f[2],0,-f[0]],w);if(!seaAt(q[0],q[2]))return false;}return true;}
-function fitShip(e){if(hullOK(e.p,e.f))return;const a0=Math.atan2(e.f[0],e.f[2]); // 出現時：船体が陸に掛からない向きを探す
+function fitShip(e){if(!FI.on&&!spawnOK(e.p,e.f)){for(let k=0;k<16;k++){const a=k*Math.PI/8,f=[Math.sin(a),0,Math.cos(a)];if(spawnOK(e.p,f)){e.f=f;return;}}const S=seaSpot(e.p);if(S){e.p=S.p;e.f=S.f;return;}}if(hullOK(e.p,e.f))return;const a0=Math.atan2(e.f[0],e.f[2]); // 出現時：船体が陸に掛からない向きを探す
  for(let k=1;k<=12;k++)for(const sg of[1,-1]){const a=a0+sg*k*Math.PI/12,f=[Math.sin(a),0,Math.cos(a)];if(hullOK(e.p,f)){e.f=f;return;}}
- for(let r=40;r<=2400;r+=40)for(let k=0;k<16;k++){const a=k*Math.PI/8,q=[e.p[0]+Math.sin(a)*r,e.p[1],e.p[2]+Math.cos(a)*r];for(let j=0;j<8;j++){const b=j*Math.PI/4,f=[Math.sin(b),0,Math.cos(b)];if(hullOK(q,f)){e.p=q;e.f=f;return;}}}}
+ for(let r=40;r<=2400;r+=40)for(let k=0;k<16;k++){const a=k*Math.PI/8,q=[e.p[0]+Math.sin(a)*r,e.p[1],e.p[2]+Math.cos(a)*r];for(let j=0;j<8;j++){const b=j*Math.PI/4,f=[Math.sin(b),0,Math.cos(b)];if(hullOK(q,f)){e.p=q;e.f=f;return;}}}
+ const S=seaSpot(e.p);if(S){e.p=S.p;e.f=S.f;}}
+function seaSpot(near){let best=null,bd=1e18;for(let x=-HALF*.86;x<=HALF*.86;x+=60)for(let z=-HALF*.86;z<=HALF*.86;z+=60){if(!seaAt(x,z))continue;for(let j=0;j<8;j++){const b=j*Math.PI/4,f=[Math.sin(b),0,Math.cos(b)],q=[x,SEAY,z];if(FI.on?hullOK(q,f):spawnOK(q,f)){const d=(x-near[0])**2+(z-near[2])**2;if(d<bd){bd=d;best={p:q,f};}break;}}}return best;} // マップ全体から船体が丸ごと海に収まる地点を探す
 function shipNav(e,spd,dt){e.navT=(e.navT||0)-dt;
  if(e.navT<=0){e.navT=.5;const a0=Math.atan2(e.f[0],e.f[2]);
   if(headClear(e.p,e.f)){e.hd=null;}
@@ -2160,7 +2163,7 @@ addEventListener('resize',resize);addEventListener('orientationchange',()=>setTi
 let last=performance.now();
 function goFull(){if(!TOUCH)return;try{const d=document.documentElement,f=d.requestFullscreen||d.webkitRequestFullscreen;if(f&&!document.fullscreenElement){const r=f.call(d);if(r&&r.catch)r.catch(()=>{});}}catch(e){}}
 function tcReset(){TC.lk=null;LOOK.yaw=LOOK.pit=0;TC.fire=TC.boost=TC.brake=TC.back=false;TC.sid=null;TC.sx=TC.sy=0;TC.ptr={};TC.pr={};}
-function start(){duelRestore();FLR=[];G.wallFire=null;FORT.on=false;FORT.st='';G.safeT=0;TY.pend=[];TY.bolts=[];TY.fl=0;TY.zone=0;G.intro=null;INTRO=null;WRK=[];PWK=null;LIGHTS=[];{const wm=G.mode==='fort'||G.mode==='duel'?(MAPDEF[G.map].night?'islandN':'island'):G.map;if(G.mode!=='adv'&&CURMAP!==wm&&!ADV.on)setMap(wm);}if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
+function start(){duelRestore();FLR=[];G.wallFire=null;FORT.on=false;FORT.st='';G.safeT=0;TY.pend=[];TY.bolts=[];TY.fl=0;TY.zone=0;G.intro=null;INTRO=null;WRK=[];PWK=null;LIGHTS=[];{const wm=G.mode==='duel'?'island':G.mode==='fort'?(MAPDEF[G.map].night?'islandN':'island'):G.map;if(G.mode!=='adv'&&CURMAP!==wm&&!ADV.on)setMap(wm);}if(G.mode!=='adv')advExit();else advEnter();$('brief').classList.remove('show');gyCalib();setTimeout(bakeAll,0);$('hg').classList.remove('show');$('go').blur();$('pz').style.display='none';initAudio();if(AC&&AC.state==='suspended')AC.resume();$('ov').classList.remove('show');goFull();tcReset();radioStop();radioUnlock();reset();
  if(G.mode==='normal'||G.mode==='sd'||G.mode==='adv'||G.mode==='fort')introStart();
  if(G.mode!=='tut'&&G.mode!=='adv'&&G.mode!=='duel')radio('start',G.mode==='sd'?"Sky Control to Pixel One. Hostiles are endless. Stay alive.":"Sky Control to Pixel One. Weapons free. Good hunting.",G.mode==='sd'?'管制よりピクセル1へ。敵は途切れない。生き残れ。':'管制よりピクセル1へ。兵装使用許可。健闘を祈る。',{pri:1,cd:0});if(G.mode==='normal')radioWave();G.tipT=G.mode==='tut'||G.mode==='adv'?0:G.time+(TOUCH?8:10);G.pause=false;G.ts=1;}
 // ===== 空母・戦艦の撃沈演出：中央で真っ二つに折れて炎上し、ゆっくり沈んで消える =====
