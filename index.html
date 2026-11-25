@@ -209,7 +209,7 @@ body.touch #hlpb{grid-column:1/-1}
 <div class="eb"><button id="endC">▶ 続けてプレイ（WAVE 11〜）</button><button id="endT">タイトルへ</button></div></div>
 <div id="ov" class="show"><button id="tub" title="チュートリアル">🎓</button><div class="panel">
 <div class="logo">PIXEL<b>SKY</b></div>
-<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v9.1</span></div>
+<div class="tag">8BIT 3D FLIGHT COMBAT <span class="ver">v9.2</span></div>
 <div id="ovMsg"></div>
 <div id="mapSel" style="display:none"></div><button id="rsm" style="display:none">▶ RESUME</button><div class="tiles2" id="advWrap"><button id="srb" class="big"><span class="bt"><b>▶ 出撃</b><i>SORTIE</i></span><small>ノーマル／サドンデス</small><em id="srMap"></em></button><button id="msb" class="big"><span class="bt"><b>🎯 ミッション</b><i>MISSION</i></span><small>アドベンチャー／要塞攻略<br>VS ACE</small><em>特別作戦</em></button></div><button id="hgb" class="hgs"><span class="hgi">🛠</span><b>HANGAR</b><small>機体強化</small><em id="hgCr"></em><span id="hgBadge" class="badge"></span></button><div class="sub3g"><button id="vwb"></button><button id="invb"></button><button id="gyb" style="display:none">📱 ジャイロ操作: OFF</button><button id="rdo"></button><button id="hlpb">❔ 操作方法</button></div><div id="gym" class="hint" style="display:none;margin-top:4px"></div><div id="crd2"></div>
 <div id="hlp" class="pk"><div class="pkb"><div class="pkh">HOW TO PLAY</div><div class="pks">操作方法</div>
@@ -1350,7 +1350,7 @@ function explode(p,s=1,pal=null,ring=0){addLight(p,Math.min(3,.6+s*.7));PALC=pal
  part(p,[0,0,0],.22,3*s,[1,.97,.8],0,0,22*s,0,0,.9);for(let i=0;i<3+2*s;i++)part(madd(p,rdir(),rnd(0,2)*s),mul(rdir(),rnd(4,12)*s),rnd(.35,.6),rnd(1.5,2.5)*s,[1,.62,.2],0,-4,4*s,1.2,0,.85,1);const dd=dist(p,eye);G.shake=Math.max(G.shake,s*2.8*clamp(1-dd/900,0,1));
  if(TOUCH&&dd<250&&navigator.vibrate)try{navigator.vibrate(Math.min(120,30*s));}catch(e){}
  if(ring)for(let i=0;i<26;i++){const a=i/26*6.283;part(p,[Math.cos(a)*70*s,rnd(-2,3),Math.sin(a)*70*s],rnd(.8,1.1),1.4*s,pal?pal[1]:[1,.6,.2],0,0,3*s,2,0,.6,1);}PALC=null;
- spatial(p,(v,lp,pan,far)=>SFX.boom(s,v,lp,pan,far),99999,180+s*60,BOOM_DELAY);}
+ const bv=clamp(.16+s*.3,.2,1.1);spatial(p,(v,lp,pan,far)=>SFX.boom(s,v*bv,lp,pan,far),99999,120+s*70,BOOM_DELAY);} // 爆発の大きさに応じて音量も変える（小爆発は控えめ）
 function sparks(p,c=[1,.9,.4],n=5){for(let i=0;i<n;i++)part(p,mul(rdir(),rnd(15,50)),rnd(.15,.35),rnd(.3,.6),c,1,30);}
 
 // ================= spawning =================
@@ -2193,7 +2193,7 @@ function hardCrash(){const onSlab=slabHit(P.p,1.5),bh=BH?bhAt(P.p[0],P.p[2]):0;l
  let fh=norm([P.f[0],0,P.f[2]]);if(!len(fh))fh=[0,0,1];let q=P.p.slice();
  if(wall||side){for(let k=0;k<80&&((BH&&bhAt(q[0],q[2])>q[1]-.5)||slabHit(q,1.5));k++)q=madd(q,fh,-1);q=madd(q,fh,-1.5);wall=true;}
  const n=wall?mul(fh,-1):[0,1,0],I=q;P.p=I.slice();
- explode(I,3.2);explode(madd(I,n,4),2);addLight(I,3,[1,.6,.25],2.4);G.shake=1.8;try{SFX.boom(1.6,.9,20000,0,0);}catch(e){}
+ explode(I,3.2);explode(madd(I,n,4),2);addLight(I,3,[1,.6,.25],2.4);G.shake=1.8;
  for(let i=0;i<70;i++)part(add(I,[rnd(-4,4),rnd(-4,4),rnd(-4,4)]),add(mul(n,rnd(6,30)),[rnd(-18,18),rnd(-6,22),rnd(-18,18)]),rnd(1.5,3),rnd(.6,1.4),i%3?[.62,.6,.56]:[.75,.88,1],i%3?0:.6,-40,.8,.3); // 外壁・ガラスの破片
  G.wallFire={p:madd(I,n,wall?-1:0),n,t:0,bt:.4,wall};
  if(wall){const sd=norm(cross(UP,n)),gp=madd(I,n,10);gp[1]=ground(gp[0],gp[2]);const clr=(a,b)=>{for(let t=.04;t<.97;t+=.03){const p=lerp(a,b,t);if(p[1]<ground(p[0],p[2])+1.5||slabHit(p,1))return false;}return true;};let best=null,bs=-1;
