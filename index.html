@@ -1933,7 +1933,8 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  if(P.locks.length>P.nLk&&P.locks.length>1)SFX.lock();P.nLk=P.locks.length;
  if(best&&!P.locked&&!G.kc){G.seekT-=dt;if(G.seekT<=0){G.seekT=.12;SFX.seek();}}
  const eb=madd(P.p,P.f,-3.6);
- if(P.boosting){part(madd(eb,rdir(),.3),mul(P.f,P.spd*.6),.12,rnd(.6,1),[1,.6,.2],1,0,-3);part(eb,mul(P.f,P.spd*.8),.06,.7,[.6,.9,1],1);}
+ P.abk=(P.abk||0)+((P.boosting?1:.12)-(P.abk||0))*Math.min(1,dt*(P.boosting?7:4)); // 炎の強さ（巡航中も小さく灯る）
+ if(P.boosting&&Math.random()<dt*14)part(madd(eb,P.f,-rnd(2,6)),mul(P.f,P.spd*.7),.25,.12,[1,.6,.25],1,0,1,0,1);
  if(P.hp<45&&Math.random()<dt*25)part(eb,add(mul(P.f,P.spd*.3),[0,3,0]),rnd(1.2,2.2),.9,[.24,.24,.26],0,-2,2.4,.5,0,P.hp<20?.6:.42);
  P.inv=Math.max(0,P.inv-dt);P.manCd-=dt;P.warpCd-=dt;P.tbCd=(P.tbCd||0)-dt;P.lzCd-=dt;
  if(P.od>0){P.od-=dt;P.over=false;P.heat=Math.max(0,P.heat-dt);if(Math.random()<dt*20)part(madd(madd(P.p,rdir(),4),P.f,2),madd(mul(rdir(),4),P.f,P.spd*.92),.35,.3,[1,.85,.3],1);if(P.od<=0)msg('','OVERDRIVE END',1);}if(G.time-P.lastHit>CFG.regenDelay)P.hp=Math.min(100,P.hp+CFG.regenRate*dt);
@@ -2077,7 +2078,7 @@ function render(){if(DK.on){envUniforms(1);renderDock();return;}envUniforms(0);g
  if(G.intro)introDraw();
  if(P&&P.fall&&!P.landed&&G.state==='dead')draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),new Float32Array([.15,.1,.08,.35]));
  if(G.state==='dead')drawPWreck();
- if(P&&P.alive&&!G.intro&&G.state!=='title'&&G.state!=='brief'&&(G.vs>.22||(G.kc&&G.kc.ph==='cam')))draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),P.od>0?new Float32Array([1,.85,.3,.2+.12*Math.sin(G.time*12)]):P.inv>0&&(G.time*20|0)%2?new Float32Array([.5,.9,1,.5]):null);
+ if(P&&P.alive&&!G.intro&&G.state!=='title'&&G.state!=='brief'&&(G.vs>.22||(G.kc&&G.kc.ph==='cam'))){draw(pjFine(),mdl(P.r,P.u,P.f,P.p,PJS),P.od>0?new Float32Array([1,.85,.3,.2+.12*Math.sin(G.time*12)]):P.inv>0&&(G.time*20|0)%2?new Float32Array([.5,.9,1,.5]):null);jetAB(P.p,P.r,P.u,P.f,P.abk||0,PJS);}
  for(const e of E){if(e.type==='fpart'||e.type==='weak')continue;const T=e.flash>0?new Float32Array([1,1,1,e.flash]):null;
   if(e.type==='fighter'){if(e.ace){if(!MESH.ace)MESH.ace=aceJetM();draw(MESH.ace,mdl(e.r,e.u,e.f,e.p,1.05),T);}else draw(MESH.ef,mdl(e.r,e.u,e.f,e.p),T);}
   else if(e.type==='turret'){draw(MESH.tb,mdl([1,0,0],[0,1,0],[0,0,1],e.p),T);if(e.plat&&MESH.plat)draw(MESH.plat,mdl([1,0,0],[0,1,0],[0,0,1],e.p),T);const b=basisF(e.aim);draw(MESH.th,mdl(b.r,b.u,e.aim,add(e.p,[0,10,0])),T);}
@@ -2449,9 +2450,9 @@ function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.sai
  if(t>5.6)once('cat',()=>{catFx();jetSet({rpm:1.08,roar:.44,crack:.28,sub:.24},.2);msg('','LAUNCH',1.4);});
  if(t>8.2)once('air',()=>{jetSet({rpm:.9,whine:.04,hiss:.07,roar:.2,sub:.08,crack:.1},.9);});if(t>10.2)once('fade',()=>jetStop(1.2));
  if(I.ph==='ign'||I.ph==='cat'){const k=I.ph==='cat'?1:clamp((t-2.7)/2.6,0,1);G.shake=Math.max(G.shake,k*.5);
-  for(let n=0;n<Math.ceil(k*3);n++)part(noz,add(mul(I.f,-rnd(8,22)*(.5+k)),mul(rdir(),2)),.22,.12+k*.06,k>.6?[.55,.85,1]:[1,.62,.28],1,0,0,0,1);}
+  if(Math.random()<k*.5)part(madd(noz,I.f,-rnd(3,7)),add(mul(I.f,-rnd(10,20)),mul(rdir(),3)),.35,.12,[1,.6,.25],1,0,1,0,1);} // 炎そのものはメッシュで描く（火の粉だけ少し）
  if(I.ph==='cat'&&Math.random()<.8)part(IW(I,-10+rnd(-2,2),13.5,-55+rnd(0,20)),[rnd(-4,4),rnd(6,14),rnd(-4,4)],1.6,.9,[.92,.94,.98],1); // カタパルトの蒸気
- if(I.ph==='fly')part(noz,mul(I.f,-40),.3,.2,[.5,.85,1],1);
+ 
  if(t>=11.2)introEnd();}
 // ===== 帰還：ポーズメニューから空母へ着艦して終了（それまでの獲得クレジットはそのまま） =====
 function doRTB(){if(G.state!=='play'||!P||!P.alive||G.mode==='tut'||G.mode==='adv')return;setPause(false);G.kc=null;G.kcQ=[];MSL=[];BL=[];P.inv=1e9;
@@ -2470,10 +2471,24 @@ function introCam(){const I=INTRO,t=I.t;cup=[0,1,0];G.fogD=FOGD;
  else if(I.ph==='cat'){eye=IW(I,20,19,52);ctr=I.p;fov=.95;}
  else{eye=add(madd(I.p,I.f,-32),[0,9,0]);ctr=madd(I.p,I.f,25);fov=1.05;}
  if(G.shake>.01){const s2=G.shake*.6;eye=add(eye,[rnd(-s2,s2),rnd(-s2,s2),rnd(-s2,s2)]);}}
+
+// ===== アフターバーナーの炎：加算合成の多層コーン（外炎・内炎・白い芯・ショックダイヤモンド）。長さ1・半径1の単位形状をノズルに合わせて伸縮して描く =====
+function abFlameM(){const m=new MB(),n=12,ring=(z,r,k)=>[Math.cos(k/n*6.2832)*r,Math.sin(k/n*6.2832)*r,z];
+ const cone=(pts,cols)=>{for(let i=0;i<pts.length-1;i++){const[z0,r0]=pts[i],[z1,r1]=pts[i+1];for(let k=0;k<n;k++)m.q(ring(z0,r0,k),ring(z0,r0,k+1),ring(z1,r1,k+1),ring(z1,r1,k),cols[i],1);}};
+ cone([[0,1],[-.08,1.02],[-.25,.9],[-.45,.7],[-.65,.45],[-.85,.2],[-1,0]],[[.42,.2,.08],[.38,.16,.05],[.3,.11,.03],[.22,.07,.02],[.13,.04,.01],[.06,.015,0]]); // 外炎（橙→暗赤へ消える）
+ cone([[0,.78],[-.12,.74],[-.3,.58],[-.5,.36],[-.7,.12],[-.78,0]],[[.75,.42,.15],[.68,.33,.1],[.5,.22,.06],[.3,.12,.03],[.14,.05,.01]]); // 内炎
+ cone([[0,.5],[-.1,.46],[-.22,.32],[-.36,.14],[-.44,0]],[[.9,.85,.7],[.8,.7,.5],[.6,.45,.25],[.35,.22,.1]]); // 白い芯
+ [[-.17,.3,1],[-.31,.25,.8],[-.45,.2,.6],[-.58,.15,.42],[-.7,.1,.28]].forEach(([z,r,b])=>cone([[z+.045,0],[z,r],[z-.045,0]],[[1*b,.85*b,.6*b],[.9*b,.7*b,.45*b]])); // ショックダイヤモンド
+ cone([[.01,.98],[0,.6],[-.02,0]],[[.12,.2,.5],[.2,.3,.6]]); // ノズル出口の青いきらめき
+ return m.build();}
+function drawAB(p,r,u,f,k,rad,flick){if(k<=.02)return;if(!MESH.abf)MESH.abf=abFlameM();const fl=1+(Math.random()-.5)*(flick||.18),L=(1.4+8*k)*fl,R=rad*(.75+.45*Math.min(k,1.2))*(1+(Math.random()-.5)*.08);
+ gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.depthMask(false);draw(MESH.abf,mdl(mul(r,R),mul(u,R),mul(f,L),p),null);gl.depthMask(true);gl.disable(gl.BLEND);}
+function jetAB(p,r,u,f,k,sc){const bl=UL.boost||0;if(bl===3){for(const sd of[-1,1])drawAB(add(madd(p,r,.62*sd*sc),mul(f,-6.72*sc)),r,u,f,k*.9,.4*sc);}else drawAB(madd(p,f,(bl===0?-6.32:bl===1?-6.93:-7.33)*sc),r,u,f,k,(bl===0?.52:.48)*sc);}
 function introDraw(){const I=INTRO;if(!I)return;if(!MESH.fcv)MESH.fcv=fcarrierM();if(ST.on&&!MESH.fcvS)MESH.fcvS=fcarrierM(1);draw(ST.on?MESH.fcvS:MESH.fcv,mdl(I.cr,I.cu,I.cf,I.cp));if(ST.on&&MESH.skF)draw(MESH.skF,mdl(I.cr,I.cu,I.cf,I.cp));
  const TG=new Float32Array([.55,.6,.66,.55]);for(const[x,,z,a]of FC_PARK){const f=norm(add(mul(I.cf,Math.cos(a+Math.PI*.5)),mul(I.cr,Math.sin(a+Math.PI*.5)))),bb=basisF(f);draw(MESH.pj,mdl(bb.r,bb.u,f,IW(I,x,14.6,z),.9),TG);} // 駐機中の僚機
  if(I.ph==='elev'){draw(MESH.hole,mdl(I.cr,I.cu,I.cf,IW(I,-10,13.03,-55)));draw(MESH.elev,mdl(I.cr,I.cu,I.cf,IW(I,-10,I.ey-2.95,-55)));}
- const b=basisF(I.f);if(I.gear){const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl+'_'+camoKey();if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,I.f,I.p,PJS));}else draw(pjFine(),mdl(b.r,b.u,I.f,I.p,PJS));}
+ const b=basisF(I.f);if(I.gear){const lv=UL.frame||0,bl=UL.boost||0,key=lv+'_'+bl+'_'+camoKey();if(!DJM[key])DJM[key]=dockJetM(lv,bl);draw(DJM[key],mdl(b.r,b.u,I.f,I.p,PJS));}else draw(pjFine(),mdl(b.r,b.u,I.f,I.p,PJS));
+ {const t=I.t,k=I.ph==='ign'?clamp((t-2.7)/2.6,0,1)*.75:I.ph==='cat'?1.15:I.ph==='fly'?1:I.ph==='app'?.3:0;if(G.vs>.22||I.ph!=='fly')jetAB(I.p,b.r,b.u,I.f,k,PJS);}}
 function introHud(){const bar=VH*.11;hx.fillStyle='#000';hx.fillRect(0,0,VW,bar);hx.fillRect(0,VH-bar,VW,bar);
  const I=INTRO,cap={elev:'FLIGHT DECK',ign:'ENGINE START',cat:'CATAPULT LAUNCH',fly:'SORTIE',app:'RETURN TO BASE',trap:'TRAP',stop:'MISSION COMPLETE'}[I.ph]||'';T(cap,16,VH-bar/2+4,'#ffd23f',12,'left');T((TOUCH?'タップ':'キー')+'でスキップ ▶▶',VW-16,VH-bar/2+4,'#aab',10,'right');
  if(G.msgT>0&&G.sub)T(G.sub,VW/2,bar+26,'#fff',14,'center');}
