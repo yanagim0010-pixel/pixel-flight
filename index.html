@@ -1174,7 +1174,7 @@ let LIGHTS=[];const PLA=new Float32Array(16),PCA=new Float32Array(12);
 function addLight(p,pow,col,life){LIGHTS.push({p:p.slice(),pow,col:col||[1,.62,.28],t:0,life:life||.6+pow*.25});if(LIGHTS.length>40)LIGHTS.shift();}
 function envUniforms(dock){const E_=dock?ENVD:ENV;gl.uniform3fv(U.uL,E_.L);gl.uniform3fv(U.uFog,E_.fog);gl.uniform1f(U.uAmb,E_.amb);gl.uniform1f(U.uSun,E_.sun);PCA.fill(0);PLA.fill(0);for(let i=0;i<4;i++)PLA[i*4+3]=1;
  if(!dock){const L=[];for(const l of LIGHTS){const k=1-l.t/l.life;if(k<=0)continue;L.push([l,k*l.pow/(1+dist(l.p,eye)/600)]);}
-  if(E_.night&&P&&P.alive&&P.boosting&&G.state==='play')L.push([{p:madd(P.p,P.f,-8),pow:.5,col:[.5,.75,1]},.6]);
+  if(E_.night&&P&&P.alive&&(P.abk||0)>.15&&G.state==='play'){const a=clamp((P.abk-.12)/.88,0,1);L.push([{p:madd(P.p,P.f,-8),pow:.5*a,col:[1,.7,.4]},.6*a]);}
   L.sort((a,b)=>b[1]-a[1]);for(let i=0;i<Math.min(4,L.length);i++){const[l,]=L[i],k=l.t!=null?1-l.t/l.life:1,I=k*k*E_.lk*l.pow;PLA.set([l.p[0],l.p[1],l.p[2],35+l.pow*45],i*4);PCA.set([l.col[0]*I,l.col[1]*I,l.col[2]*I],i*3);}}
  gl.uniform4fv(U.uPL,PLA);gl.uniform3fv(U.uPC,PCA);}
 function upLights(dt){for(const l of LIGHTS)l.t+=dt;LIGHTS=LIGHTS.filter(l=>l.t<l.life);}
@@ -1933,8 +1933,7 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  if(P.locks.length>P.nLk&&P.locks.length>1)SFX.lock();P.nLk=P.locks.length;
  if(best&&!P.locked&&!G.kc){G.seekT-=dt;if(G.seekT<=0){G.seekT=.12;SFX.seek();}}
  const eb=madd(P.p,P.f,-3.6);
- P.abk=(P.abk||0)+((P.boosting?1:.12)-(P.abk||0))*Math.min(1,dt*(P.boosting?7:4)); // 炎の強さ（巡航中も小さく灯る）
- if(P.boosting&&Math.random()<dt*14)part(madd(eb,P.f,-rnd(2,6)),mul(P.f,P.spd*.7),.25,.12,[1,.6,.25],1,0,1,0,1);
+ {const a=P.abk||0,tg=P.boosting?1:.12;P.abk=tg>a?Math.min(tg,a+dt*(.28+.9*a)):Math.max(tg,a-dt*1.6);} // 炎の強さ：点火はじわっと（約1秒かけて最大へ）、消火は少し速め。巡航中も小さく灯る
  if(P.hp<45&&Math.random()<dt*25)part(eb,add(mul(P.f,P.spd*.3),[0,3,0]),rnd(1.2,2.2),.9,[.24,.24,.26],0,-2,2.4,.5,0,P.hp<20?.6:.42);
  P.inv=Math.max(0,P.inv-dt);P.manCd-=dt;P.warpCd-=dt;P.tbCd=(P.tbCd||0)-dt;P.lzCd-=dt;
  if(P.od>0){P.od-=dt;P.over=false;P.heat=Math.max(0,P.heat-dt);if(Math.random()<dt*20)part(madd(madd(P.p,rdir(),4),P.f,2),madd(mul(rdir(),4),P.f,P.spd*.92),.35,.3,[1,.85,.3],1);if(P.od<=0)msg('','OVERDRIVE END',1);}if(G.time-P.lastHit>CFG.regenDelay)P.hp=Math.min(100,P.hp+CFG.regenRate*dt);
@@ -2450,7 +2449,7 @@ function introTick(dt){const I=INTRO;I.t+=dt;const t=I.t,once=(k,fn)=>{if(!I.sai
  if(t>5.6)once('cat',()=>{catFx();jetSet({rpm:1.08,roar:.44,crack:.28,sub:.24},.2);msg('','LAUNCH',1.4);});
  if(t>8.2)once('air',()=>{jetSet({rpm:.9,whine:.04,hiss:.07,roar:.2,sub:.08,crack:.1},.9);});if(t>10.2)once('fade',()=>jetStop(1.2));
  if(I.ph==='ign'||I.ph==='cat'){const k=I.ph==='cat'?1:clamp((t-2.7)/2.6,0,1);G.shake=Math.max(G.shake,k*.5);
-  if(Math.random()<k*.5)part(madd(noz,I.f,-rnd(3,7)),add(mul(I.f,-rnd(10,20)),mul(rdir(),3)),.35,.12,[1,.6,.25],1,0,1,0,1);} // 炎そのものはメッシュで描く（火の粉だけ少し）
+  } // 炎そのものはメッシュで描く（火の粉だけ少し）
  if(I.ph==='cat'&&Math.random()<.8)part(IW(I,-10+rnd(-2,2),13.5,-55+rnd(0,20)),[rnd(-4,4),rnd(6,14),rnd(-4,4)],1.6,.9,[.92,.94,.98],1); // カタパルトの蒸気
  
  if(t>=11.2)introEnd();}
@@ -2482,7 +2481,8 @@ function abFlameM(){const m=new MB(),n=12,ring=(z,r,k)=>[Math.cos(k/n*6.2832)*r,
  cone([[.01,.98],[0,.6],[-.02,0]],[[.12,.2,.5],[.2,.3,.6]]); // ノズル出口の青いきらめき
  return m.build();}
 function drawAB(p,r,u,f,k,rad,flick){if(k<=.02)return;if(!MESH.abf)MESH.abf=abFlameM();const fl=1+(Math.random()-.5)*(flick||.18),L=(1.4+8*k)*fl,R=rad*(.75+.45*Math.min(k,1.2))*(1+(Math.random()-.5)*.08);
- gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.depthMask(false);draw(MESH.abf,mdl(mul(r,R),mul(u,R),mul(f,L),p),null);gl.depthMask(true);gl.disable(gl.BLEND);}
+ const br=clamp(.3+.7*k,0,1); // 明るさも炎の強さに合わせて徐々に（黒へのティントで加算量を下げる）
+ gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.depthMask(false);draw(MESH.abf,mdl(mul(r,R),mul(u,R),mul(f,L),p),br<.99?new Float32Array([0,0,0,1-br]):null);gl.depthMask(true);gl.disable(gl.BLEND);}
 function jetAB(p,r,u,f,k,sc){const bl=UL.boost||0;if(bl===3){for(const sd of[-1,1])drawAB(add(madd(p,r,.62*sd*sc),mul(f,-6.72*sc)),r,u,f,k*.9,.4*sc);}else drawAB(madd(p,f,(bl===0?-6.32:bl===1?-6.93:-7.33)*sc),r,u,f,k,(bl===0?.52:.48)*sc);}
 function introDraw(){const I=INTRO;if(!I)return;if(!MESH.fcv)MESH.fcv=fcarrierM();if(ST.on&&!MESH.fcvS)MESH.fcvS=fcarrierM(1);draw(ST.on?MESH.fcvS:MESH.fcv,mdl(I.cr,I.cu,I.cf,I.cp));if(ST.on&&MESH.skF)draw(MESH.skF,mdl(I.cr,I.cu,I.cf,I.cp));
  const TG=new Float32Array([.55,.6,.66,.55]);for(const[x,,z,a]of FC_PARK){const f=norm(add(mul(I.cf,Math.cos(a+Math.PI*.5)),mul(I.cr,Math.sin(a+Math.PI*.5)))),bb=basisF(f);draw(MESH.pj,mdl(bb.r,bb.u,f,IW(I,x,14.6,z),.9),TG);} // 駐機中の僚機
