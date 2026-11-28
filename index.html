@@ -885,7 +885,7 @@ function duelStart(){DUEL.ul=Object.assign({},UL);DUEL.vw=1;G.view=0;G.vs=0; // 
  UPG.forEach(u=>UL[u.id]=0);P.spd=UV.cruise();P.ms=6;P.od=0;P.odG=0;P.odR=0;P.exc=0;
  P.p=[0,460,-1250];P.f=[0,0,1];P.u=[0,1,0];P.r=norm(cross(P.f,P.u));camF=P.f.slice();camU=P.u.slice();
  const e={type:'fighter',ace:1,p:[0,480,1250],f:[0,0,-1],bank:0,hp:28,max:28,spd:78,base:78,turn:1.3,cd:3,burst:0,bt:0,ev:0,rad:6,flash:0,sc:20000,ti:0,roll:0,man:null,manT:0};ebasis(e);E.push(e);
- Object.assign(DUEL,{e,evaded:0,hits:0,lk:0,mcd:7,mleft:6,st:'merge',stT:0,t0:G.time,tw:0,say:0});G.wave=1;
+ Object.assign(DUEL,{e,evaded:0,hits:0,lk:0,mcd:7,mleft:6,st:'merge',stT:0,t0:G.time,tw:0,say:0,sm:1,smT:0,smLast:-99,six:0});G.wave=1;
  msg('VS ACE','敵エース《BANSHEE》 — 無強化・ミサイル6発・補充なし',4);SFX.warn();
  radio('duelin',"Pixel One, bandit is an ace, callsign Banshee. Your upgrades are locked. Six missiles, no resupply. Make every shot count, and use your guns.",'ピクセル1、相手はエース、コールサイン《バンシー》だ。機体強化は封印、ミサイルは6発で補充なし。一発も無駄にするな。機銃も使え。',{pri:1,cd:0});
  G.sq.push({t:G.time+5,fn:()=>aceSay('0',"So you're the famous Pixel One. Let's dance.",'お前が噂のピクセル1か。踊ろうぜ。',0)});
@@ -901,10 +901,25 @@ const toP=sub(P.p,e.p),d=len(toP)||1,dP=mul(toP,1/d),behind=dot(e.f,dP)<-.2&&d<9
  for(const m of MSL){if(m.en||m.tgt!==e)continue;if(DUEL.flT>0&&!m.dodge&&dist(m.p,e.p)<700&&Math.random()<.92){m.dodge=1;decoyMissile(m);continue;} // フレア散布中は連射したミサイルもまとめてそらされる
   if(m.dodge)continue;const v=sub(e.p,m.p),dm=len(v);if(dm<240&&dot(m.f,norm(v))>.6){m.dodge=1;const sure=DUEL.evaded<2,ok=sure||Math.random()<.42;
    
-   const side=Math.random()<.5?1:-1;e.man={type:'break',t:0,dur:1.6,dir:norm(add(mul(e.r0||[1,0,0],side),[0,rnd(-.4,.5),0]))};
+   const side=Math.random()<.5?1:-1;if(!(e.man&&e.man.type==='kulbit'))e.man={type:'break',t:0,dur:1.6,dir:norm(add(mul(e.r0||[1,0,0],side),[0,rnd(-.4,.5),0]))};
    if(ok){dropFlares(e,8);decoyMissile(m);if(sure)DUEL.evaded++;DUEL.flT=1.6;if(Math.random()<.6)aceSay('dodge'+(Math.random()*3|0),["Too slow!","Nice try, rookie.","Is that all you've got?"][Math.random()*3|0],['遅いな！','惜しかったな、新米。','その程度か？'][Math.random()*3|0],8);msg('','FLARE — 敵エースがフレアでミサイルをそらした',1.4);}}}
  // 機動の選択
- if(e.man){e.man.t+=dt;const M=e.man;if(M.type==='break'){want=M.dir;turn=e.turn*1.12;spdT=e.base*1.15;}
+ // ---- 切り札：ポストストール機動（クルビット）で背後を奪い返す。1回分から始まり60秒ごとに1回分回復（最大2）----
+ if(DUEL.sm<2){DUEL.smT+=dt;if(DUEL.smT>=60){DUEL.smT=0;DUEL.sm++;}}
+ DUEL.six=behind&&d<520?DUEL.six+dt:Math.max(0,DUEL.six-dt*1.5);const kbOK=DUEL.sm>0&&gh>260&&G.time-DUEL.smLast>14; // 切り札が使える間は、後ろを取られても通常の回避より切り札を優先
+ if(!(e.man&&e.man.type==='kulbit')&&kbOK&&DUEL.six>.35&&d<300&&P.alive){DUEL.sm--;DUEL.smLast=G.time;DUEL.six=0;
+  e.man={type:'kulbit',t:0,dur:2.6,vd:e.f.slice(),v0:e.spd};SFX.warn();msg('WARNING','敵エースが急機動 — 背後を奪い返しに来る！',2);
+  aceSay('kb'+(Math.random()*3|0),["You're on my six? Not for long!","Watch this!","Got you now — overshoot!"][Math.random()*3|0],['後ろを取ったつもりか？甘い！','見てろよ！','かかったな、前に出ろ！'][Math.random()*3|0],0);}
+ if(e.man&&e.man.type==='kulbit'){const M=e.man;M.t+=dt;const rv=(v,k,a)=>{const c=Math.cos(a),sn=Math.sin(a);return add(add(mul(v,c),mul(cross(k,v),sn)),mul(k,dot(k,v)*(1-c)));},rotB=(ax,a)=>{e.f=norm(rv(e.f,ax,a));e.U=norm(rv(e.U,ax,a));e.U=norm(sub(e.U,mul(e.f,dot(e.U,e.f))));e.r=norm(cross(e.f,e.U));e.u=e.U;e.r0=e.r;};
+  if(M.t<1.6){ // 機首を一気に引き起こし（失速域）、慣性で前へ流れながら減速。後ろの相手は追い越す
+   if(M.t<.75)rotB(e.r,5.2*dt);else{const tgt=norm(sub(madd(P.p,P.f,-15),e.p)),ax=cross(e.f,tgt),sa=len(ax);if(sa>1e-4){const ang=Math.min(Math.atan2(sa,dot(e.f,tgt)),4.4*dt);rotB(mul(ax,1/sa),ang);}}
+   e.spd=Math.max(24,e.spd-dt*(M.t<.75?95:30));M.vd=norm(add(mul(M.vd,1-dt*.9),mul(e.f,dt*.9)));e.p=madd(add(e.p,[0,dt*6,0]),M.vd,e.spd*dt);
+   if(Math.random()<dt*50)for(const sx of[-6,6])part(add(e.p,mul(e.r,sx)),mul(rdir(),4),.5,rnd(1.2,2),[.92,.95,1],.45,0,2.5,.5); // 翼の上に湧く水蒸気
+   trailEmit(e,[tipPos(e,6.1,-3),tipPos(e,-6.1,-3)],1);if(e.p[1]<ground(e.p[0],e.p[2])+4){hurtE(e,e.hp+1,e.p);}return;}
+  // 機首を向けたまま全開で加速して食らいつく
+  want=norm(sub(madd(P.p,P.f,P.spd*.4),e.p));turn=e.turn*1.6;spdT=150;e.minS=30;if(Math.random()<dt*40)for(const sx of[-.68,.68])part(add(madd(e.p,e.f,-8.6),mul(e.r,sx)),mul(e.f,-30),.14,1,[1,.6,.25],1,0,-3,0);
+  if(M.t>M.dur){e.man=null;e.cd=.2;}}
+ else if(e.man){e.man.t+=dt;const M=e.man;if(M.type==='break'){want=M.dir;turn=e.turn*1.12;spdT=e.base*1.15;}
   else if(M.type==='roll'){want=null;aceRoll(e,2.5*dt*(M.s||1));aceFly(e,null,e.turn*.55,dt,true);spdT=e.base*1.05;}
   else if(M.type==='splitS'){want=norm([-M.f0[0],-.35,-M.f0[2]]);turn=e.turn*1.1;}
   else if(M.type==='extend'){const r0=norm(cross(M.dir,UP)),w=Math.sin(M.t*2.4+(M.ph||0));want=norm(add(add(mul(M.dir,1),mul(r0,w*.85)),[0,.08+.35*Math.sin(M.t*1.7),0]));spdT=e.base*1.6;turn=e.turn*1.1; // 離脱中も蛇行して照準を外す
@@ -917,6 +932,7 @@ const toP=sub(P.p,e.p),d=len(toP)||1,dP=mul(toP,1/d),behind=dot(e.f,dP)<-.2&&d<9
   else if(M.type==='scissors'){if(M.t>(M.nx||0)){M.nx=M.t+.75;M.sg=-(M.sg||1);}want=norm(add(e.f,add(mul(e.r0||[1,0,0],1.6*M.sg),[0,.1,0])));spdT=e.base*.6;e.minS=40;turn=e.turn*1.15;}
   else if(M.type==='yoyo'){want=M.t<1.3?norm([e.f[0],.85,e.f[2]]):norm(sub(madd(P.p,P.f,-20),e.p));turn=e.turn*(M.t<1.3?1:1.2);spdT=M.t<1.3?e.base:e.base*1.35;}
   if(M.t>M.dur)e.man=null;}
+ else if(behind&&d<300&&kbOK){want=e.f;}
  else if(behind&&d<420&&Math.random()<.6){const r=Math.random(),side=Math.random()<.5?1:-1;e.man=r<.45?{type:'reverse',t:0,dur:3.8}:r<.8?{type:'scissors',t:0,dur:3,sg:side}:{type:'break',t:0,dur:1.8,dir:norm(add(mul(e.r0||[1,0,0],side),[0,.2,0]))};
   if(e.man.type==='reverse')aceSay('rev'+(Math.random()*2|0),["Let's see you handle this!","Overshoot, rookie!"][Math.random()*2|0],['これはどうだ！','前に出ちまえよ、新米！'][Math.random()*2|0],8);want=e.f;}
  else if(behind){const r=Math.random(),side=Math.random()<.5?1:-1;e.man=r<.25?{type:'yoyo',t:0,dur:3}:r<.45?{type:'break',t:0,dur:rnd(1.4,2.2),dir:norm(add(mul(e.r0||[1,0,0],side),[0,rnd(-.3,.4),0]))}:r<.55?{type:'roll',t:0,dur:2.5,s:side,dir:mul(e.r0||[1,0,0],side)}:r<.75&&gh>350?{type:'splitS',t:0,dur:2.4,f0:e.f.slice()}:r<.9?{type:'extend',t:0,dur:2.5,dir:mul(dP,-1)}:{type:'climb',t:0,dur:1.8};
@@ -1937,7 +1953,7 @@ function upPlayer(dt){const inv=G.inv?-1:1;
  {const a=P.abk||0,tg=P.boosting?1:.12;P.abk=tg>a?Math.min(tg,a+dt*(.28+.9*a)):Math.max(tg,a-dt*1.6);} // 炎の強さ：点火はじわっと（約1秒かけて最大へ）、消火は少し速め。巡航中も小さく灯る
  if(P.hp<45&&Math.random()<dt*25)part(eb,add(mul(P.f,P.spd*.3),[0,3,0]),rnd(1.2,2.2),.9,[.24,.24,.26],0,-2,2.4,.5,0,P.hp<20?.6:.42);
  P.inv=Math.max(0,P.inv-dt);P.manCd-=dt;P.warpCd-=dt;P.tbCd=(P.tbCd||0)-dt;P.lzCd-=dt;
- if(P.od>0){P.od-=dt;P.over=false;P.heat=Math.max(0,P.heat-dt);if(Math.random()<dt*20)part(madd(madd(P.p,rdir(),4),P.f,2),madd(mul(rdir(),4),P.f,P.spd*.92),.35,.3,[1,.85,.3],1);if(P.od<=0)msg('','OVERDRIVE END',1);}if(G.time-P.lastHit>CFG.regenDelay)P.hp=Math.min(100,P.hp+CFG.regenRate*dt);
+ if(P.od>0){P.od-=dt;P.over=false;P.heat=Math.max(0,P.heat-dt);if(Math.random()<dt*20)part(madd(madd(P.p,rdir(),4),P.f,2),madd(mul(rdir(),4),P.f,P.spd*.92),.35,.3,[1,.85,.3],1);if(P.od<=0)msg('','OVERDRIVE END',1);}if(G.mode!=='duel'&&G.time-P.lastHit>CFG.regenDelay)P.hp=Math.min(100,P.hp+CFG.regenRate*dt); // VS ACE中は自然回復なし
  const wf=angRate(P.pf,P.f,dt),wu=angRate(P.pu,P.u,dt),I=Math.max(clamp((wf*P.spd-55)/55,0,1),clamp((wu-2.6)/3,0,1)*.75);
  P.ti+=(I-P.ti)*Math.min(1,dt*10);P.pf=P.f.slice();P.pu=P.u.slice();
  trailEmit(P,[tipPos(P,5.7,-2.1),tipPos(P,-5.7,-2.1)],P.ti);}
